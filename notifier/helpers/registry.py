@@ -61,3 +61,7 @@ class Registry:
             return class_
 
         return _register_wrapper
+
+    @classmethod
+    def clean(cls):
+        cls._instances = {}

@@ -14,10 +14,12 @@ class RegisterTestClass:
 
 @pytest.fixture
 def f_registry() -> Registry:
+    Registry.clean()
     return Registry('Test Registry')
 
 
 def test_create_two_different_registers():
+    Registry.clean()
     reg1 = Registry('reg1')
     reg1.set(RegisterTestClass)
     reg2 = Registry('reg2')
@@ -50,7 +52,7 @@ def test_get_class_which_not_added_raises_error(f_registry):
     with pytest.raises(
         ItemNotExists,
         match=(
-            f"Available keys: {RegisterTestClass.__name__}\n"
+            f"Avaliable keys: {RegisterTestClass.__name__}\n"
             f"Requested key: unexpected_key"
         )
     ):
