@@ -1,0 +1,45 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - notifier_postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+      RABBITMQ_DEFAULT_VHOST: notifier
+    volumes:
+      - rabbitmq_volume:/var/lib/rabbitmq/mnesia
+
+  web:
+    build: .
+    image: web:latest
+#    entrypoint: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/application
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      CELERY_BROKER: amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier
+
+  workers:
+    image: web:latest
+    entrypoint: celery -A notifier worker -l debug
+    environment:
+      CELERY_BROKER: amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier
+
+volumes:
+  notifier_postgres:
+  rabbitmq_volume:
