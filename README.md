@@ -1,4 +1,5 @@
 ![Python application](https://github.com/HagasSaan/notifier/workflows/Python%20application/badge.svg)
+[![codecov](https://codecov.io/gh/HagasSaan/notifier/branch/master/graph/badge.svg)](https://codecov.io/gh/HagasSaan/notifier)
 
 # notifier
 Notifier with producers and consumers
