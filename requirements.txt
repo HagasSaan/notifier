@@ -11,7 +11,6 @@ certifi==2020.6.20
 chardet==3.0.4
 Django==3.1
 django-json-widget==1.0.1
-future==0.18.2
 idna==2.10
 iniconfig==1.0.1
 kombu==4.6.11
@@ -22,10 +21,13 @@ pluggy==0.13.1
 psycopg2==2.8.5
 py==1.9.0
 pyparsing==2.4.7
+pyTelegramBotAPI==3.7.2
 pytest==6.0.1
 pytest-aiohttp==0.3.0
 pytest-asyncio==0.14.0
+pytest-mock==3.2.0
 pytz==2020.1
+requests==2.7.0
 six==1.15.0
 sqlparse==0.3.1
 structlog==20.1.0
