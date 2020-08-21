@@ -4,7 +4,7 @@ import pytest
 import telebot
 from django.core.exceptions import ValidationError
 from telebot.apihelper import ApiException
-from telebot.types import Chat
+import telebot.types as tb_types
 
 from helpers.messages_components import Message
 from .telegram import TelegramGroupChat
@@ -17,7 +17,7 @@ def test_validate_params(mocker):
     mocker.patch.object(telebot, 'AsyncTeleBot', return_value=patched_telebot)
     mocked_chat = MagicMock()
     patched_telebot.get_chat.return_value = mocked_chat
-    mocked_chat.wait.return_value = Chat(chat_id, None)
+    mocked_chat.wait.return_value = tb_types.Chat(chat_id, None)
     TelegramGroupChat.validate_params(
         {
             'bot_token': 'fake:token',
@@ -65,6 +65,11 @@ async def test_send_message(mocker):
 
     patched_telebot = MagicMock()
     mocker.patch.object(telebot, 'AsyncTeleBot', return_value=patched_telebot)
+    mocked_send_message = MagicMock()
+    patched_telebot.send_message.return_value = mocked_send_message
+    mocked_send_message.wait.return_value = tb_types.Message(
+        None, None, None, None, None, [], None
+    )
 
     bot = TelegramGroupChat(
         bot_token='fake:token',

@@ -1,3 +1,5 @@
+![Python application](https://github.com/HagasSaan/notifier/workflows/Python%20application/badge.svg)
+
 # notifier
 Notifier with producers and consumers
 
