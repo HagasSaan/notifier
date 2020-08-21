@@ -92,6 +92,7 @@ class Configuration(models.Model):
             messages,
             producer,
         )
+        messages = self._filter_messages_where_receiver_not_in_config(messages)
         messages = self._filter_messages_where_receiver_is_not_working(messages)
         messages = self._filter_messages_with_skip_keywords(messages)
         messages = self._translate_message_users_from_users_into_consumer(
@@ -101,27 +102,42 @@ class Configuration(models.Model):
         asyncio.run(consumer.consume_messages(messages))
         logger.info('Messages consumed', messages=messages)
 
-    def _filter_messages_with_skip_keywords(self, messages: List[Message]):
-        result_messages = []
-        for message in messages:
-            # TODO: skip
-            # for skip_keyword in self.skip_keywords:
-            #     if skip_keyword in message.content:
-            #         continue
-            result_messages.append(message)
+    def _filter_messages_with_skip_keywords(
+        self,
+        messages: List[Message]
+    ) -> List[Message]:
+        skip_keywords = list(
+            row['word']
+            for row in self.skip_keywords.values('word')
+        )
+        return [
+            message
+            for message in messages
+            if not any(
+                skip_keyword in message.content
+                for skip_keyword in skip_keywords
+            )
+        ]
 
-        return result_messages
+    def _filter_messages_where_receiver_not_in_config(
+        self,
+        messages: List[Message]
+    ) -> List[Message]:
+        return [
+            message
+            for message in messages
+            if message.receiver in self.users.all()
+        ]
 
     @staticmethod
     def _filter_messages_where_receiver_is_not_working(
         messages: List[Message],
     ) -> List[Message]:
-        result_messages = []
-        for message in messages:
-            if message.receiver.is_working_time:
-                result_messages.append(message)
-            
-        return result_messages
+        return [
+            message
+            for message in messages
+            if message.receiver.is_working_time
+        ]
 
     @staticmethod
     def _get_object_by_model_and_registry(
