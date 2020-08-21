@@ -17,5 +17,5 @@ class GoogleChat(Chat):
     async def consume_messages(self, messages: List[Message]):
         pass
 
-    async def send_message(self, *args, **kwargs):
+    async def send_message(self, message, *args, **kwargs):
         raise NotImplementedError
