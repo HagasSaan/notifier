@@ -7,6 +7,7 @@ from django.db import models
 from requests import Request
 
 from .models import User, SkipKeyword, Configuration
+from .tasks import run_configuration
 
 logger = structlog.get_logger(__name__)
 
@@ -48,6 +49,6 @@ class ConfigurationAdmin(admin.ModelAdmin):
 
     def run_configurations(self, request: Request, queryset: QuerySet) -> None:
         for configuration in queryset:
-            configuration.run()
+            run_configuration.delay(configuration.id)
 
     run_configurations.short_description = 'Run selected configurations'

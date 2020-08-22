@@ -36,7 +36,9 @@ services:
 
   workers:
     image: web:latest
-    command: celery -A notifier worker -l debug
+    volumes:
+      - .:/application
+    command: celery -A notifier worker -l info
     environment:
       CELERY_BROKER: amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier
 

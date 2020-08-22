@@ -144,3 +144,4 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'interval_step': 0.2,
     'interval_max': 0.5,
 }
+CELERY_RESULT_BACKEND = 'django-db'
