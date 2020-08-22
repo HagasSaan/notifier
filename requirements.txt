@@ -63,6 +63,7 @@ pytest-asyncio==0.14.0
 pytest-cov==2.10.1
 pytest-django==3.9.0
 pytest-mock==3.2.0
+pytest-pythonpath==0.7.3
 pytz==2020.1
 PyYAML==5.3.1
 requests==2.7.0
