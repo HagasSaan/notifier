@@ -1,10 +1,11 @@
 import pytest
+from pytest_mock import MockFixture
 
 from .configuration import Configuration
 
 
 @pytest.fixture
-def m_configuration(db) -> Configuration:
+def m_configuration(db: MockFixture) -> Configuration:
     return Configuration.objects.create(
         name='Test configuration',
     )
