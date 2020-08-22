@@ -1,10 +1,10 @@
 import abc
 from typing import Any, List, Dict
 
-from helpers.messages_components import CanConsumeMessages, Message
+from helpers.messages_components import MessageConsumer, Message
 
 
-class Chat(CanConsumeMessages):
+class Chat(MessageConsumer):
     @abc.abstractmethod
     async def send_message(
         self,

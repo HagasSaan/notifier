@@ -10,9 +10,7 @@ logger = structlog.get_logger(__name__)
 
 class ProducerModel(ABCObjectModel):
     DEFAULT_REGISTRY = Registry(PRODUCER_REGISTRY_NAME)
-
-    # TODO: Rename type to type_
-    type = models.CharField(
+    object_type = models.CharField(
         max_length=100,
         choices=[
             (key, key)

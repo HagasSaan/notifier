@@ -8,7 +8,7 @@ Notifier with producers and consumers
 TODO:
 - [x] Прикрутить консьюмер(telegram)
 - [ ] Покрыть тестами configuration
-- [ ] Прикрутить линтер
+- [x] Прикрутить линтер
 - [ ] Прикрутить celery tasks
 - [ ] Прикрутить DRF (или graphene) для вызова тасок через API
 - [ ] Допокрыть тестами github producer

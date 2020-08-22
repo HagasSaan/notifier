@@ -9,8 +9,8 @@ from django.utils.functional import cached_property
 
 from helpers.abc_object_model import ABCObjectModel
 from helpers.messages_components import (
-    CanConsumeMessages,
-    CanProduceMessages,
+    MessageConsumer,
+    MessageProducer,
     PRODUCER_REGISTRY_NAME,
     CONSUMER_REGISTRY_NAME,
     Message,
@@ -90,10 +90,10 @@ class Configuration(models.Model):
         ]
 
     def run(self) -> None:
-        producer: CanProduceMessages = self._get_object_by_model_and_registry(
+        producer: MessageProducer = self._get_object_by_model_and_registry(
             self.producer, PRODUCER_REGISTRY_NAME,
         )
-        consumer: CanConsumeMessages = self._get_object_by_model_and_registry(
+        consumer: MessageConsumer = self._get_object_by_model_and_registry(
             self.consumer, CONSUMER_REGISTRY_NAME,
         )
         # TODO: Maybe run as task?
@@ -150,16 +150,16 @@ class Configuration(models.Model):
     def _get_object_by_model_and_registry(
         object_model: ABCObjectModel,
         registry_name: str,
-    ) -> Union[CanConsumeMessages, CanProduceMessages]:
+    ) -> Union[MessageConsumer, MessageProducer]:
         registry = Registry(registry_name)
-        class_ = registry.get(object_model.type)
+        class_ = registry.get(object_model.object_type)
         object_ = class_(**object_model.parameters)
         return object_
 
     @staticmethod
     def _translate_message_users_from_producer_into_users(
         messages: List[Message],
-        producer: CanProduceMessages,
+        producer: MessageProducer,
     ) -> List[Message]:
         producer_username_key = producer.username_key
 
@@ -183,7 +183,7 @@ class Configuration(models.Model):
     @staticmethod
     def _translate_message_users_from_users_into_consumer(
         messages: List[Message],
-        consumer: CanConsumeMessages,
+        consumer: MessageConsumer,
     ) -> List[Message]:
         consumer_username_key = consumer.username_key
 

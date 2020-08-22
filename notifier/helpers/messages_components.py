@@ -13,7 +13,7 @@ class Message:
     content: Any
 
 
-class CanProduceMessages(abc.ABC):
+class MessageProducer(abc.ABC):
 
     @property
     @abc.abstractmethod
@@ -33,7 +33,7 @@ class CanProduceMessages(abc.ABC):
 PRODUCER_REGISTRY_NAME = 'Producer'
 
 
-class CanConsumeMessages(abc.ABC):
+class MessageConsumer(abc.ABC):
 
     @property
     @abc.abstractmethod

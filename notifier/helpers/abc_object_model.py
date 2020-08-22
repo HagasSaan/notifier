@@ -3,7 +3,7 @@ from typing import Union, Any, Optional
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from helpers.messages_components import CanProduceMessages, CanConsumeMessages
+from helpers.messages_components import MessageProducer, MessageConsumer
 from helpers.registry import Registry
 
 
@@ -11,8 +11,7 @@ class ABCObjectModel(models.Model):
     DEFAULT_REGISTRY = Registry('default')
 
     name = models.CharField(max_length=100, unique=True)
-    # TODO: Rename type to type_
-    type = models.CharField(
+    object_type = models.CharField(
         max_length=100,
         choices=[
             (key, key)
@@ -23,7 +22,7 @@ class ABCObjectModel(models.Model):
     parameters = models.JSONField()
 
     def __str__(self):
-        return f'{self.type} "{self.name}"({self.__class__.__name__})'
+        return f'{self.object_type} "{self.name}"({self.__class__.__name__})'
 
     class Meta:
         abstract = True
@@ -35,7 +34,9 @@ class ABCObjectModel(models.Model):
         using: Optional[Any] = None,
         update_fields: Optional[Any] = None,
     ) -> None:
-        class_: Union[CanProduceMessages, CanConsumeMessages] = self.DEFAULT_REGISTRY.get(self.type)
+        class_: Union[MessageProducer, MessageConsumer] = (
+            self.DEFAULT_REGISTRY.get(self.object_type)
+        )
         try:
             class_.validate_params(self.parameters)
         except TypeError as e:
@@ -47,7 +48,7 @@ class ABCObjectModel(models.Model):
             )
             raise ValidationError(
                 f'Error: {e}\n'
-                f'Required fields for {self.type} is: \n'
+                f'Required fields for {self.object_type} is: \n'
                 f'\t{required_fields}',
             )
         super().save(
