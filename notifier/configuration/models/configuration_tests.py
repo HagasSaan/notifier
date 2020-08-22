@@ -4,7 +4,8 @@ from .configuration import Configuration
 
 
 @pytest.fixture
-def m_configuration(db) -> Configuration:
+@pytest.mark.django_db
+def m_configuration() -> Configuration:
     return Configuration.objects.create(
         name='Test configuration',
     )
