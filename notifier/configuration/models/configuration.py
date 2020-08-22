@@ -12,7 +12,7 @@ from helpers.messages_components import (
     PRODUCER_REGISTRY_NAME,
     MessageConsumer,
     CONSUMER_REGISTRY_NAME,
-    Message
+    Message,
 )
 from helpers.registry import Registry
 from message_consumers.models import ConsumerModel
@@ -47,6 +47,9 @@ class Configuration(models.Model):
         ]
 
     def run(self) -> None:
+        if self.consumer is None or self.producer is None:
+            raise ValueError('Error: consumer or producer not specified')
+
         producer: MessageProducer = self._get_object_by_model_and_registry(
             self.producer, PRODUCER_REGISTRY_NAME,
         )
