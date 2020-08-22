@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_json_widget',
+    'django_celery_results',
     'configuration',
     'message_producers',
     'message_consumers',

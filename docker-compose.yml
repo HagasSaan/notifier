@@ -23,7 +23,7 @@ services:
   web:
     build: .
     image: web:latest
-#    entrypoint: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/application
     ports:
@@ -36,7 +36,7 @@ services:
 
   workers:
     image: web:latest
-    entrypoint: celery -A notifier worker -l debug
+    command: celery -A notifier worker -l debug
     environment:
       CELERY_BROKER: amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier
 
