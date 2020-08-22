@@ -3,6 +3,7 @@ services:
   db:
     image: postgres
     environment:
+      # TODO: rename db to notifier
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

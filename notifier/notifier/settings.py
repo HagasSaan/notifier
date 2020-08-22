@@ -85,6 +85,7 @@ WSGI_APPLICATION = 'notifier.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # TODO: rename db to notifier
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
@@ -98,6 +99,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            # TODO: rename db to test_notifier
             'NAME': 'postgres',
             'USER': 'postgres',
             'PASSWORD': 'postgres',
