@@ -134,6 +134,7 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'configuration.User'
 
 # Celery configs
+# TODO: Move to their own configfile
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER', 'amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier')
 CELERY_BROKER_TRANSPORT_OPTIONS = {
