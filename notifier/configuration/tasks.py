@@ -1,7 +1,7 @@
 import structlog
 
-from configuration.models import Configuration
 from notifier.celery import app
+from .models import Configuration
 
 logger = structlog.get_logger(__name__)
 
