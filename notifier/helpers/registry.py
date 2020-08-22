@@ -1,6 +1,6 @@
 import structlog
 
-from typing import Any, List
+from typing import Any, List, Callable, KeysView
 
 logger = structlog.get_logger(__name__)
 
@@ -24,19 +24,19 @@ class Registry:
     def __str__(self):
         return f'Registry {self.name}'
 
-    def set(self, value: Any):
+    def set(self, value: Any) -> None:  # noqa A003
         key = value.__name__
         if self._instances[self.name].get(key) is not None:
             raise ItemAlreadyExists
 
         self._instances[self.name][key] = value
 
-    def get(self, key: Any):
+    def get(self, key: Any) -> Any:
         value = self._instances[self.name].get(key)
         if value is None:
             raise ItemNotExists(
                 f'Avaliable keys: {",".join(self._instances[self.name].keys())}\n'
-                f'Requested key: {key}'
+                f'Requested key: {key}',
             )
 
         return value
@@ -46,22 +46,22 @@ class Registry:
         return self._instances[self.name].keys()
 
     @staticmethod
-    def get_registers():
+    def get_registers() -> KeysView:
         return Registry._instances.keys()
 
     @staticmethod
-    def register(name):
-        def _register_wrapper(class_):
+    def register(name: str) -> Callable:
+        def _register_wrapper(class_: object) -> object:
             registry = Registry(name)
             registry.set(class_)
             logger.info(
                 f'Class {class_.__name__} successfully '
-                f'registered in {name} scope'
+                f'registered in {name} scope',
             )
             return class_
 
         return _register_wrapper
 
     @classmethod
-    def clean(cls):
+    def clean(cls) -> None:
         cls._instances = {}

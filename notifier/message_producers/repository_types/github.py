@@ -47,8 +47,8 @@ class GithubPullRequest(PullRequest):
     labels: List[GithubLabel]
     assignees: List[GithubUser]
 
-    # approved_by: Set[str] = field(default_factory=set)
-    # reviewers: Dict[str, str] = field(default_factory=dict)
+    # approved_by: Set[str] = field(default_factory=set)  # noqa: E800
+    # reviewers: Dict[str, str] = field(default_factory=dict)  # noqa: E800
 
 
 @Registry.register(PRODUCER_REGISTRY_NAME)
@@ -64,16 +64,16 @@ class GithubRepository(Repository):
     BAD_CREDENTIALS_MESSAGE = 'Bad credentials'
 
     @property
-    def username_key(self):
+    def username_key(self) -> str:
         return 'github_username'
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]):
+    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
         try:
             asyncio.run(
                 cls(**params)._request(
-                    cls.URL_REPOSITORY.format(repository=params['name'])
-                )
+                    cls.URL_REPOSITORY.format(repository=params['name']),
+                ),
             )
         except Exception as e:
             if cls.BAD_CREDENTIALS_MESSAGE in str(e):
@@ -92,7 +92,7 @@ class GithubRepository(Repository):
                         f'{pull_request.title} '
                         f'({pull_request.html_url})'
                         f'\nLabels: {",".join(map(str,pull_request.labels))}'
-                    )
+                    ),
                 )
                 messages.append(message)
 
@@ -102,8 +102,8 @@ class GithubRepository(Repository):
         pull_requests = list(map(
             GithubPullRequest,
             await self._request(
-                self.URL_PULLS.format(repository=self.name)
-            )
+                self.URL_PULLS.format(repository=self.name),
+            ),
         ))
         logger.info('Pull requests downloaded')
         return pull_requests
@@ -111,7 +111,7 @@ class GithubRepository(Repository):
     async def _request(self, url: str) -> Dict[str, Any]:
         async with aiohttp.request(
             'get', url,
-            headers={'Authorization': f'Bearer {self.token}'}
+            headers={'Authorization': f'Bearer {self.token}'},
         ) as response:
             logger.info('Got response', status_code=response.status, url=url)
             content = await response.content.read()
@@ -120,7 +120,7 @@ class GithubRepository(Repository):
                 raise Exception(
                     f'Bad response, '
                     f'status code: {response.status}, '
-                    f'content: {decoded_content}'
+                    f'content: {decoded_content}',
                 )
 
             return decoded_content

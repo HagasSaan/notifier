@@ -89,7 +89,7 @@ DATABASES = {
         'PASSWORD': 'postgres',
         'HOST': 'db',
         'PORT': '5432',
-    }
+    },
 }
 
 
@@ -133,10 +133,12 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'configuration.User'
 
+# Celery configs
+
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER', 'amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier')
 CELERY_BROKER_TRANSPORT_OPTIONS = {
-    "max_retries": 3,
-    "interval_start": 0,
-    "interval_step": 0.2,
-    "interval_max": 0.5
+    'max_retries': 3,
+    'interval_start': 0,
+    'interval_step': 0.2,
+    'interval_max': 0.5,
 }

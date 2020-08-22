@@ -7,7 +7,7 @@ from django_json_widget.widgets import JSONEditorWidget
 
 @admin.register(ProducerModel)
 class ProducerModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', )
+    list_display = ('name', 'type')
 
     formfield_overrides = {
         models.JSONField: {'widget': JSONEditorWidget},

@@ -11,10 +11,11 @@ logger = structlog.get_logger(__name__)
 class ConsumerModel(ABCObjectModel):
     DEFAULT_REGISTRY = Registry(CONSUMER_REGISTRY_NAME)
 
+    # TODO: Rename type to type_
     type = models.CharField(
         max_length=100,
         choices=[
             (key, key)
             for key in DEFAULT_REGISTRY.keys
-        ]
+        ],
     )

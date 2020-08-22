@@ -5,6 +5,7 @@ from typing import List, Union
 import structlog
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.functional import cached_property
 
 from helpers.abc_object_model import ABCObjectModel
 from helpers.messages_components import (
@@ -12,7 +13,7 @@ from helpers.messages_components import (
     CanProduceMessages,
     PRODUCER_REGISTRY_NAME,
     CONSUMER_REGISTRY_NAME,
-    Message
+    Message,
 )
 from helpers.registry import Registry
 from message_consumers.models import ConsumerModel
@@ -78,7 +79,17 @@ class Configuration(models.Model):
         on_delete=models.SET_NULL,
     )
 
-    def run(self):
+    def __str__(self):
+        return f'{self.__class__.__name__} {self.name}'
+
+    @cached_property
+    def skip_keywords_list(self) -> List[str]:
+        return [
+            row['word']
+            for row in self.skip_keywords.values('word')
+        ]
+
+    def run(self) -> None:
         producer: CanProduceMessages = self._get_object_by_model_and_registry(
             self.producer, PRODUCER_REGISTRY_NAME,
         )
@@ -104,24 +115,20 @@ class Configuration(models.Model):
 
     def _filter_messages_with_skip_keywords(
         self,
-        messages: List[Message]
+        messages: List[Message],
     ) -> List[Message]:
-        skip_keywords = list(
-            row['word']
-            for row in self.skip_keywords.values('word')
-        )
         return [
             message
             for message in messages
             if not any(
                 skip_keyword in message.content
-                for skip_keyword in skip_keywords
+                for skip_keyword in self.skip_keywords_list
             )
         ]
 
     def _filter_messages_where_receiver_not_in_config(
         self,
-        messages: List[Message]
+        messages: List[Message],
     ) -> List[Message]:
         return [
             message
@@ -205,24 +212,24 @@ class Configuration(models.Model):
         try:
             return User.objects.get(
                 additional_info__contains={
-                    producer_username_key: username
-                }
+                    producer_username_key: username,
+                },
             )
         except User.DoesNotExist:
             raise User.DoesNotExist(
                 f'User with {producer_username_key}:{username} '
-                f'does not exist'
+                f'does not exist',
             )
 
     @staticmethod
     def _get_consumer_username_by_user(
         user: User,
-        consumer_username_key: str
+        consumer_username_key: str,
     ) -> str:
         try:
             return user.additional_info[consumer_username_key]
         except KeyError:
             raise KeyError(
                 f'User {user.username} does not contain data '
-                f'about {consumer_username_key} scope'
+                f'about {consumer_username_key} scope',
             )

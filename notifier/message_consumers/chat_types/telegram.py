@@ -1,13 +1,14 @@
 import asyncio
 import dataclasses
-from typing import List, Union, Dict, Tuple, Type
+import traceback
+from typing import List, Union, Dict, Tuple, Type, Any
 
 import telebot
 from django.core.exceptions import ValidationError
 from django.db.models import JSONField
 from telebot.util import AsyncTask
 
-from helpers.messages_components import Message, CONSUMER_REGISTRY_NAME
+from helpers.messages_components import CONSUMER_REGISTRY_NAME, Message
 from helpers.registry import Registry
 from .chats_base import Chat
 
@@ -24,18 +25,18 @@ class TelegramGroupChat(Chat):
         self._bot = telebot.AsyncTeleBot(self.bot_token)
 
     @property
-    def username_key(self):
+    def username_key(self) -> str:
         return 'telegram_username'
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]):
+    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
         bot = telebot.AsyncTeleBot(token=params['bot_token'])
         chat_task: AsyncTask = bot.get_chat(params['chat_id'])
         result = chat_task.wait()
         if not isinstance(result, telebot.types.Chat):
             cls._handle_error(result)
 
-    async def consume_messages(self, messages: List[Message]):
+    async def consume_messages(self, messages: List[Message]) -> None:
         await asyncio.gather(
             *[
                 self.send_message(message)
@@ -43,8 +44,14 @@ class TelegramGroupChat(Chat):
             ],
             return_exceptions=True,
         )
+        # TODO: Handle exceptions
 
-    async def send_message(self, message: Message, *args, **kwargs):
+    async def send_message(
+        self,
+        message: Message,
+        *args: List[Any],
+        **kwargs: Dict[Any, Any],
+    ) -> None:
         message_text = f'From {message.sender} to {message.receiver}: {message.content}'
         send_message_task: AsyncTask = self._bot.send_message(self.chat_id, message_text)
         result = send_message_task.wait()
@@ -52,7 +59,10 @@ class TelegramGroupChat(Chat):
             self._handle_error(result)
 
     @classmethod
-    def _handle_error(cls, error: Tuple[Type[Exception], Exception, 'traceback']):
+    def _handle_error(
+        cls,
+        error: Tuple[Type[Exception], Exception, traceback.TracebackException],
+    ) -> None:
         _, exception, _ = error
         if cls.CHAT_NOT_FOUND in str(exception):
             raise ValidationError(cls.CHAT_NOT_FOUND)
@@ -65,15 +75,20 @@ class TelegramGroupChat(Chat):
 class TelegramChat(Chat):
 
     @property
-    def username_key(self):
+    def username_key(self) -> str:
         return 'telegram_user_chat_id'
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]):
+    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
         pass
 
-    async def consume_messages(self, messages: List[Message]):
+    async def consume_messages(self, messages: List[Message]) -> None:
         pass
 
-    async def send_message(self, message, *args, **kwargs):
+    async def send_message(
+        self,
+        message: Message,
+        *args: List[Any],
+        **kwargs: Dict[Any, Any],
+    ) -> None:
         raise NotImplementedError

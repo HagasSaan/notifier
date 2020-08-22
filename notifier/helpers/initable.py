@@ -1,4 +1,4 @@
-from typing import get_origin, get_args, Any, Dict, List
+from typing import get_origin, get_args, Any, Dict, List, Type
 
 
 class InitError(Exception):
@@ -16,20 +16,21 @@ class Initable:
             else:
                 self.__dict__[key] = type_(kwargs[key])
 
-    def _handle_as_list(self, key, kwargs, type_) -> List:
+    def _handle_as_list(
+        self,
+        key: str,
+        kwargs: Dict[str, Any],
+        type_: Type,
+    ) -> List:
         result = []
         subtypes = get_args(type_)
         if len(subtypes) == 1:
             subtype = subtypes[0]
             for kwarg in kwargs[key]:
-                result.append(
-                    subtype(kwarg)
-                )
+                result.append(subtype(kwarg))
         elif len(subtypes) == 0:
             for kwarg in kwargs[key]:
-                result.append(
-                    kwarg
-                )
+                result.append(kwarg)
         else:
             raise InitError('List with more than 1 typing cannot be initialized')
 

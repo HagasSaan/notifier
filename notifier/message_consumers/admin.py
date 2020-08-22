@@ -7,7 +7,7 @@ from .models import ConsumerModel
 
 @admin.register(ConsumerModel)
 class ConsumerModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', )
+    list_display = ('name', 'type')
 
     formfield_overrides = {
         models.JSONField: {'widget': JSONEditorWidget},

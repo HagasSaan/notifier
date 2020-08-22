@@ -9,25 +9,25 @@ from message_producers.repository_types.github import GithubRepository
 def f_github_repository() -> GithubRepository:
     return GithubRepository(
         'owner/repo',
-        'api_token'
+        'api_token',
     )
 
 
 @pytest.mark.skip(reason='Need to mock request first')
 @pytest.mark.asyncio
-async def test_github_get_pull_requests(f_github_repository):
+async def test_github_get_pull_requests(f_github_repository: GithubRepository) -> None:
     pull_requests = await f_github_repository.get_pull_requests()
     assert pull_requests
 
 
 @pytest.mark.skip(reason='Need to mock request first')
 @pytest.mark.asyncio
-async def test_github_produce_messages(f_github_repository):
+async def test_github_produce_messages(f_github_repository: GithubRepository) -> None:
     messages = await f_github_repository.produce_messages()
     assert messages
 
 
-def test_validate_params():
+def test_validate_params() -> None:
     repository_name = 'owner/repository'
 
     with aioresponses() as mocked:
@@ -38,12 +38,12 @@ def test_validate_params():
         GithubRepository.validate_params(
             {
                 'name': repository_name,
-                'token': 'valid_token'
-            }
+                'token': 'valid_token',
+            },
         )
 
 
-def test_validate_params_should_raise_error():
+def test_validate_params_should_raise_error() -> None:
     repository_name = 'owner/repository'
 
     with aioresponses() as mocked:
@@ -59,6 +59,6 @@ def test_validate_params_should_raise_error():
             GithubRepository.validate_params(
                 {
                     'name': repository_name,
-                    'token': 'fake_token'
-                }
+                    'token': 'fake_token',
+                },
             )

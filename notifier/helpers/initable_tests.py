@@ -10,11 +10,11 @@ class InitableClassForTests(Initable):
     field_2: int
 
 
-def test_init_class_with_extra_args():
+def test_init_class_with_extra_args() -> None:
     args = {
         'field_1': 'string',
         'field_2': 4,
-        'field_not_exists': dict()
+        'field_not_exists': {},
     }
 
     class_ = InitableClassForTests(args)
@@ -25,7 +25,7 @@ def test_init_class_with_extra_args():
     }
 
 
-def test_init_class_without_required_args():
+def test_init_class_without_required_args() -> None:
     args = {
         'field_1': 'string',
     }
@@ -39,13 +39,13 @@ class ComplexInitableClassForTests(Initable):
     complex_field: InitableClassForTests
 
 
-def test_init_complex_class():
+def test_init_complex_class() -> None:
     args = {
         'field_3': ['string', 4],
         'complex_field': {
             'field_1': 'string',
             'field_2': 4,
-            'field_not_exists': dict(),
+            'field_not_exists': {},
         },
         'field_not_exists': 123,
     }
@@ -63,12 +63,12 @@ def test_init_complex_class():
     }
 
 
-def test_init_complex_class_without_required_args():
+def test_init_complex_class_without_required_args() -> None:
     args = {
         'field_3': ['string', 4],
         'complex_field': {
             'field_1': 'string',
-            'field_not_exists': dict(),
+            'field_not_exists': {},
         },
         'field_not_exists': 123,
     }
@@ -80,10 +80,10 @@ def test_init_complex_class_without_required_args():
 class InitableClassWithTypingsForTests(Initable):
     field_1: List[str]
     field_2: List[InitableClassForTests]
-    # field_3: Dict[Any, Any]  # Not yet
+    # field_3: Dict[Any, Any]  # Not yet  # noqa: E800
 
 
-def test_init_class_with_typings():
+def test_init_class_with_typings() -> None:
     args = {
         'field_1': ['str_1', 'str_2'],
         'field_2': [
@@ -95,7 +95,7 @@ def test_init_class_with_typings():
                 'field_1': 'alala',
                 'field_2': 456,
             },
-        ]
+        ],
     }
     class_ = InitableClassWithTypingsForTests(args)
     initable_classes = class_.field_2

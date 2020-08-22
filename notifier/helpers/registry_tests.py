@@ -8,7 +8,7 @@ from helpers.registry import (
 
 
 class RegisterTestClass:
-    def method(self):
+    def method(self) -> str:
         return self.__class__.__name__
 
 
@@ -18,7 +18,7 @@ def f_registry() -> Registry:
     return Registry('Test Registry')
 
 
-def test_create_two_different_registers():
+def test_create_two_different_registers() -> None:
     Registry.clean()
     reg1 = Registry('reg1')
     reg1.set(RegisterTestClass)
@@ -27,7 +27,7 @@ def test_create_two_different_registers():
     assert list(Registry.get_registers()) == ['reg1', 'reg2']
 
 
-def test_creating_same_registers_returns_same_register():
+def test_creating_same_registers_returns_same_register() -> None:
     reg = Registry('Registry')
     assert len(reg.keys) == 0
     reg.set(RegisterTestClass)
@@ -35,34 +35,40 @@ def test_creating_same_registers_returns_same_register():
     assert RegisterTestClass.__name__ in reg1.keys
 
 
-def test_add_class_to_registry(f_registry):
+def test_add_class_to_registry(
+    f_registry: Registry,
+) -> None:
     f_registry.set(RegisterTestClass)
     assert f_registry.get(RegisterTestClass.__name__) == RegisterTestClass
-    assert list(f_registry.keys) == [RegisterTestClass.__name__, ]
+    assert list(f_registry.keys) == [RegisterTestClass.__name__]
 
 
-def test_add_class_to_registry_twice_raises_error(f_registry):
+def test_add_class_to_registry_twice_raises_error(
+    f_registry: Registry,
+) -> None:
     f_registry.set(RegisterTestClass)
     with pytest.raises(ItemAlreadyExists):
         f_registry.set(RegisterTestClass)
 
 
-def test_get_class_which_not_added_raises_error(f_registry):
+def test_get_class_which_not_added_raises_error(
+    f_registry: Registry,
+) -> None:
     f_registry.set(RegisterTestClass)
     with pytest.raises(
         ItemNotExists,
         match=(
-            f"Avaliable keys: {RegisterTestClass.__name__}\n"
-            f"Requested key: unexpected_key"
-        )
+            f'Avaliable keys: {RegisterTestClass.__name__}\n'
+            f'Requested key: unexpected_key'
+        ),
     ):
         f_registry.get('unexpected_key')
 
 
-def test_class_decorator():
+def test_class_decorator() -> None:
     @Registry.register('Test')
     class RegisterTestClassDecorated:
-        def method(self):
+        def method(self) -> str:
             return self.__class__.__name__
 
     registry = Registry('Test')

@@ -1,5 +1,6 @@
 import abc
 import dataclasses
+from typing import List
 
 import structlog
 
@@ -17,5 +18,5 @@ class PullRequest(Initable):
 class Repository(CanProduceMessages):
 
     @abc.abstractmethod
-    async def get_pull_requests(self):
+    async def get_pull_requests(self) -> List[PullRequest]:
         raise NotImplementedError

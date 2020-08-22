@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Any, Optional
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -11,12 +11,13 @@ class ABCObjectModel(models.Model):
     DEFAULT_REGISTRY = Registry('default')
 
     name = models.CharField(max_length=100, unique=True)
+    # TODO: Rename type to type_
     type = models.CharField(
         max_length=100,
         choices=[
             (key, key)
             for key in DEFAULT_REGISTRY.keys
-        ]
+        ],
     )
 
     parameters = models.JSONField()
@@ -29,13 +30,12 @@ class ABCObjectModel(models.Model):
 
     def save(
         self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        class_: Union[CanProduceMessages, CanConsumeMessages] = \
-            self.DEFAULT_REGISTRY.get(self.type)
+        force_insert: bool = False,
+        force_update: bool = False,
+        using: Optional[Any] = None,
+        update_fields: Optional[Any] = None,
+    ) -> None:
+        class_: Union[CanProduceMessages, CanConsumeMessages] = self.DEFAULT_REGISTRY.get(self.type)
         try:
             class_.validate_params(self.parameters)
         except TypeError as e:
@@ -43,12 +43,12 @@ class ABCObjectModel(models.Model):
                 [
                     f'{name}:{type_}'
                     for name, type_ in class_.__annotations__.items()
-                ]
+                ],
             )
             raise ValidationError(
                 f'Error: {e}\n'
                 f'Required fields for {self.type} is: \n'
-                f'\t{required_fields}'
+                f'\t{required_fields}',
             )
         super().save(
             force_insert=force_insert,

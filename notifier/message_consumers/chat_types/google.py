@@ -1,5 +1,5 @@
 import dataclasses
-from typing import List
+from typing import List, Any, Dict
 
 from helpers.messages_components import CONSUMER_REGISTRY_NAME, Message
 from helpers.registry import Registry
@@ -11,11 +11,16 @@ from .chats_base import Chat
 class GoogleChat(Chat):
 
     @property
-    def username_key(self):
+    def username_key(self) -> str:
         return 'google_username'
 
-    async def consume_messages(self, messages: List[Message]):
+    async def consume_messages(self, messages: List[Message]) -> None:
         pass
 
-    async def send_message(self, message, *args, **kwargs):
+    async def send_message(
+        self,
+        message: Message,
+        *args: List[Any],
+        **kwargs: Dict[Any, Any],
+    ) -> None:
         raise NotImplementedError

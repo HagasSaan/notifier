@@ -1,15 +1,15 @@
 import abc
 import dataclasses
-from typing import Any, List, Union, Dict
+from typing import List, Union, Dict, Any
 
 from django.db.models import JSONField
 
 
 @dataclasses.dataclass
 class Message:
-    # TODO: Replace User in typings with user from Configs
-    sender: Union[str, 'User']
-    receiver: Union[str, 'User']
+    # TODO: get normal typing from config user
+    sender: Union[str, 'User']  # noqa F821
+    receiver: Union[str, 'User']  # noqa F821
     content: Any
 
 
@@ -17,7 +17,7 @@ class CanProduceMessages(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def username_key(self):
+    def username_key(self) -> str:
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -26,7 +26,7 @@ class CanProduceMessages(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def validate_params(cls, params: Union[Dict, JSONField]):
+    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
         raise NotImplementedError
 
 
@@ -37,16 +37,16 @@ class CanConsumeMessages(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def username_key(self):
+    def username_key(self) -> str:
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def consume_messages(self, messages: List[Message]):
+    async def consume_messages(self, messages: List[Message]) -> None:
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
-    def validate_params(cls, params: Union[Dict, JSONField]):
+    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
         raise NotImplementedError
 
 
