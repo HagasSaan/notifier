@@ -15,23 +15,10 @@ class TestProducer(MessageProducer):
     field_1: str
     field_2: int
 
-    @property
-    def username_key(self) -> str:
-        return 'test_producer'
+    username_key = 'test_producer'
 
     async def produce_messages(self) -> List[Message]:
-        return [
-            Message(
-                sender='user1',
-                receiver='user2',
-                content='content from user1 to user2',
-            ),
-            Message(
-                sender='user2',
-                receiver='user1',
-                content='content from user2 to user1',
-            ),
-        ]
+        pass
 
     @classmethod
     def validate_params(cls, params: Union[Dict, JSONField]) -> None:

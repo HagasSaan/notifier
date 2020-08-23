@@ -19,14 +19,12 @@ class TelegramGroupChat(Chat):
     bot_token: str
     chat_id: int
 
+    username_key = 'telegram_username'
+
     CHAT_NOT_FOUND = 'chat not found'
 
     def __post_init__(self):
         self._bot = telebot.AsyncTeleBot(self.bot_token)
-
-    @property
-    def username_key(self) -> str:
-        return 'telegram_username'
 
     @classmethod
     def validate_params(cls, params: Union[Dict, JSONField]) -> None:
@@ -73,10 +71,7 @@ class TelegramGroupChat(Chat):
 @Registry.register(CONSUMER_REGISTRY_NAME)
 @dataclasses.dataclass
 class TelegramChat(Chat):
-
-    @property
-    def username_key(self) -> str:
-        return 'telegram_user_chat_id'
+    username_key = 'telegram_user_chat_id'
 
     @classmethod
     def validate_params(cls, params: Union[Dict, JSONField]) -> None:

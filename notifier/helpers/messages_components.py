@@ -14,11 +14,7 @@ class Message:
 
 
 class MessageProducer(abc.ABC):
-
-    @property
-    @abc.abstractmethod
-    def username_key(self) -> str:
-        raise NotImplementedError
+    username_key = 'undefined'
 
     @abc.abstractmethod
     async def produce_messages(self) -> List[Message]:
@@ -34,11 +30,7 @@ PRODUCER_REGISTRY_NAME = 'Producer'
 
 
 class MessageConsumer(abc.ABC):
-
-    @property
-    @abc.abstractmethod
-    def username_key(self) -> str:
-        raise NotImplementedError
+    username_key = 'undefined'
 
     @abc.abstractmethod
     async def consume_messages(self, messages: List[Message]) -> None:

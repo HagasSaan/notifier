@@ -15,9 +15,7 @@ class TestConsumer(MessageConsumer):
     field_1: str
     field_2: int
 
-    @property
-    def username_key(self) -> str:
-        return 'test_consumer'
+    username_key = 'test_consumer'
 
     async def consume_messages(self, messages: List[Message]) -> None:
         pass

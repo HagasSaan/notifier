@@ -9,10 +9,7 @@ from .chats_base import Chat
 @Registry.register(CONSUMER_REGISTRY_NAME)
 @dataclasses.dataclass
 class GoogleChat(Chat):
-
-    @property
-    def username_key(self) -> str:
-        return 'google_username'
+    username_key = 'google_username'
 
     async def consume_messages(self, messages: List[Message]) -> None:
         pass

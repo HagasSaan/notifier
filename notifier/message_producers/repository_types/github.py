@@ -57,15 +57,13 @@ class GithubRepository(Repository):
     name: str
     token: str
 
+    username_key = 'github_username'
+
     URL_API_GITHUB = 'https://api.github.com'
     URL_REPOSITORY = URL_API_GITHUB + '/repos/{repository}'
     URL_PULLS = URL_REPOSITORY + '/pulls'
 
     BAD_CREDENTIALS_MESSAGE = 'Bad credentials'
-
-    @property
-    def username_key(self) -> str:
-        return 'github_username'
 
     @classmethod
     def validate_params(cls, params: Union[Dict, JSONField]) -> None:
