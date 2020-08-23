@@ -6,7 +6,7 @@ Notifier with producers and consumers
 
 
 TODO:
-- [ ] Покрыть тестами configuration
+- [x] Покрыть тестами configuration
 - [ ] Допокрыть тестами github producer
 - [x] Прикрутить консьюмер(telegram)
 - [x] Прикрутить celery tasks
