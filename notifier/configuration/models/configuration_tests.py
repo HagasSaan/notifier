@@ -83,7 +83,7 @@ def test_run_configuration(
         Message(
             user1.username,
             user_without_consumer_username.username,
-            'message to user without consumer username'
+            'message to user without consumer username',
         ),
     ]
 
