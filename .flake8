@@ -33,3 +33,5 @@ ignore =
     ANN102  # typing for cls
     S101    # use of assert
     ANN204  # return type annotation for special methods
+    W503    # line break before binary operator
+    W504    # line break after binary operator
