@@ -19,7 +19,7 @@ from message_producers.factories import TestProducer
         {'producer': None, 'consumer': None},
         {'producer': None},
         {'consumer': None},
-    ]
+    ],
 )
 def test_run_configuration_raises_error_if_consumer_or_producer_not_specified(
     db: MockFixture,

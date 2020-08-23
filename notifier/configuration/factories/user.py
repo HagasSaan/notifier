@@ -10,8 +10,8 @@ from message_producers.factories import TestProducer
 class UserFactory(factory.django.DjangoModelFactory):
     username = factory.LazyAttribute(
         lambda _: factory.Faker(
-            'profile', fields=['username']
-        ).generate()['username']
+            'profile', fields=['username'],
+        ).generate()['username'],
     )
 
     status = models.User.DEVELOPER_STATUS
@@ -20,7 +20,7 @@ class UserFactory(factory.django.DjangoModelFactory):
         {
             TestProducer.username_key: factory.SelfAttribute('..username'),
             TestConsumer.username_key: factory.SelfAttribute('..username'),
-        }
+        },
     )
     working_time_start = datetime.now().time()
     working_time_end = datetime.now().time()
