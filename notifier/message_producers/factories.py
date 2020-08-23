@@ -39,14 +39,12 @@ class TestProducer(MessageProducer):
 
 
 class ProducerModelFactory(factory.django.DjangoModelFactory):
-    name = factory.Sequence(lambda n: f'producer_model_{n}')
-    object_type = factory.Sequence(lambda _: TestProducer.__name__)
-    parameters = factory.Sequence(
-        lambda _: {
-            name: type_(1234)
-            for (name, type_) in TestProducer.__annotations__.items()
-        },
-    )
+    name = f'producer_model_{TestProducer.__name__}'
+    object_type = TestProducer.__name__
+    parameters = {
+        name: type_(1234)
+        for (name, type_) in TestProducer.__annotations__.items()
+    }
 
     class Meta:
         model = models.ProducerModel

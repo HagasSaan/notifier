@@ -16,15 +16,9 @@ class User(AbstractUser):
 
     status = models.CharField(choices=STATUS_CHOICES, max_length=20)
     on_leave = models.BooleanField(default=False)
-
     additional_info = models.JSONField(default=None, null=True, blank=True)
-
-    working_time_start = models.TimeField(
-        default=datetime.now,
-    )
-    working_time_end = models.TimeField(
-        default=datetime.now,
-    )
+    working_time_start = models.TimeField(default=datetime.now)
+    working_time_end = models.TimeField(default=datetime.now)
 
     @property
     def is_working_time(self) -> bool:

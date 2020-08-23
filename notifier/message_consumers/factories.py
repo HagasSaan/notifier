@@ -28,14 +28,12 @@ class TestConsumer(MessageConsumer):
 
 
 class ConsumerModelFactory(factory.django.DjangoModelFactory):
-    name = factory.Sequence(lambda n: f'consumer_model_{n}')
-    object_type = factory.Sequence(lambda _: TestConsumer.__name__)
-    parameters = factory.Sequence(
-        lambda _: {
-            name: type_(1234)
-            for (name, type_) in TestConsumer.__annotations__.items()
-        },
-    )
+    name = f'consumer_model_{TestConsumer.__name__}'
+    object_type = TestConsumer.__name__
+    parameters = {
+        name: type_(1234)
+        for (name, type_) in TestConsumer.__annotations__.items()
+    }
 
     class Meta:
         model = models.ConsumerModel
