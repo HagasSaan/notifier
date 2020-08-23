@@ -37,6 +37,7 @@ flake8-print==3.1.4
 flake8-quotes==3.2.0
 flake8-string-format==0.3.0
 flake8-variables-names==0.0.3
+freezegun==0.3.15
 future==0.18.2
 gitdb==4.0.5
 GitPython==3.1.7

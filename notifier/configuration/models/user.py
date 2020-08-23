@@ -26,7 +26,13 @@ class User(AbstractUser):
             return False
 
         now = datetime.now().time()
-        if not (self.working_time_start <= now <= self.working_time_end):
-            return False
+        if self.working_time_start <= now <= self.working_time_end:
+            return True
 
-        return True
+        if (
+            self.working_time_start > self.working_time_end
+            and not (self.working_time_end <= now <= self.working_time_start)
+        ):
+            return True
+
+        return False
