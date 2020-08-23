@@ -60,6 +60,13 @@ def test_run_configuration(
         working_time_start=datetime.time(8, 0, 0),
         working_time_end=datetime.time(17, 0, 0),
     )
+    user_without_consumer_username = UserFactory(
+        on_leave=False,
+        working_time_start=datetime.time(8, 0, 0),
+        working_time_end=datetime.time(17, 0, 0),
+    )
+    user_without_consumer_username.additional_info.pop(TestConsumer.username_key)
+    user_without_consumer_username.save()
 
     skip_keyword = SkipKeywordFactory()
 
@@ -72,6 +79,12 @@ def test_run_configuration(
         Message(user2.username, user_not_working.username, 'message to not working user'),
         Message(user2.username, user1.username, f'message with {skip_keyword.word}'),
         Message(user2.username, user_not_in_config.username, 'messsage to not in config user'),
+        Message('unknown_user', user1.username, 'message from unknown user'),
+        Message(
+            user1.username,
+            user_without_consumer_username.username,
+            'message to user without consumer username'
+        ),
     ]
 
     mocker.patch.object(TestProducer, 'produce_messages', return_value=fake_messages)
@@ -79,7 +92,7 @@ def test_run_configuration(
     consume_messages_spy = mocker.spy(TestConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
-        users=(user1, user2, user_not_working),
+        users=(user1, user2, user_not_working, user_without_consumer_username),
         skip_keywords=(skip_keyword,),
     )
 
