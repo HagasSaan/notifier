@@ -11,6 +11,7 @@ from configuration.factories import (
     UserFactory,
 )
 from helpers.messages_components import Message
+from message_consumers.factories import TestConsumer
 from message_producers.factories import TestProducer
 
 
@@ -62,9 +63,12 @@ def test_run_configuration(
 
     skip_keyword = SkipKeywordFactory()
 
-    fake_messages = [
+    messages_should_be_consumed = [
         Message(user1.username, user2.username, 'message1'),
         Message(user2.username, user1.username, 'message2'),
+    ]
+
+    fake_messages = messages_should_be_consumed + [
         Message(user2.username, user_not_working.username, 'message to not working user'),
         Message(user2.username, user1.username, f'message with {skip_keyword.word}'),
         Message(user2.username, user_not_in_config.username, 'messsage to not in config user'),
@@ -72,9 +76,13 @@ def test_run_configuration(
 
     mocker.patch.object(TestProducer, 'produce_messages', return_value=fake_messages)
 
+    consume_messages_spy = mocker.spy(TestConsumer, 'consume_messages')
+
     configuration = ConfigurationFactory(
         users=(user1, user2, user_not_working),
         skip_keywords=(skip_keyword,),
     )
 
     configuration.run()
+
+    assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
