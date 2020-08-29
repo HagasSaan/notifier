@@ -10,13 +10,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import JSONField
 
 from helpers.initable import Initable
-from helpers.messages_components import PRODUCER_REGISTRY_NAME, Message
+from helpers.messages_components import PRODUCER_REGISTRY_NAME, Message, MessageProducer
 from helpers.registry import Registry
-
-from .repositories_base import (
-    Repository,
-    PullRequest,
-)
 
 logger = structlog.get_logger(__name__)
 
@@ -38,7 +33,7 @@ class GithubLabel(Initable):
         return self.name
 
 
-class GithubPullRequest(PullRequest):
+class GithubPullRequest(Initable):
     url: str
     html_url: str
     title: str
@@ -53,7 +48,7 @@ class GithubPullRequest(PullRequest):
 
 @Registry.register(PRODUCER_REGISTRY_NAME)
 @dataclasses.dataclass
-class GithubRepository(Repository):
+class GithubRepository(MessageProducer):
     name: str
     token: str
 

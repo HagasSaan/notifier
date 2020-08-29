@@ -1,1 +1,5 @@
-from .repository_types import *  # noqa F403, F403
+from .github import GithubRepository
+
+__all__ = (
+    'GithubRepository',
+)

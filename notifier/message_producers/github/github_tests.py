@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from pytest_mock import MockFixture
 
 from helpers.messages_components import Message
-from message_producers.repository_types.github import GithubRepository
+from .github import GithubRepository
 
 
 @pytest.fixture

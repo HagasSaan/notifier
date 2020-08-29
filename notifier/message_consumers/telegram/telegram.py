@@ -8,14 +8,13 @@ from django.core.exceptions import ValidationError
 from django.db.models import JSONField
 from telebot.util import AsyncTask
 
-from helpers.messages_components import CONSUMER_REGISTRY_NAME, Message
+from helpers.messages_components import CONSUMER_REGISTRY_NAME, Message, MessageConsumer
 from helpers.registry import Registry
-from .chats_base import Chat
 
 
 @Registry.register(CONSUMER_REGISTRY_NAME)
 @dataclasses.dataclass
-class TelegramGroupChat(Chat):
+class TelegramGroupChat(MessageConsumer):
     bot_token: str
     chat_id: int
 
@@ -70,7 +69,7 @@ class TelegramGroupChat(Chat):
 
 @Registry.register(CONSUMER_REGISTRY_NAME)
 @dataclasses.dataclass
-class TelegramChat(Chat):
+class TelegramChat(MessageConsumer):
     username_key = 'telegram_user_chat_id'
 
     @classmethod

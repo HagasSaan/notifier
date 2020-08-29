@@ -1,14 +1,20 @@
 import dataclasses
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Union
 
-from helpers.messages_components import CONSUMER_REGISTRY_NAME, Message
+from django.db.models import JSONField
+
+from helpers.messages_components import CONSUMER_REGISTRY_NAME, Message, MessageConsumer
 from helpers.registry import Registry
-from .chats_base import Chat
 
 
 @Registry.register(CONSUMER_REGISTRY_NAME)
 @dataclasses.dataclass
-class GoogleChat(Chat):
+class GoogleChat(MessageConsumer):
+
+    @classmethod
+    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+        pass
+
     username_key = 'google_username'
 
     async def consume_messages(self, messages: List[Message]) -> None:
