@@ -1,4 +1,4 @@
-name: Python application
+name: Testing on bare metal
 
 on:
   push:
