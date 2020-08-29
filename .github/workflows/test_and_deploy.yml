@@ -1,4 +1,4 @@
-name: Testing on bare metal
+name: Test and deploy
 
 on:
   push:
@@ -7,10 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  testing_stage:
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres
@@ -40,7 +38,7 @@ jobs:
       run: |
         echo "::set-output name=dir::$(pip cache dir)"
 
-    - name: pip cache
+    - name: Restore pip cache
       uses: actions/cache@v2
       with:
         path: ${{ steps.pip-cache.outputs.dir }}
@@ -69,3 +67,8 @@ jobs:
 
     - name: Lint with flake8
       run: flake8
+
+#  TODO: push to dockerhub?
+#  deploy_stage:
+#    needs: testing_stage
+#    runs-on: ubuntu-latest
