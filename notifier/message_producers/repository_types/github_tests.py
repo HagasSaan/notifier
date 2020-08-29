@@ -23,7 +23,7 @@ def m_pulls_fixture() -> bytes:
         (
             os.path.dirname(os.path.abspath(__file__)) +
             '/github_pulls_fixture.json'
-        ), 'rb'
+        ), 'rb',
     ) as fixture:
         yield fixture.read()
 
@@ -79,7 +79,7 @@ async def test_github_produce_messages(
                 'IMD-8404: Facebook limit error '
                 '(https://github.com/tekliner/dsas/pull/3045)\n'
                 'Labels: Facebook'
-            )
+            ),
         ),
         Message(
             sender='comeuplater',
@@ -88,8 +88,8 @@ async def test_github_produce_messages(
                 'IMD-8404: Facebook limit error '
                 '(https://github.com/tekliner/dsas/pull/3045)\n'
                 'Labels: Facebook'
-            )
-        )
+            ),
+        ),
     }
 
 
