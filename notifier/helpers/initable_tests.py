@@ -80,7 +80,9 @@ def test_init_complex_class_without_required_args() -> None:
 class InitableClassWithTypingsForTests(Initable):
     field_1: List[str]
     field_2: List[InitableClassForTests]
-    # field_3: Dict[Any, Any]  # Not yet  # noqa: E800
+    # field_3: Dict[Any, Any]   # Not yet  # noqa: E800
+    # field_4: Optional[Any]    # Not yet  # noqa: E800
+    # field_4: Set[Any]         # Not yet  # noqa: E800
 
 
 def test_init_class_with_typings() -> None:

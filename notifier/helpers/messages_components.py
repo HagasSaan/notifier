@@ -12,6 +12,14 @@ class Message:
     receiver: Union[str, 'User']  # noqa F821
     content: Any
 
+    def __hash__(self):
+        # TODO: do it in cycle, cuz new field can be added
+        return (
+            hash(self.sender)
+            + hash(self.receiver)
+            + hash(self.content)
+        )
+
 
 class MessageProducer(abc.ABC):
     username_key = 'undefined'

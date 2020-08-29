@@ -8,8 +8,7 @@ from helpers.registry import (
 
 
 class RegisterTestClass:
-    def method(self) -> str:
-        return self.__class__.__name__
+    pass
 
 
 @pytest.fixture
@@ -68,8 +67,7 @@ def test_get_class_which_not_added_raises_error(
 def test_class_decorator() -> None:
     @Registry.register('Test')
     class RegisterTestClassDecorated:
-        def method(self) -> str:
-            return self.__class__.__name__
+        pass
 
     registry = Registry('Test')
 
