@@ -21,6 +21,7 @@ class Message:
         )
 
 
+@dataclasses.dataclass
 class MessageProducer(abc.ABC):
     username_key = 'undefined'
 
@@ -37,6 +38,7 @@ class MessageProducer(abc.ABC):
 PRODUCER_REGISTRY_NAME = 'Producer'
 
 
+@dataclasses.dataclass
 class MessageConsumer(abc.ABC):
     username_key = 'undefined'
 
