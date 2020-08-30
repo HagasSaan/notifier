@@ -5,6 +5,7 @@ exclude =
     __pycache__
     migrations
     manage.py
+    schema.py
 
 dlint = ["+*"]  # https://github.com/duo-labs/dlint/tree/master/docs
 flake8-annotations = ["+*",]  # https://github.com/python-discord/flake8-annotations
