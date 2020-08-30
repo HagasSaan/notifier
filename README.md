@@ -24,6 +24,7 @@ TODO:
     - [ ] Прикрутить запуск конфигураций с помощью API
     - [ ] Включить линтер на файлы schema.py
     - [ ] Покрыть это всё тестами
+    - [ ] Посмотреть в сторону ![оптимизации запросов](https://github.com/tfoxy/graphene-django-optimizer)
 - [ ] Собрать весь CI/CD пайплайн на Github Actions (желательно всё завернуть в контейнеры, даже тестирование на GA ![link](https://github.community/t/how-to-use-docker-compose-with-github-actions/16850/3))
     - [x] Прикрутить линтер
     - [ ] Добавить выгрузку контейнера после тестов на Dockerhub
