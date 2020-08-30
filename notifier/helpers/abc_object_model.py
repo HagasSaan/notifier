@@ -39,7 +39,7 @@ class ABCObjectModel(models.Model):
         )
         try:
             class_.validate_params(self.parameters)
-        except TypeError as e:
+        except Exception as e:
             required_fields = '\t\n'.join(
                 [
                     f'{name}:{type_}'

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
     'django_json_widget',
     'django_celery_results',
     'configuration',
@@ -146,3 +147,9 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'interval_max': 0.5,
 }
 CELERY_RESULT_BACKEND = 'django-db'
+
+USE_GRAPHIQL_INTERFACE = True
+
+GRAPHENE = {
+    "SCHEMA": "notifier.schema.schema"
+}
