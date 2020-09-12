@@ -63,6 +63,7 @@ class Configuration(models.Model):
             messages,
             producer,
         )
+        # TODO: Move filters to their own class and make them pluggable
         messages = self._filter_messages_where_receiver_not_in_config(messages)
         messages = self._filter_messages_where_receiver_is_not_working(messages)
         messages = self._filter_messages_with_skip_keywords(messages)
