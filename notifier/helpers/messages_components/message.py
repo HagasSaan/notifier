@@ -4,6 +4,11 @@ from typing import Any
 
 @dataclasses.dataclass
 class ExternalMessage:
+    """
+    That type of message used by consumers and producers
+    Sender and receiver as strings represent usernames in
+    consumer/producer scope
+    """
     sender: str
     receiver: str
     content: Any
