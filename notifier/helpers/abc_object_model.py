@@ -3,10 +3,9 @@ from typing import Union, Any, Optional
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from helpers.messages_components import MessageProducer
-
 from helpers.registry import Registry
 from message_consumers.consumers.message_consumer import MessageConsumer
+from message_producers.producers.message_producer import MessageProducer
 
 
 class ABCObjectModel(models.Model):
