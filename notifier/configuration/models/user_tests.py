@@ -97,7 +97,7 @@ def test_get_consumer_username(
     default_user: User,
 ) -> None:
     assert default_user.get_consumer_username(
-        TestConsumer.username_key
+        TestConsumer.username_key,
     ) == default_user.username
 
 
@@ -109,6 +109,6 @@ def test_get_consumer_username_raises_error_if_user_without_consumer_username(
         match=(
             f'User {default_user.username} does not contain data '
             f'about fake_consumer_username_key scope'
-        )
+        ),
     ):
         default_user.get_consumer_username('fake_consumer_username_key')

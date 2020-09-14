@@ -6,5 +6,5 @@ from . import Message
 
 class AbstractMessageFilter(abc.ABC):
     @abc.abstractmethod
-    def filter(self, messages: List[Message]):
+    def __call__(self, messages: List[Message], *args, **kwargs) -> List[Message]:
         ...
