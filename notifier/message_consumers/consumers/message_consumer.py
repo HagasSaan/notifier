@@ -1,23 +1,15 @@
 import abc
-import dataclasses
-from typing import List, Union, Dict
-
-from django.forms import JSONField
+from typing import List
 
 from helpers.messages_components import Message
+from helpers.traits import Validatable
 
 
-@dataclasses.dataclass
-class MessageConsumer(abc.ABC):
+class MessageConsumer(Validatable, abc.ABC):
     username_key = 'undefined'
 
     @abc.abstractmethod
     async def consume_messages(self, messages: List[Message]) -> None:
-        raise NotImplementedError
-
-    @classmethod
-    @abc.abstractmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
         raise NotImplementedError
 
 

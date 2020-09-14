@@ -2,7 +2,7 @@ from typing import List
 
 import pytest
 
-from helpers.initable import Initable
+from helpers.traits import Initable
 
 
 class InitableClassForTests(Initable):

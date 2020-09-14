@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 from helpers.registry import Registry
+from helpers.traits import Validatable
 from message_consumers.consumers.message_consumer import MessageConsumer
 from message_producers.producers.message_producer import MessageProducer
 
@@ -35,28 +36,24 @@ class ABCObjectModel(models.Model):
         using: Optional[Any] = None,
         update_fields: Optional[Any] = None,
     ) -> None:
-        # TODO: need to specify which type of class it is. Validatable?)
-        class_: Union[MessageConsumer, MessageProducer, 'MessageFilterModel'] = (
-            self.DEFAULT_REGISTRY.get(self.object_type)
-        )
-        try:
-            class_.validate_params(self.parameters)
-        except Exception as e:
-            # TODO: Specify exceptions
-            # Now it masks exceptions of attributes of classes
-            # Or run validate_params only if method exists
-            # Or run if it dataclass or subclass of MC, MP
-            required_fields = '\t\n'.join(
-                [
-                    f'{name}:{type_}'
-                    for name, type_ in class_.__annotations__.items()
-                ],
-            )
-            raise ValidationError(
-                f'Error: {e}\n'
-                f'Required fields for {self.object_type} is: \n'
-                f'\t{required_fields}',
-            )
+        class_ = self.DEFAULT_REGISTRY.get(self.object_type)
+        if isinstance(class_, Validatable):
+            try:
+                class_.validate_params(self.parameters)
+            except Exception as e:
+                # TODO: Specify exceptions
+                # Now it masks exceptions of attributes of classes
+                required_fields = '\t\n'.join(
+                    [
+                        f'{name}:{type_}'
+                        for name, type_ in class_.__annotations__.items()
+                    ],
+                )
+                raise ValidationError(
+                    f'Error: {e}\n'
+                    f'Required fields for {self.object_type} is: \n'
+                    f'\t{required_fields}',
+                )
         super().save(
             force_insert=force_insert,
             force_update=force_update,

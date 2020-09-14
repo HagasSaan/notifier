@@ -7,8 +7,11 @@ from django.utils.functional import cached_property
 
 from configuration.models import SkipKeyword, User, MessageFilterModel
 from helpers.messages_components import Message
-from helpers.messages_components.message_filters import SkipKeywordsMessageFilter, ReceiverExistsMessageFilter, \
-    ReceiverWorkingMessageFilter
+from helpers.messages_components.message_filters import (
+    SkipKeywordsMessageFilter,
+    ReceiverExistsMessageFilter,
+    ReceiverWorkingMessageFilter,
+)
 from message_consumers.consumers.message_consumer import MessageConsumer, CONSUMER_REGISTRY_NAME
 from message_consumers.models import ConsumerModel
 from message_producers.models import ProducerModel

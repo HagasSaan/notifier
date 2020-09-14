@@ -8,7 +8,7 @@ import structlog
 from django.core.exceptions import ValidationError
 from django.db.models import JSONField
 
-from helpers.initable import Initable
+from helpers.traits import Initable
 from helpers.registry import Registry
 from ..message_producer import PRODUCER_REGISTRY_NAME, Message, MessageProducer
 

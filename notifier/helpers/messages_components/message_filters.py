@@ -1,8 +1,5 @@
 import abc
-import dataclasses
-from typing import List, Any, Dict, Union
-
-from django.forms import JSONField
+from typing import List, Any, Dict
 
 from . import Message
 from ..registry import Registry
@@ -18,11 +15,6 @@ class BaseMessageFilter(abc.ABC):
         **kwargs: Dict[str, Any],
     ) -> List[Message]:
         ...
-
-    # TODO: remove that stub when abc_object_model stops check everything
-    @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
-        pass
 
 
 @Registry.register(MESSAGE_FILTER_REGISTRY_NAME)

@@ -1,3 +1,4 @@
+import abc
 from typing import get_origin, get_args, Any, Dict, List, Type
 
 
@@ -5,7 +6,7 @@ class InitError(Exception):
     pass
 
 
-class Initable:
+class Initable(abc.ABC):
     def __init__(self, kwargs: Dict[str, Any]):
         fields = self.__annotations__.items()
         for key, type_ in fields:
