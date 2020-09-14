@@ -25,8 +25,8 @@ class ExternalMessage:
 @dataclasses.dataclass
 class InternalMessage:
     # TODO: get normal typing from config user
-    sender: 'User'
-    receiver: 'User'
+    sender: 'User'  # noqa F821
+    receiver: 'User'  # noqa F821
     content: Any
 
     def __hash__(self):

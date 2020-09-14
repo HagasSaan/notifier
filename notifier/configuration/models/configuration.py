@@ -101,7 +101,7 @@ class Configuration(models.Model):
                             producer_username_key,
                         ),
                         content=message.content,
-                    )
+                    ),
                 )
             except User.DoesNotExist as e:
                 logger.warning(f'Error: {e}')
@@ -127,7 +127,7 @@ class Configuration(models.Model):
                             consumer_username_key,
                         ),
                         content=message.content,
-                    )
+                    ),
                 )
             except KeyError as e:
                 logger.warning(f'Error: {e}')

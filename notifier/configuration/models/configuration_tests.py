@@ -171,7 +171,11 @@ def test_run_configuration_should_filter_message_if_user_not_in_config(
     )
 
     fake_messages = messages_should_be_consumed + [
-        ExternalMessage(user2.username, user_not_in_config.username, 'message to not in config user'),
+        ExternalMessage(
+            user2.username,
+            user_not_in_config.username,
+            'message to not in config user'
+        ),
     ]
 
     mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
