@@ -63,7 +63,7 @@ class Configuration(models.Model):
         messages = self._filter_messages_where_receiver_is_not_working(messages)
         messages = self._filter_messages_with_skip_keywords(
             messages,
-            skip_keywords=self.skip_keywords,
+            skip_keywords=self.skip_keywords_list,
         )
         messages = self._translate_message_users_from_users_into_consumer(
             messages,
