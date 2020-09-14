@@ -1,1 +1,1 @@
-from .producers import *
+from .producers import *  # noqa

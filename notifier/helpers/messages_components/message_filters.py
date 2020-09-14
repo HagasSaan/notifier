@@ -21,6 +21,6 @@ class SkipKeywordsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[Message],
-        **kwargs: Dict[str, Any]
+        **kwargs: Dict[str, Any],
     ) -> List[Message]:
         pass

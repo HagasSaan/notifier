@@ -1,8 +1,6 @@
 import abc
 import dataclasses
-from typing import List, Union, Dict
-
-from django.db.models import JSONField
+from typing import List
 
 from helpers.messages_components import Message
 
