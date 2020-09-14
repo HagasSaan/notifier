@@ -15,10 +15,5 @@ class MessageConsumer(abc.ABC):
     async def consume_messages(self, messages: List[Message]) -> None:
         raise NotImplementedError
 
-    @classmethod
-    @abc.abstractmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
-        raise NotImplementedError
-
 
 CONSUMER_REGISTRY_NAME = 'Consumer'

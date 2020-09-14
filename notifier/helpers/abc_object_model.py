@@ -1,7 +1,9 @@
-from typing import Union, Any, Optional
+import abc
+from typing import Union, Any, Optional, Dict
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.forms import JSONField
 
 from helpers.registry import Registry
 from message_consumers.consumers.message_consumer import MessageConsumer
@@ -35,7 +37,7 @@ class ABCObjectModel(models.Model):
         using: Optional[Any] = None,
         update_fields: Optional[Any] = None,
     ) -> None:
-        class_: Union[MessageProducer, MessageConsumer] = (
+        class_: 'ABCObjectModel' = (
             self.DEFAULT_REGISTRY.get(self.object_type)
         )
         try:
@@ -67,3 +69,7 @@ class ABCObjectModel(models.Model):
         class_ = registry.get(self.object_type)
         object_ = class_(**self.parameters)
         return object_
+
+    @classmethod
+    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+        raise NotImplementedError

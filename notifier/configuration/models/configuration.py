@@ -5,8 +5,7 @@ import structlog
 from django.db import models
 from django.utils.functional import cached_property
 
-from configuration.models import SkipKeyword, User
-from configuration.models.message_filter import MessageFilter
+from configuration.models import SkipKeyword, User, MessageFilterModel
 from helpers.messages_components import Message
 from message_consumers.consumers.message_consumer import MessageConsumer, CONSUMER_REGISTRY_NAME
 from message_consumers.models import ConsumerModel
@@ -30,7 +29,7 @@ class Configuration(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    message_filters = models.ManyToManyField(MessageFilter)
+    message_filters = models.ManyToManyField(MessageFilterModel)
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.name}'

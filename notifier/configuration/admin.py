@@ -6,7 +6,7 @@ from django_json_widget.widgets import JSONEditorWidget
 from django.db import models
 from requests import Request
 
-from .models import User, SkipKeyword, Configuration
+from .models import User, SkipKeyword, Configuration, MessageFilterModel
 from .tasks import run_configuration
 
 logger = structlog.get_logger(__name__)
@@ -52,3 +52,8 @@ class ConfigurationAdmin(admin.ModelAdmin):
             run_configuration.delay(configuration.id)
 
     run_configurations.short_description = 'Run selected configurations'
+
+
+@admin.register(MessageFilterModel)
+class MessageFilterModelAdmin(admin.ModelAdmin):
+    list_display = ('name', )
