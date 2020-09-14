@@ -8,8 +8,11 @@ from pytest_mock import MockFixture
 from configuration.factories import UserFactory, SkipKeywordFactory, ConfigurationFactory
 from configuration.models import User
 from . import InternalMessage
-from .message_filters import SkipKeywordsMessageFilter, ReceiverExistsMessageFilter
-
+from .message_filters import (
+    SkipKeywordsMessageFilter,
+    ReceiverExistsMessageFilter,
+    ReceiverWorkingMessageFilter,
+)
 
 @pytest.fixture
 def setup(db: MockFixture) -> Tuple[User, User, List[InternalMessage]]:
@@ -100,7 +103,7 @@ def test_receiver_working_filter(
         users=(user1, user2, user_not_working,),
     )
 
-    assert messages_should_be_consumed == ReceiverExistsMessageFilter()(
+    assert messages_should_be_consumed == ReceiverWorkingMessageFilter()(
         fake_messages,
         configuration,
     )
