@@ -71,7 +71,7 @@ def test_receiver_exists_filter(
     ]
 
     configuration = ConfigurationFactory(
-        users=(user1, user2, user_not_in_config,),
+        users=(user1, user2,),
     )
 
     assert messages_should_be_consumed == ReceiverExistsMessageFilter()(
