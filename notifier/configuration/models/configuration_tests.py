@@ -184,7 +184,7 @@ def test_run_configuration_should_filter_message_if_user_not_in_config(
         ExternalMessage(
             user2.username,
             user_not_in_config.username,
-            'message to not in config user'
+            'message to not in config user',
         ),
     ]
 

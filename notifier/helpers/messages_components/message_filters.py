@@ -11,7 +11,7 @@ class BaseMessageFilter(abc.ABC):
     def __call__(
         self,
         messages: List[InternalMessage],
-        configuration: 'Configuration',
+        configuration: 'Configuration',  # noqa F821
     ) -> List[InternalMessage]:
         ...
 
@@ -21,7 +21,7 @@ class SkipKeywordsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        configuration: 'Configuration',
+        configuration: 'Configuration',  # noqa F821
     ) -> List[InternalMessage]:
         return [
             message
@@ -38,7 +38,7 @@ class ReceiverExistsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        configuration: 'Configuration',
+        configuration: 'Configuration',  # noqa F821
     ) -> List[InternalMessage]:
         return [
             message
@@ -52,7 +52,7 @@ class ReceiverWorkingMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        configuration: 'Configuration',
+        configuration: 'Configuration',  # noqa F821
     ) -> List[InternalMessage]:
         return [
             message

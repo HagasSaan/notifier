@@ -44,7 +44,7 @@ def test_skip_messages_filter(
     skip_keyword = SkipKeywordFactory()
 
     configuration = ConfigurationFactory(
-        users=(user1, user2,),
+        users=(user1, user2),
         skip_keywords=(skip_keyword,),
     )
 
@@ -75,7 +75,7 @@ def test_receiver_exists_filter(
     ]
 
     configuration = ConfigurationFactory(
-        users=(user1, user2,),
+        users=(user1, user2),
     )
 
     assert messages_should_be_consumed == ReceiverExistsMessageFilter()(
@@ -101,7 +101,7 @@ def test_receiver_working_filter(
     ]
 
     configuration = ConfigurationFactory(
-        users=(user1, user2, user_not_working,),
+        users=(user1, user2, user_not_working),
     )
 
     assert messages_should_be_consumed == ReceiverWorkingMessageFilter()(

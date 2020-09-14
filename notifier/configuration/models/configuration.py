@@ -57,10 +57,6 @@ class Configuration(models.Model):
         consumer: MessageConsumer = self.consumer.get_object_by_registry_name(
             CONSUMER_REGISTRY_NAME,
         )
-        message_filters = [
-            message_filter.get_object_by_registry_name(MESSAGE_FILTER_REGISTRY_NAME)
-            for message_filter in self.message_filters.all()
-        ]
         # TODO: Maybe run as task?
         messages = asyncio.run(producer.produce_messages())
         logger.info('Got messages', messages=messages)
@@ -69,6 +65,11 @@ class Configuration(models.Model):
             producer,
         )
         # TODO: Move filters to their own class and make them pluggable
+        message_filters = [
+            message_filter.get_object_by_registry_name(MESSAGE_FILTER_REGISTRY_NAME)
+            for message_filter in self.message_filters.all()
+        ]
+
         messages = ReceiverExistsMessageFilter()(messages, self)
         messages = ReceiverWorkingMessageFilter()(messages, self)
         messages = SkipKeywordsMessageFilter()(messages, self)
