@@ -4,9 +4,10 @@ from typing import Union, Dict, List
 import factory
 from django.db.models import JSONField
 
-from helpers.messages_components import MessageConsumer, Message, CONSUMER_REGISTRY_NAME
+from helpers.messages_components import Message
 from helpers.registry import Registry
 from . import models
+from .consumers.message_consumer import CONSUMER_REGISTRY_NAME, MessageConsumer
 
 
 @Registry.register(CONSUMER_REGISTRY_NAME)
