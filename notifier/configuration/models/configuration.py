@@ -127,11 +127,11 @@ class Configuration(models.Model):
         result_messages = []
         for message in messages:
             try:
-                message.sender = Configuration._get_user_by_producer_username(
+                message.sender = User.get_user_by_producer_username(
                     message.sender,
                     producer_username_key,
                 )
-                message.receiver = Configuration._get_user_by_producer_username(
+                message.receiver = User.get_user_by_producer_username(
                     message.receiver,
                     producer_username_key,
                 )
@@ -151,12 +151,10 @@ class Configuration(models.Model):
         result_messages = []
         for message in messages:
             try:
-                message.sender = Configuration._get_consumer_username_by_user(
-                    message.sender,
+                message.sender = message.sender.get_consumer_username(
                     consumer_username_key,
                 )
-                message.receiver = Configuration._get_consumer_username_by_user(
-                    message.receiver,
+                message.receiver = message.receiver.get_consumer_username(
                     consumer_username_key,
                 )
                 result_messages.append(message)
@@ -164,33 +162,3 @@ class Configuration(models.Model):
                 logger.warning(f'Error: {e}')
 
         return result_messages
-
-    @staticmethod
-    def _get_user_by_producer_username(
-        username: str,
-        producer_username_key: str,
-    ) -> User:
-        try:
-            return User.objects.get(
-                additional_info__contains={
-                    producer_username_key: username,
-                },
-            )
-        except User.DoesNotExist:
-            raise User.DoesNotExist(
-                f'User with {producer_username_key}:{username} '
-                f'does not exist',
-            )
-
-    @staticmethod
-    def _get_consumer_username_by_user(
-        user: User,
-        consumer_username_key: str,
-    ) -> str:
-        try:
-            return user.additional_info[consumer_username_key]
-        except KeyError:
-            raise KeyError(
-                f'User {user.username} does not contain data '
-                f'about {consumer_username_key} scope',
-            )

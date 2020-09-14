@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-# noinspection PyTypeChecker
 class User(AbstractUser):
 
     DEVELOPER_STATUS = 'Developer'
@@ -36,3 +35,29 @@ class User(AbstractUser):
             return True
 
         return False
+
+    @staticmethod
+    def get_user_by_producer_username(
+        username: str,
+        producer_username_key: str,
+    ) -> 'User':
+        try:
+            return User.objects.get(
+                additional_info__contains={
+                    producer_username_key: username,
+                },
+            )
+        except User.DoesNotExist:
+            raise User.DoesNotExist(
+                f'User with {producer_username_key}:{username} '
+                f'does not exist',
+            )
+
+    def get_consumer_username(self, consumer_username_key: str) -> str:
+        try:
+            return self.additional_info[consumer_username_key]
+        except KeyError:
+            raise KeyError(
+                f'User {self.username} does not contain data '
+                f'about {consumer_username_key} scope',
+            )
