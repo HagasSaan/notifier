@@ -7,7 +7,8 @@ from django.utils.functional import cached_property
 
 from configuration.models import SkipKeyword, User, MessageFilterModel
 from helpers.messages_components import Message
-from helpers.messages_components.message_filters import SkipKeywordsMessageFilter
+from helpers.messages_components.message_filters import SkipKeywordsMessageFilter, ReceiverExistsMessageFilter, \
+    ReceiverWorkingMessageFilter
 from message_consumers.consumers.message_consumer import MessageConsumer, CONSUMER_REGISTRY_NAME
 from message_consumers.models import ConsumerModel
 from message_producers.models import ProducerModel
@@ -60,8 +61,11 @@ class Configuration(models.Model):
             producer,
         )
         # TODO: Move filters to their own class and make them pluggable
-        messages = self._filter_messages_where_receiver_not_in_config(messages)
-        messages = self._filter_messages_where_receiver_is_not_working(messages)
+        messages = ReceiverExistsMessageFilter()(
+            messages,
+            users=self.users.all(),
+        )
+        messages = ReceiverWorkingMessageFilter()(messages)
         messages = SkipKeywordsMessageFilter()(
             messages,
             skip_keywords=self.skip_keywords_list,
@@ -72,26 +76,6 @@ class Configuration(models.Model):
         )
         asyncio.run(consumer.consume_messages(messages))
         logger.info('Messages consumed', messages=messages)
-
-    def _filter_messages_where_receiver_not_in_config(
-        self,
-        messages: List[Message],
-    ) -> List[Message]:
-        return [
-            message
-            for message in messages
-            if message.receiver in self.users.all()
-        ]
-
-    @staticmethod
-    def _filter_messages_where_receiver_is_not_working(
-        messages: List[Message],
-    ) -> List[Message]:
-        return [
-            message
-            for message in messages
-            if message.receiver.is_working_time
-        ]
 
     @staticmethod
     def _translate_message_users_from_producer_into_users(

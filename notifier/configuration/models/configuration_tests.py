@@ -12,8 +12,8 @@ from configuration.factories import (
 )
 from configuration.models import User
 from helpers.messages_components import Message
-from message_consumers.factories import TestConsumer
-from message_producers.factories import TestProducer
+from message_consumers.factories import SampleConsumer
+from message_producers.factories import SampleProducer
 
 
 @pytest.mark.parametrize(
@@ -69,7 +69,7 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
         working_time_start=datetime.time(8, 0, 0),
         working_time_end=datetime.time(17, 0, 0),
     )
-    user_without_consumer_username.additional_info.pop(TestConsumer.username_key)
+    user_without_consumer_username.additional_info.pop(SampleConsumer.username_key)
     user_without_consumer_username.save()
 
     messages_should_be_consumed = [
@@ -85,9 +85,9 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
         ),
     ]
 
-    mocker.patch.object(TestProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
 
-    consume_messages_spy = mocker.spy(TestConsumer, 'consume_messages')
+    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
         users=(user1, user2, user_without_consumer_username),
@@ -115,9 +115,9 @@ def test_run_configuration_should_filter_message_where_receiver_is_not_working(
         Message(user2.username, user_not_working.username, 'message to not working user'),
     ]
 
-    mocker.patch.object(TestProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
 
-    consume_messages_spy = mocker.spy(TestConsumer, 'consume_messages')
+    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
         users=(user1, user2, user_not_working),
@@ -142,9 +142,9 @@ def test_run_configuration_should_filter_message_with_skip_keywords(
         Message(user2.username, user1.username, f'message with {skip_keyword.word}'),
     ]
 
-    mocker.patch.object(TestProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
 
-    consume_messages_spy = mocker.spy(TestConsumer, 'consume_messages')
+    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
         users=(user1, user2),
@@ -173,9 +173,9 @@ def test_run_configuration_should_filter_message_if_user_not_in_config(
         Message(user2.username, user_not_in_config.username, 'message to not in config user'),
     ]
 
-    mocker.patch.object(TestProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
 
-    consume_messages_spy = mocker.spy(TestConsumer, 'consume_messages')
+    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
         users=(user1, user2),
@@ -198,8 +198,8 @@ def test_run_configuration_should_filter_message_if_user_is_unknown(
         Message('unknown_user', user1.username, 'message from unknown user'),
     ]
 
-    mocker.patch.object(TestProducer, 'produce_messages', return_value=fake_messages)
-    consume_messages_spy = mocker.spy(TestConsumer, 'consume_messages')
+    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
+    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(users=(user1, user2))
     configuration.run()

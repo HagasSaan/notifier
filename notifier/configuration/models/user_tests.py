@@ -5,8 +5,8 @@ from pytest_mock import MockFixture
 
 from configuration.factories.user import UserFactory
 from configuration.models import User
-from message_consumers.factories import TestConsumer
-from message_producers.factories import TestProducer
+from message_consumers.factories import SampleConsumer
+from message_producers.factories import SampleProducer
 
 
 @pytest.fixture
@@ -72,7 +72,7 @@ def test_get_user_by_producer_username(
 ) -> None:
     user = User.get_user_by_producer_username(
         default_user.username,
-        TestProducer.username_key,
+        SampleProducer.username_key,
     )
     assert user == default_user
 
@@ -97,7 +97,7 @@ def test_get_consumer_username(
     default_user: User,
 ) -> None:
     assert default_user.get_consumer_username(
-        TestConsumer.username_key,
+        SampleConsumer.username_key,
     ) == default_user.username
 
 

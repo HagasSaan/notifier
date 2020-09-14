@@ -14,6 +14,7 @@ class BaseMessageFilter(abc.ABC):
     def __call__(
         self,
         messages: List[Message],
+        *args: List[Any],
         **kwargs: Dict[str, Any],
     ) -> List[Message]:
         ...
@@ -25,11 +26,11 @@ class BaseMessageFilter(abc.ABC):
 
 
 @Registry.register(MESSAGE_FILTER_REGISTRY_NAME)
-@dataclasses.dataclass
 class SkipKeywordsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[Message],
+        *args: List[Any],
         **kwargs: Dict[str, Any],
     ) -> List[Message]:
         return [
@@ -39,4 +40,34 @@ class SkipKeywordsMessageFilter(BaseMessageFilter):
                 skip_keyword in message.content
                 for skip_keyword in kwargs['skip_keywords']
             )
+        ]
+
+
+@Registry.register(MESSAGE_FILTER_REGISTRY_NAME)
+class ReceiverExistsMessageFilter(BaseMessageFilter):
+    def __call__(
+        self,
+        messages: List[Message],
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> List[Message]:
+        return [
+            message
+            for message in messages
+            if message.receiver in kwargs['users']
+        ]
+
+
+@Registry.register(MESSAGE_FILTER_REGISTRY_NAME)
+class ReceiverWorkingMessageFilter(BaseMessageFilter):
+    def __call__(
+        self,
+        messages: List[Message],
+        *args: List[Any],
+        **kwargs: Dict[str, Any],
+    ) -> List[Message]:
+        return [
+            message
+            for message in messages
+            if message.receiver.is_working_time
         ]

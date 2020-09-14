@@ -12,7 +12,7 @@ from .producers.message_producer import PRODUCER_REGISTRY_NAME, MessageProducer
 
 @Registry.register(PRODUCER_REGISTRY_NAME)
 @dataclasses.dataclass
-class TestProducer(MessageProducer):
+class SampleProducer(MessageProducer):
     field_1: str
     field_2: int
 
@@ -27,11 +27,11 @@ class TestProducer(MessageProducer):
 
 
 class ProducerModelFactory(factory.django.DjangoModelFactory):
-    name = f'producer_model_{TestProducer.__name__}'
-    object_type = TestProducer.__name__
+    name = f'producer_model_{SampleProducer.__name__}'
+    object_type = SampleProducer.__name__
     parameters = {
         name: type_(1234)
-        for (name, type_) in TestProducer.__annotations__.items()
+        for (name, type_) in SampleProducer.__annotations__.items()
     }
 
     class Meta:

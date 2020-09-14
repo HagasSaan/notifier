@@ -12,7 +12,7 @@ from .consumers.message_consumer import CONSUMER_REGISTRY_NAME, MessageConsumer
 
 @Registry.register(CONSUMER_REGISTRY_NAME)
 @dataclasses.dataclass
-class TestConsumer(MessageConsumer):
+class SampleConsumer(MessageConsumer):
     field_1: str
     field_2: int
 
@@ -27,11 +27,11 @@ class TestConsumer(MessageConsumer):
 
 
 class ConsumerModelFactory(factory.django.DjangoModelFactory):
-    name = f'consumer_model_{TestConsumer.__name__}'
-    object_type = TestConsumer.__name__
+    name = f'consumer_model_{SampleConsumer.__name__}'
+    object_type = SampleConsumer.__name__
     parameters = {
         name: type_(1234)
-        for (name, type_) in TestConsumer.__annotations__.items()
+        for (name, type_) in SampleConsumer.__annotations__.items()
     }
 
     class Meta:
