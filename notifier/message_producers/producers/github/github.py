@@ -10,7 +10,7 @@ from django.db.models import JSONField
 
 from helpers.traits import Initable
 from helpers.registry import Registry
-from ..message_producer import PRODUCER_REGISTRY_NAME, Message, MessageProducer
+from ..message_producer import PRODUCER_REGISTRY_NAME, ExternalMessage, MessageProducer
 
 logger = structlog.get_logger(__name__)
 
@@ -72,12 +72,12 @@ class GithubRepository(MessageProducer):
                 raise ValidationError(cls.BAD_CREDENTIALS_MESSAGE)
             raise e
 
-    async def produce_messages(self) -> List[Message]:
-        messages: List[Message] = []
+    async def produce_messages(self) -> List[ExternalMessage]:
+        messages: List[ExternalMessage] = []
         pull_requests = await self.get_pull_requests()
         for pull_request in pull_requests:
             for pull_request_assignee in pull_request.assignees:
-                message = Message(
+                message = ExternalMessage(
                     sender=pull_request.user.login,
                     receiver=pull_request_assignee.login,
                     content=(

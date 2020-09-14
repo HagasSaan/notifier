@@ -9,7 +9,7 @@ from django.db.models import JSONField
 from telebot.util import AsyncTask
 
 from helpers.registry import Registry
-from ..message_consumer import CONSUMER_REGISTRY_NAME, Message, MessageConsumer
+from ..message_consumer import CONSUMER_REGISTRY_NAME, ExternalMessage, MessageConsumer
 
 
 @Registry.register(CONSUMER_REGISTRY_NAME)
@@ -33,7 +33,7 @@ class TelegramGroupChat(MessageConsumer):
         if not isinstance(result, telebot.types.Chat):
             cls._handle_error(result)
 
-    async def consume_messages(self, messages: List[Message]) -> None:
+    async def consume_messages(self, messages: List[ExternalMessage]) -> None:
         await asyncio.gather(
             *[
                 self.send_message(message)
@@ -45,7 +45,7 @@ class TelegramGroupChat(MessageConsumer):
 
     async def send_message(
         self,
-        message: Message,
+        message: ExternalMessage,
         *args: List[Any],
         **kwargs: Dict[Any, Any],
     ) -> None:
@@ -76,12 +76,12 @@ class TelegramChat(MessageConsumer):
     def validate_params(cls, params: Union[Dict, JSONField]) -> None:
         pass
 
-    async def consume_messages(self, messages: List[Message]) -> None:
+    async def consume_messages(self, messages: List[ExternalMessage]) -> None:
         pass
 
     async def send_message(
         self,
-        message: Message,
+        message: ExternalMessage,
         *args: List[Any],
         **kwargs: Dict[Any, Any],
     ) -> None:

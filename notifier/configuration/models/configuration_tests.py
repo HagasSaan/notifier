@@ -11,7 +11,7 @@ from configuration.factories import (
     UserFactory,
 )
 from configuration.models import User
-from helpers.messages_components import Message
+from helpers.messages_components import ExternalMessage
 from message_consumers.factories import SampleConsumer
 from message_producers.factories import SampleProducer
 
@@ -37,7 +37,7 @@ def test_run_configuration_raises_error_if_consumer_or_producer_not_specified(
 
 
 @pytest.fixture
-def setup(db: MockFixture) -> Tuple[User, User, List[Message]]:
+def setup(db: MockFixture) -> Tuple[User, User, List[ExternalMessage]]:
     user1 = UserFactory(
         on_leave=False,
         working_time_start=datetime.time(8, 0, 0),
@@ -50,8 +50,8 @@ def setup(db: MockFixture) -> Tuple[User, User, List[Message]]:
     )
 
     messages_should_be_consumed = [
-        Message(user1.username, user2.username, 'message1'),
-        Message(user2.username, user1.username, 'message2'),
+        ExternalMessage(user1.username, user2.username, 'message1'),
+        ExternalMessage(user2.username, user1.username, 'message2'),
     ]
 
     return user1, user2, messages_should_be_consumed
@@ -61,7 +61,7 @@ def setup(db: MockFixture) -> Tuple[User, User, List[Message]]:
 def test_run_configuration_should_filter_message_where_receiver_doesnt_have_consumer_username(
     db: MockFixture,
     mocker: MockFixture,
-    setup: Tuple[User, User, List[Message]],
+    setup: Tuple[User, User, List[ExternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
     user_without_consumer_username = UserFactory(
@@ -73,12 +73,12 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
     user_without_consumer_username.save()
 
     messages_should_be_consumed = [
-        Message(user1.username, user2.username, 'message1'),
-        Message(user2.username, user1.username, 'message2'),
+        ExternalMessage(user1.username, user2.username, 'message1'),
+        ExternalMessage(user2.username, user1.username, 'message2'),
     ]
 
     fake_messages = messages_should_be_consumed + [
-        Message(
+        ExternalMessage(
             user1.username,
             user_without_consumer_username.username,
             'message to user without consumer username',
@@ -91,6 +91,7 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
 
     configuration = ConfigurationFactory(
         users=(user1, user2, user_without_consumer_username),
+        message_filters=(),
     )
 
     configuration.run()
@@ -102,7 +103,7 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
 def test_run_configuration_should_filter_message_where_receiver_is_not_working(
     db: MockFixture,
     mocker: MockFixture,
-    setup: Tuple[User, User, List[Message]],
+    setup: Tuple[User, User, List[ExternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
     user_not_working = UserFactory(
@@ -112,7 +113,7 @@ def test_run_configuration_should_filter_message_where_receiver_is_not_working(
     )
 
     fake_messages = messages_should_be_consumed + [
-        Message(user2.username, user_not_working.username, 'message to not working user'),
+        ExternalMessage(user2.username, user_not_working.username, 'message to not working user'),
     ]
 
     mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
@@ -132,14 +133,14 @@ def test_run_configuration_should_filter_message_where_receiver_is_not_working(
 def test_run_configuration_should_filter_message_with_skip_keywords(
     db: MockFixture,
     mocker: MockFixture,
-    setup: Tuple[User, User, List[Message]],
+    setup: Tuple[User, User, List[ExternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
 
     skip_keyword = SkipKeywordFactory()
 
     fake_messages = messages_should_be_consumed + [
-        Message(user2.username, user1.username, f'message with {skip_keyword.word}'),
+        ExternalMessage(user2.username, user1.username, f'message with {skip_keyword.word}'),
     ]
 
     mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
@@ -160,7 +161,7 @@ def test_run_configuration_should_filter_message_with_skip_keywords(
 def test_run_configuration_should_filter_message_if_user_not_in_config(
     db: MockFixture,
     mocker: MockFixture,
-    setup: Tuple[User, User, List[Message]],
+    setup: Tuple[User, User, List[ExternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
     user_not_in_config = UserFactory(
@@ -170,7 +171,7 @@ def test_run_configuration_should_filter_message_if_user_not_in_config(
     )
 
     fake_messages = messages_should_be_consumed + [
-        Message(user2.username, user_not_in_config.username, 'message to not in config user'),
+        ExternalMessage(user2.username, user_not_in_config.username, 'message to not in config user'),
     ]
 
     mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
@@ -190,12 +191,12 @@ def test_run_configuration_should_filter_message_if_user_not_in_config(
 def test_run_configuration_should_filter_message_if_user_is_unknown(
     db: MockFixture,
     mocker: MockFixture,
-    setup: Tuple[User, User, List[Message]],
+    setup: Tuple[User, User, List[ExternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
 
     fake_messages = messages_should_be_consumed + [
-        Message('unknown_user', user1.username, 'message from unknown user'),
+        ExternalMessage('unknown_user', user1.username, 'message from unknown user'),
     ]
 
     mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)

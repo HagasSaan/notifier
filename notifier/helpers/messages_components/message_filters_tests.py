@@ -7,12 +7,12 @@ from pytest_mock import MockFixture
 
 from configuration.factories import UserFactory, SkipKeywordFactory
 from configuration.models import User
-from . import Message
+from . import InternalMessage
 from .message_filters import SkipKeywordsMessageFilter, ReceiverExistsMessageFilter
 
 
 @pytest.fixture
-def setup(db: MockFixture) -> Tuple[User, User, List[Message]]:
+def setup(db: MockFixture) -> Tuple[User, User, List[InternalMessage]]:
     user1, user2 = [
         UserFactory(
             on_leave=False,
@@ -23,8 +23,8 @@ def setup(db: MockFixture) -> Tuple[User, User, List[Message]]:
     ]
 
     messages_should_be_consumed = [
-        Message(user1, user2, 'message1'),
-        Message(user2, user1, 'message2'),
+        InternalMessage(user1, user2, 'message1'),
+        InternalMessage(user2, user1, 'message2'),
     ]
 
     return user1, user2, messages_should_be_consumed
@@ -33,14 +33,14 @@ def setup(db: MockFixture) -> Tuple[User, User, List[Message]]:
 @freezegun.freeze_time('15:00:00')
 def test_skip_messages_filter(
     db: MockFixture,
-    setup: Tuple[User, User, List[Message]],
+    setup: Tuple[User, User, List[InternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
 
     skip_keyword = SkipKeywordFactory()
 
     fake_messages = messages_should_be_consumed + [
-        Message(user2.username, user1.username, f'message with {skip_keyword.word}'),
+        InternalMessage(user2.username, user1.username, f'message with {skip_keyword.word}'),
     ]
     assert messages_should_be_consumed == SkipKeywordsMessageFilter()(
         fake_messages,
@@ -51,7 +51,7 @@ def test_skip_messages_filter(
 @freezegun.freeze_time('15:00:00')
 def test_receiver_exists_filter(
     db: MockFixture,
-    setup: Tuple[User, User, List[Message]],
+    setup: Tuple[User, User, List[InternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
     user_not_in_config = UserFactory(
@@ -61,7 +61,7 @@ def test_receiver_exists_filter(
     )
 
     fake_messages = messages_should_be_consumed + [
-        Message(user2, user_not_in_config, 'message to not in config user'),
+        InternalMessage(user2, user_not_in_config, 'message to not in config user'),
     ]
 
     assert messages_should_be_consumed == ReceiverExistsMessageFilter()(
@@ -73,7 +73,7 @@ def test_receiver_exists_filter(
 @freezegun.freeze_time('15:00:00')
 def test_receiver_working_filter(
     db: MockFixture,
-    setup: Tuple[User, User, List[Message]],
+    setup: Tuple[User, User, List[InternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
     user_not_working = UserFactory(
@@ -83,7 +83,7 @@ def test_receiver_working_filter(
     )
 
     fake_messages = messages_should_be_consumed + [
-        Message(user2, user_not_working, 'message to not working user'),
+        InternalMessage(user2, user_not_working, 'message to not working user'),
     ]
 
     assert messages_should_be_consumed == ReceiverExistsMessageFilter()(

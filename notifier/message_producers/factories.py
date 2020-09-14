@@ -4,7 +4,7 @@ from typing import Union, Dict, List
 import factory
 from django.db.models import JSONField
 
-from helpers.messages_components import Message
+from helpers.messages_components import ExternalMessage
 from helpers.registry import Registry
 from . import models
 from .producers.message_producer import PRODUCER_REGISTRY_NAME, MessageProducer
@@ -18,7 +18,7 @@ class SampleProducer(MessageProducer):
 
     username_key = 'test_producer'
 
-    async def produce_messages(self) -> List[Message]:
+    async def produce_messages(self) -> List[ExternalMessage]:
         pass
 
     @classmethod

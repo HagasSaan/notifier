@@ -1,5 +1,6 @@
-from .message import Message
+from .message import ExternalMessage, InternalMessage
 
 __all__ = (
-    'Message',
+    'ExternalMessage',
+    'InternalMessage',
 )

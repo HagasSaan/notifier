@@ -1,12 +1,27 @@
 import dataclasses
-from typing import Union, Any
+from typing import Any
 
 
 @dataclasses.dataclass
-class Message:
+class ExternalMessage:
+    sender: str
+    receiver: str
+    content: Any
+
+    def __hash__(self):
+        # TODO: do it in cycle, cuz new field can be added
+        return (
+            hash(self.sender)
+            + hash(self.receiver)
+            + hash(self.content)
+        )
+
+
+@dataclasses.dataclass
+class InternalMessage:
     # TODO: get normal typing from config user
-    sender: Union[str, 'User']  # noqa F821
-    receiver: Union[str, 'User']  # noqa F821
+    sender: 'User'
+    receiver: 'User'
     content: Any
 
     def __hash__(self):

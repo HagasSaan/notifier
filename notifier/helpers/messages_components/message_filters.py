@@ -1,7 +1,7 @@
 import abc
 from typing import List, Any, Dict
 
-from . import Message
+from . import InternalMessage
 from ..registry import Registry
 
 MESSAGE_FILTER_REGISTRY_NAME = 'MessageFilter'
@@ -10,10 +10,10 @@ MESSAGE_FILTER_REGISTRY_NAME = 'MessageFilter'
 class BaseMessageFilter(abc.ABC):
     def __call__(
         self,
-        messages: List[Message],
+        messages: List[InternalMessage],
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> List[Message]:
+    ) -> List[InternalMessage]:
         ...
 
 
@@ -21,10 +21,10 @@ class BaseMessageFilter(abc.ABC):
 class SkipKeywordsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
-        messages: List[Message],
+        messages: List[InternalMessage],
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> List[Message]:
+    ) -> List[InternalMessage]:
         return [
             message
             for message in messages
@@ -39,10 +39,10 @@ class SkipKeywordsMessageFilter(BaseMessageFilter):
 class ReceiverExistsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
-        messages: List[Message],
+        messages: List[InternalMessage],
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> List[Message]:
+    ) -> List[InternalMessage]:
         return [
             message
             for message in messages
@@ -54,10 +54,10 @@ class ReceiverExistsMessageFilter(BaseMessageFilter):
 class ReceiverWorkingMessageFilter(BaseMessageFilter):
     def __call__(
         self,
-        messages: List[Message],
+        messages: List[InternalMessage],
         *args: List[Any],
         **kwargs: Dict[str, Any],
-    ) -> List[Message]:
+    ) -> List[InternalMessage]:
         return [
             message
             for message in messages

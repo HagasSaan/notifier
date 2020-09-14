@@ -4,7 +4,7 @@ from typing import Union, Dict, List
 import factory
 from django.db.models import JSONField
 
-from helpers.messages_components import Message
+from helpers.messages_components import ExternalMessage
 from helpers.registry import Registry
 from . import models
 from .consumers.message_consumer import CONSUMER_REGISTRY_NAME, MessageConsumer
@@ -18,7 +18,7 @@ class SampleConsumer(MessageConsumer):
 
     username_key = 'test_consumer'
 
-    async def consume_messages(self, messages: List[Message]) -> None:
+    async def consume_messages(self, messages: List[ExternalMessage]) -> None:
         pass
 
     @classmethod

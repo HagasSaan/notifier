@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from configuration.models import SkipKeyword, User, MessageFilterModel
-from helpers.messages_components import Message
+from helpers.messages_components import ExternalMessage, InternalMessage
 from helpers.messages_components.message_filters import (
     SkipKeywordsMessageFilter,
     ReceiverExistsMessageFilter,
@@ -50,10 +50,10 @@ class Configuration(models.Model):
         if self.consumer is None or self.producer is None:
             raise ValueError('Error: consumer or producer not specified')
 
-        producer: MessageProducer = self.producer.get_object_by_registry(
+        producer: MessageProducer = self.producer.get_object_by_registry_name(
             PRODUCER_REGISTRY_NAME,
         )
-        consumer: MessageConsumer = self.consumer.get_object_by_registry(
+        consumer: MessageConsumer = self.consumer.get_object_by_registry_name(
             CONSUMER_REGISTRY_NAME,
         )
         # TODO: Maybe run as task?
@@ -82,23 +82,27 @@ class Configuration(models.Model):
 
     @staticmethod
     def _translate_message_users_from_producer_into_users(
-        messages: List[Message],
+        messages: List[ExternalMessage],
         producer: MessageProducer,
-    ) -> List[Message]:
+    ) -> List[InternalMessage]:
         producer_username_key = producer.username_key
 
         result_messages = []
         for message in messages:
             try:
-                message.sender = User.get_user_by_producer_username(
-                    message.sender,
-                    producer_username_key,
+                result_messages.append(
+                    InternalMessage(
+                        sender=User.get_user_by_producer_username(
+                            message.sender,
+                            producer_username_key,
+                        ),
+                        receiver=User.get_user_by_producer_username(
+                            message.receiver,
+                            producer_username_key,
+                        ),
+                        content=message.content,
+                    )
                 )
-                message.receiver = User.get_user_by_producer_username(
-                    message.receiver,
-                    producer_username_key,
-                )
-                result_messages.append(message)
             except User.DoesNotExist as e:
                 logger.warning(f'Error: {e}')
 
@@ -106,21 +110,25 @@ class Configuration(models.Model):
 
     @staticmethod
     def _translate_message_users_from_users_into_consumer(
-        messages: List[Message],
+        messages: List[InternalMessage],
         consumer: MessageConsumer,
-    ) -> List[Message]:
+    ) -> List[ExternalMessage]:
         consumer_username_key = consumer.username_key
 
         result_messages = []
         for message in messages:
             try:
-                message.sender = message.sender.get_consumer_username(
-                    consumer_username_key,
+                result_messages.append(
+                    ExternalMessage(
+                        sender=message.sender.get_consumer_username(
+                            consumer_username_key,
+                        ),
+                        receiver=message.receiver.get_consumer_username(
+                            consumer_username_key,
+                        ),
+                        content=message.content,
+                    )
                 )
-                message.receiver = message.receiver.get_consumer_username(
-                    consumer_username_key,
-                )
-                result_messages.append(message)
             except KeyError as e:
                 logger.warning(f'Error: {e}')
 

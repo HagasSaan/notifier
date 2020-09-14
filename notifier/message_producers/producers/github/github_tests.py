@@ -5,7 +5,7 @@ from aioresponses import aioresponses
 from django.core.exceptions import ValidationError
 from pytest_mock import MockFixture
 
-from helpers.messages_components import Message
+from helpers.messages_components import ExternalMessage
 from .github import GithubRepository
 
 
@@ -72,7 +72,7 @@ async def test_github_produce_messages(
 ) -> None:
     messages = await f_github_repository.produce_messages()
     assert set(messages) == {
-        Message(
+        ExternalMessage(
             sender='comeuplater',
             receiver='vlmihnevich',
             content=(
@@ -81,7 +81,7 @@ async def test_github_produce_messages(
                 'Labels: Facebook'
             ),
         ),
-        Message(
+        ExternalMessage(
             sender='comeuplater',
             receiver='123phg',
             content=(

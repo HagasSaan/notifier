@@ -7,7 +7,7 @@ from pytest_mock import MockFixture
 from telebot.apihelper import ApiException
 import telebot.types as tb_types
 
-from helpers.messages_components import Message
+from helpers.messages_components import ExternalMessage
 from .telegram import TelegramGroupChat
 
 
@@ -64,7 +64,7 @@ def test_validate_params_should_raise_validation_error(m_telebot: MagicMock) -> 
 @pytest.mark.asyncio
 async def test_send_message(m_telebot: MagicMock) -> None:
     chat_id = 123456
-    message = Message(
+    message = ExternalMessage(
         sender='@sender',
         receiver='@receiver',
         content='testing message',
@@ -93,7 +93,7 @@ async def test_send_message(m_telebot: MagicMock) -> None:
 @pytest.mark.asyncio
 async def test_send_message_raises_validation_error(m_telebot: MagicMock) -> None:
     chat_id = 123
-    message = Message(
+    message = ExternalMessage(
         sender='@sender',
         receiver='@receiver',
         content='testing message',
@@ -127,12 +127,12 @@ async def test_send_message_raises_validation_error(m_telebot: MagicMock) -> Non
 async def test_consume_messages(m_telebot: MagicMock) -> None:
     chat_id = 123456
     messages = [
-        Message(
+        ExternalMessage(
             sender='@sender2',
             receiver='@receiver1',
             content='testing message 1',
         ),
-        Message(
+        ExternalMessage(
             sender='@sender1',
             receiver='@receiver2',
             content='testing message 2',

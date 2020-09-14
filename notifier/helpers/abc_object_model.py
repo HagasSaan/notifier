@@ -61,7 +61,7 @@ class ABCObjectModel(models.Model):
             update_fields=update_fields,
         )
 
-    def get_object_by_registry(
+    def get_object_by_registry_name(
         self,
         registry_name: str,
     ) -> Union[MessageConsumer, MessageProducer]:
