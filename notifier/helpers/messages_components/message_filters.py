@@ -1,7 +1,6 @@
 import abc
-from typing import List, Any, Dict
+from typing import List
 
-from configuration.models import Configuration
 from . import InternalMessage
 from ..registry import Registry
 
@@ -12,7 +11,7 @@ class BaseMessageFilter(abc.ABC):
     def __call__(
         self,
         messages: List[InternalMessage],
-        configuration: Configuration,
+        configuration: 'Configuration',
     ) -> List[InternalMessage]:
         ...
 
@@ -22,7 +21,7 @@ class SkipKeywordsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        configuration: Configuration,
+        configuration: 'Configuration',
     ) -> List[InternalMessage]:
         return [
             message
@@ -39,7 +38,7 @@ class ReceiverExistsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        configuration: Configuration,
+        configuration: 'Configuration',
     ) -> List[InternalMessage]:
         return [
             message
@@ -53,7 +52,7 @@ class ReceiverWorkingMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        configuration: Configuration,
+        configuration: 'Configuration',
     ) -> List[InternalMessage]:
         return [
             message
