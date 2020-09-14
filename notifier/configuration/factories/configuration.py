@@ -8,7 +8,7 @@ from message_producers.factories import ProducerModelFactory
 
 
 class ConfigurationFactory(factory.django.DjangoModelFactory):
-    name = 'test_configuration'
+    name = factory.Sequence(lambda x: f'test_configuration_{x}')
     consumer = factory.SubFactory(ConsumerModelFactory)
     producer = factory.SubFactory(ProducerModelFactory)
 

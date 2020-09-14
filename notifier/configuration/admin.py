@@ -49,7 +49,8 @@ class ConfigurationAdmin(admin.ModelAdmin):
 
     def run_configurations(self, request: Request, queryset: QuerySet) -> None:
         for configuration in queryset:
-            run_configuration.delay(configuration.id)
+            # run_configuration.delay(configuration.id)
+            configuration.run()
 
     run_configurations.short_description = 'Run selected configurations'
 

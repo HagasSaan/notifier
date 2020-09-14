@@ -1,6 +1,7 @@
 import abc
 from typing import List, Any, Dict
 
+from configuration.models import Configuration
 from . import InternalMessage
 from ..registry import Registry
 
@@ -11,8 +12,7 @@ class BaseMessageFilter(abc.ABC):
     def __call__(
         self,
         messages: List[InternalMessage],
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
+        configuration: Configuration,
     ) -> List[InternalMessage]:
         ...
 
@@ -22,15 +22,14 @@ class SkipKeywordsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
+        configuration: Configuration,
     ) -> List[InternalMessage]:
         return [
             message
             for message in messages
             if not any(
                 skip_keyword in message.content
-                for skip_keyword in kwargs['skip_keywords']
+                for skip_keyword in configuration.skip_keywords_list
             )
         ]
 
@@ -40,13 +39,12 @@ class ReceiverExistsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
+        configuration: Configuration,
     ) -> List[InternalMessage]:
         return [
             message
             for message in messages
-            if message.receiver in kwargs['users']
+            if message.receiver in configuration.users.all()
         ]
 
 
@@ -55,8 +53,7 @@ class ReceiverWorkingMessageFilter(BaseMessageFilter):
     def __call__(
         self,
         messages: List[InternalMessage],
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
+        configuration: Configuration,
     ) -> List[InternalMessage]:
         return [
             message

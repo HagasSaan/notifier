@@ -5,7 +5,7 @@ import freezegun
 import pytest
 from pytest_mock import MockFixture
 
-from configuration.factories import UserFactory, SkipKeywordFactory
+from configuration.factories import UserFactory, SkipKeywordFactory, ConfigurationFactory
 from configuration.models import User
 from . import InternalMessage
 from .message_filters import SkipKeywordsMessageFilter, ReceiverExistsMessageFilter
@@ -39,12 +39,18 @@ def test_skip_messages_filter(
 
     skip_keyword = SkipKeywordFactory()
 
+    configuration = ConfigurationFactory(
+        users=(user1, user2,),
+        skip_keywords=(skip_keyword,),
+    )
+
     fake_messages = messages_should_be_consumed + [
         InternalMessage(user2.username, user1.username, f'message with {skip_keyword.word}'),
     ]
+
     assert messages_should_be_consumed == SkipKeywordsMessageFilter()(
         fake_messages,
-        skip_keywords=[skip_keyword.word],
+        configuration,
     )
 
 
@@ -64,9 +70,13 @@ def test_receiver_exists_filter(
         InternalMessage(user2, user_not_in_config, 'message to not in config user'),
     ]
 
+    configuration = ConfigurationFactory(
+        users=(user1, user2, user_not_in_config,),
+    )
+
     assert messages_should_be_consumed == ReceiverExistsMessageFilter()(
         fake_messages,
-        users=[user1, user2],
+        configuration,
     )
 
 
@@ -86,7 +96,11 @@ def test_receiver_working_filter(
         InternalMessage(user2, user_not_working, 'message to not working user'),
     ]
 
+    configuration = ConfigurationFactory(
+        users=(user1, user2, user_not_working,),
+    )
+
     assert messages_should_be_consumed == ReceiverExistsMessageFilter()(
         fake_messages,
-        users=[user1, user2],
+        configuration,
     )

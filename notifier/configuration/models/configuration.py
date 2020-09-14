@@ -11,6 +11,7 @@ from helpers.messages_components.message_filters import (
     SkipKeywordsMessageFilter,
     ReceiverExistsMessageFilter,
     ReceiverWorkingMessageFilter,
+    MESSAGE_FILTER_REGISTRY_NAME,
 )
 from message_consumers.consumers.message_consumer import MessageConsumer, CONSUMER_REGISTRY_NAME
 from message_consumers.models import ConsumerModel
@@ -56,6 +57,10 @@ class Configuration(models.Model):
         consumer: MessageConsumer = self.consumer.get_object_by_registry_name(
             CONSUMER_REGISTRY_NAME,
         )
+        message_filters = [
+            message_filter.get_object_by_registry_name(MESSAGE_FILTER_REGISTRY_NAME)
+            for message_filter in self.message_filters.all()
+        ]
         # TODO: Maybe run as task?
         messages = asyncio.run(producer.produce_messages())
         logger.info('Got messages', messages=messages)
@@ -64,15 +69,9 @@ class Configuration(models.Model):
             producer,
         )
         # TODO: Move filters to their own class and make them pluggable
-        messages = ReceiverExistsMessageFilter()(
-            messages,
-            users=self.users.all(),
-        )
-        messages = ReceiverWorkingMessageFilter()(messages)
-        messages = SkipKeywordsMessageFilter()(
-            messages,
-            skip_keywords=self.skip_keywords_list,
-        )
+        messages = ReceiverExistsMessageFilter()(messages, self)
+        messages = ReceiverWorkingMessageFilter()(messages, self)
+        messages = SkipKeywordsMessageFilter()(messages, self)
         messages = self._translate_message_users_from_users_into_consumer(
             messages,
             consumer,

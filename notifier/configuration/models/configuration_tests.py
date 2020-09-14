@@ -10,8 +10,14 @@ from configuration.factories import (
     SkipKeywordFactory,
     UserFactory,
 )
+from configuration.factories.message_filter import MessageFilterModelFactory
 from configuration.models import User
 from helpers.messages_components import ExternalMessage
+from helpers.messages_components.message_filters import (
+    SkipKeywordsMessageFilter,
+    ReceiverExistsMessageFilter,
+    ReceiverWorkingMessageFilter,
+)
 from message_consumers.factories import SampleConsumer
 from message_producers.factories import SampleProducer
 
@@ -91,7 +97,11 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
 
     configuration = ConfigurationFactory(
         users=(user1, user2, user_without_consumer_username),
-        message_filters=(),
+        message_filters=(
+            MessageFilterModelFactory(object_type=SkipKeywordsMessageFilter.__name__),
+            MessageFilterModelFactory(object_type=ReceiverWorkingMessageFilter.__name__),
+            MessageFilterModelFactory(object_type=ReceiverExistsMessageFilter.__name__),
+        ),
     )
 
     configuration.run()
