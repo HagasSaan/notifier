@@ -3,8 +3,10 @@ from typing import Union, Any, Optional
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from helpers.messages_components import MessageProducer, MessageConsumer
+from helpers.messages_components import MessageProducer
+
 from helpers.registry import Registry
+from message_consumers.consumers.message_consumer import MessageConsumer
 
 
 class ABCObjectModel(models.Model):
@@ -57,3 +59,12 @@ class ABCObjectModel(models.Model):
             using=using,
             update_fields=update_fields,
         )
+
+    def get_object_by_registry(
+        self,
+        registry_name: str,
+    ) -> Union[MessageConsumer, MessageProducer]:
+        registry = Registry(registry_name)
+        class_ = registry.get(self.object_type)
+        object_ = class_(**self.parameters)
+        return object_

@@ -8,8 +8,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import JSONField
 from telebot.util import AsyncTask
 
-from helpers.messages_components import CONSUMER_REGISTRY_NAME, Message, MessageConsumer
 from helpers.registry import Registry
+from ..message_consumer import CONSUMER_REGISTRY_NAME, Message, MessageConsumer
 
 
 @Registry.register(CONSUMER_REGISTRY_NAME)

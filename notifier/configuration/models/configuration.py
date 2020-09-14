@@ -1,22 +1,17 @@
 import asyncio
-from typing import List, Union
+from typing import List
 
 import structlog
 from django.db import models
 from django.utils.functional import cached_property
 
 from configuration.models import SkipKeyword, User
-from helpers.abc_object_model import ABCObjectModel
-from helpers.messages_components import (
-    MessageProducer,
-    PRODUCER_REGISTRY_NAME,
-    MessageConsumer,
-    CONSUMER_REGISTRY_NAME,
-    Message,
-)
-from helpers.registry import Registry
+from configuration.models.message_filter import MessageFilter
+from helpers.messages_components import Message
+from message_consumers.consumers.message_consumer import MessageConsumer, CONSUMER_REGISTRY_NAME
 from message_consumers.models import ConsumerModel
 from message_producers.models import ProducerModel
+from message_producers.producers.message_producer import MessageProducer, PRODUCER_REGISTRY_NAME
 
 logger = structlog.get_logger(__name__)
 
@@ -35,6 +30,7 @@ class Configuration(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+    message_filters = models.ManyToManyField(MessageFilter)
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.name}'
@@ -50,11 +46,11 @@ class Configuration(models.Model):
         if self.consumer is None or self.producer is None:
             raise ValueError('Error: consumer or producer not specified')
 
-        producer: MessageProducer = self._get_object_by_model_and_registry(
-            self.producer, PRODUCER_REGISTRY_NAME,
+        producer: MessageProducer = self.producer.get_object_by_registry(
+            PRODUCER_REGISTRY_NAME,
         )
-        consumer: MessageConsumer = self._get_object_by_model_and_registry(
-            self.consumer, CONSUMER_REGISTRY_NAME,
+        consumer: MessageConsumer = self.consumer.get_object_by_registry(
+            CONSUMER_REGISTRY_NAME,
         )
         # TODO: Maybe run as task?
         messages = asyncio.run(producer.produce_messages())
@@ -66,7 +62,10 @@ class Configuration(models.Model):
         # TODO: Move filters to their own class and make them pluggable
         messages = self._filter_messages_where_receiver_not_in_config(messages)
         messages = self._filter_messages_where_receiver_is_not_working(messages)
-        messages = self._filter_messages_with_skip_keywords(messages)
+        messages = self._filter_messages_with_skip_keywords(
+            messages,
+            skip_keywords=self.skip_keywords,
+        )
         messages = self._translate_message_users_from_users_into_consumer(
             messages,
             consumer,
@@ -74,16 +73,17 @@ class Configuration(models.Model):
         asyncio.run(consumer.consume_messages(messages))
         logger.info('Messages consumed', messages=messages)
 
+    @staticmethod
     def _filter_messages_with_skip_keywords(
-        self,
         messages: List[Message],
+        skip_keywords: List[str],
     ) -> List[Message]:
         return [
             message
             for message in messages
             if not any(
                 skip_keyword in message.content
-                for skip_keyword in self.skip_keywords_list
+                for skip_keyword in skip_keywords
             )
         ]
 
@@ -106,16 +106,6 @@ class Configuration(models.Model):
             for message in messages
             if message.receiver.is_working_time
         ]
-
-    @staticmethod
-    def _get_object_by_model_and_registry(
-        object_model: ABCObjectModel,
-        registry_name: str,
-    ) -> Union[MessageConsumer, MessageProducer]:
-        registry = Registry(registry_name)
-        class_ = registry.get(object_model.object_type)
-        object_ = class_(**object_model.parameters)
-        return object_
 
     @staticmethod
     def _translate_message_users_from_producer_into_users(

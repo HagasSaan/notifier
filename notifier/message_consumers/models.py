@@ -2,8 +2,8 @@ import structlog
 from django.db import models
 
 from helpers.abc_object_model import ABCObjectModel
-from helpers.messages_components import CONSUMER_REGISTRY_NAME
 from helpers.registry import Registry
+from .consumers.message_consumer import CONSUMER_REGISTRY_NAME
 
 logger = structlog.get_logger(__name__)
 

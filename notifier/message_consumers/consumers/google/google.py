@@ -3,8 +3,8 @@ from typing import List, Any, Dict, Union
 
 from django.db.models import JSONField
 
-from helpers.messages_components import CONSUMER_REGISTRY_NAME, Message, MessageConsumer
 from helpers.registry import Registry
+from ..message_consumer import CONSUMER_REGISTRY_NAME, Message, MessageConsumer
 
 
 @Registry.register(CONSUMER_REGISTRY_NAME)

@@ -1,17 +1,16 @@
 import asyncio
+import dataclasses
+import json
 from typing import List, Union, Dict, Any
 
 import aiohttp
-import dataclasses
-import json
-
 import structlog
 from django.core.exceptions import ValidationError
 from django.db.models import JSONField
 
 from helpers.initable import Initable
-from helpers.messages_components import PRODUCER_REGISTRY_NAME, Message, MessageProducer
 from helpers.registry import Registry
+from ..message_producer import PRODUCER_REGISTRY_NAME, Message, MessageProducer
 
 logger = structlog.get_logger(__name__)
 
