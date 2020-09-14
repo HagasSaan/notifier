@@ -14,6 +14,7 @@ from .message_filters import (
     ReceiverWorkingMessageFilter,
 )
 
+
 @pytest.fixture
 def setup(db: MockFixture) -> Tuple[User, User, List[InternalMessage]]:
     user1, user2 = [
