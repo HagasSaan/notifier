@@ -1,6 +1,8 @@
 import abc
 import dataclasses
-from typing import List
+from typing import List, Union, Dict
+
+from django.forms import JSONField
 
 from helpers.messages_components import Message
 
@@ -11,6 +13,11 @@ class MessageConsumer(abc.ABC):
 
     @abc.abstractmethod
     async def consume_messages(self, messages: List[Message]) -> None:
+        raise NotImplementedError
+
+    @classmethod
+    @abc.abstractmethod
+    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
         raise NotImplementedError
 
 

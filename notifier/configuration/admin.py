@@ -57,3 +57,7 @@ class ConfigurationAdmin(admin.ModelAdmin):
 @admin.register(MessageFilterModel)
 class MessageFilterModelAdmin(admin.ModelAdmin):
     list_display = ('name', )
+
+    formfield_overrides = {
+        models.JSONField: {'widget': JSONEditorWidget},
+    }

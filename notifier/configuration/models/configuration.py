@@ -7,6 +7,7 @@ from django.utils.functional import cached_property
 
 from configuration.models import SkipKeyword, User, MessageFilterModel
 from helpers.messages_components import Message
+from helpers.messages_components.message_filters import SkipKeywordsMessageFilter
 from message_consumers.consumers.message_consumer import MessageConsumer, CONSUMER_REGISTRY_NAME
 from message_consumers.models import ConsumerModel
 from message_producers.models import ProducerModel
@@ -61,7 +62,7 @@ class Configuration(models.Model):
         # TODO: Move filters to their own class and make them pluggable
         messages = self._filter_messages_where_receiver_not_in_config(messages)
         messages = self._filter_messages_where_receiver_is_not_working(messages)
-        messages = self._filter_messages_with_skip_keywords(
+        messages = SkipKeywordsMessageFilter()(
             messages,
             skip_keywords=self.skip_keywords_list,
         )
@@ -71,20 +72,6 @@ class Configuration(models.Model):
         )
         asyncio.run(consumer.consume_messages(messages))
         logger.info('Messages consumed', messages=messages)
-
-    @staticmethod
-    def _filter_messages_with_skip_keywords(
-        messages: List[Message],
-        skip_keywords: List[str],
-    ) -> List[Message]:
-        return [
-            message
-            for message in messages
-            if not any(
-                skip_keyword in message.content
-                for skip_keyword in skip_keywords
-            )
-        ]
 
     def _filter_messages_where_receiver_not_in_config(
         self,

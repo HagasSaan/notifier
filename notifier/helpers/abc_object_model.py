@@ -1,8 +1,7 @@
-from typing import Union, Any, Optional, Dict
+from typing import Union, Any, Optional
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.forms import JSONField
 
 from helpers.registry import Registry
 from message_consumers.consumers.message_consumer import MessageConsumer
@@ -21,7 +20,7 @@ class ABCObjectModel(models.Model):
         ],
     )
 
-    parameters = models.JSONField()
+    parameters = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.object_type} "{self.name}"({self.__class__.__name__})'
@@ -36,12 +35,17 @@ class ABCObjectModel(models.Model):
         using: Optional[Any] = None,
         update_fields: Optional[Any] = None,
     ) -> None:
-        class_: 'ABCObjectModel' = (
+        # TODO: need to specify which type of class it is. Validatable?)
+        class_: Union[MessageConsumer, MessageProducer, 'MessageFilterModel'] = (
             self.DEFAULT_REGISTRY.get(self.object_type)
         )
         try:
             class_.validate_params(self.parameters)
         except Exception as e:
+            # TODO: Specify exceptions
+            # Now it masks exceptions of attributes of classes
+            # Or run validate_params only if method exists
+            # Or run if it dataclass or subclass of MC, MP
             required_fields = '\t\n'.join(
                 [
                     f'{name}:{type_}'
@@ -68,7 +72,3 @@ class ABCObjectModel(models.Model):
         class_ = registry.get(self.object_type)
         object_ = class_(**self.parameters)
         return object_
-
-    @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
-        raise NotImplementedError
