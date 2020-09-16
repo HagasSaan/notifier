@@ -97,11 +97,6 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
 
     configuration = ConfigurationFactory(
         users=(user1, user2, user_without_consumer_username),
-        message_filters=(
-            MessageFilterModelFactory(object_type=SkipKeywordsMessageFilter.__name__),
-            MessageFilterModelFactory(object_type=ReceiverWorkingMessageFilter.__name__),
-            MessageFilterModelFactory(object_type=ReceiverExistsMessageFilter.__name__),
-        ),
     )
 
     configuration.run()
@@ -132,6 +127,9 @@ def test_run_configuration_should_filter_message_where_receiver_is_not_working(
 
     configuration = ConfigurationFactory(
         users=(user1, user2, user_not_working),
+        message_filters=(
+            MessageFilterModelFactory(object_type=ReceiverWorkingMessageFilter.__name__),
+        ),
     )
 
     configuration.run()
@@ -160,6 +158,9 @@ def test_run_configuration_should_filter_message_with_skip_keywords(
     configuration = ConfigurationFactory(
         users=(user1, user2),
         skip_keywords=(skip_keyword,),
+        message_filters=(
+            MessageFilterModelFactory(object_type=SkipKeywordsMessageFilter.__name__),
+        ),
     )
 
     configuration.run()
@@ -194,6 +195,9 @@ def test_run_configuration_should_filter_message_if_user_not_in_config(
 
     configuration = ConfigurationFactory(
         users=(user1, user2),
+        message_filters=(
+            MessageFilterModelFactory(object_type=ReceiverExistsMessageFilter.__name__),
+        ),
     )
 
     configuration.run()
@@ -216,7 +220,9 @@ def test_run_configuration_should_filter_message_if_user_is_unknown(
     mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
-    configuration = ConfigurationFactory(users=(user1, user2))
+    configuration = ConfigurationFactory(
+        users=(user1, user2),
+    )
     configuration.run()
 
     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed

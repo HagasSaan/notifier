@@ -28,7 +28,7 @@ class SkipKeywordsMessageFilter(BaseMessageFilter):
             for message in messages
             if not any(
                 skip_keyword in message.content
-                for skip_keyword in configuration.skip_keywords_list
+                for skip_keyword in configuration.skip_keywords
             )
         ]
 

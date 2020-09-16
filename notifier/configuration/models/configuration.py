@@ -1,5 +1,6 @@
 import asyncio
-from typing import List
+from functools import reduce
+from typing import List, Type
 
 import structlog
 from django.db import models
@@ -8,10 +9,8 @@ from django.utils.functional import cached_property
 from configuration.models import SkipKeyword, User, MessageFilterModel
 from helpers.messages_components import ExternalMessage, InternalMessage
 from helpers.messages_components.message_filters import (
-    SkipKeywordsMessageFilter,
-    ReceiverExistsMessageFilter,
-    ReceiverWorkingMessageFilter,
     MESSAGE_FILTER_REGISTRY_NAME,
+    BaseMessageFilter,
 )
 from message_consumers.consumers.message_consumer import MessageConsumer, CONSUMER_REGISTRY_NAME
 from message_consumers.models import ConsumerModel
@@ -23,7 +22,6 @@ logger = structlog.get_logger(__name__)
 
 class Configuration(models.Model):
     name = models.CharField(max_length=100)
-    skip_keywords = models.ManyToManyField(SkipKeyword)
     consumer: ConsumerModel = models.ForeignKey(
         ConsumerModel,
         null=True,
@@ -35,16 +33,24 @@ class Configuration(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    message_filters = models.ManyToManyField(MessageFilterModel)
+    _skip_keywords = models.ManyToManyField(SkipKeyword)
+    _message_filters = models.ManyToManyField(MessageFilterModel)
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.name}'
 
     @cached_property
-    def skip_keywords_list(self) -> List[str]:
+    def skip_keywords(self) -> List[str]:
         return [
             row['word']
-            for row in self.skip_keywords.values('word')
+            for row in self._skip_keywords.values('word')
+        ]
+
+    @cached_property
+    def message_filters(self) -> List[Type[BaseMessageFilter]]:
+        return [
+            message_filter.get_object_by_registry_name(MESSAGE_FILTER_REGISTRY_NAME)
+            for message_filter in self._message_filters.all()
         ]
 
     def run(self) -> None:
@@ -64,15 +70,11 @@ class Configuration(models.Model):
             messages,
             producer,
         )
-        # TODO: Move filters to their own class and make them pluggable
-        message_filters = [
-            message_filter.get_object_by_registry_name(MESSAGE_FILTER_REGISTRY_NAME)
-            for message_filter in self.message_filters.all()
-        ]
-
-        messages = ReceiverExistsMessageFilter()(messages, self)
-        messages = ReceiverWorkingMessageFilter()(messages, self)
-        messages = SkipKeywordsMessageFilter()(messages, self)
+        messages = reduce(
+            lambda messages, message_filter: message_filter(messages, self),
+            self.message_filters,
+            messages
+        )
         messages = self._translate_message_users_from_users_into_consumer(
             messages,
             consumer,
@@ -83,7 +85,7 @@ class Configuration(models.Model):
     @staticmethod
     def _translate_message_users_from_producer_into_users(
         messages: List[ExternalMessage],
-        producer: MessageProducer,
+        producer: Type[MessageProducer],
     ) -> List[InternalMessage]:
         producer_username_key = producer.username_key
 
@@ -111,7 +113,7 @@ class Configuration(models.Model):
     @staticmethod
     def _translate_message_users_from_users_into_consumer(
         messages: List[InternalMessage],
-        consumer: MessageConsumer,
+        consumer: Type[MessageConsumer],
     ) -> List[ExternalMessage]:
         consumer_username_key = consumer.username_key
 
