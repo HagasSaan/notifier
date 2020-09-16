@@ -1,5 +1,5 @@
 import abc
-from typing import List
+from typing import List, Dict
 
 from . import InternalMessage
 from ..registry import Registry
@@ -8,6 +8,9 @@ MESSAGE_FILTER_REGISTRY_NAME = 'MessageFilter'
 
 
 class BaseMessageFilter(abc.ABC):
+    def __init__(self, **kwargs: Dict):
+        ...
+
     def __call__(
         self,
         messages: List[InternalMessage],

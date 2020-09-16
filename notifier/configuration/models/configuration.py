@@ -73,7 +73,7 @@ class Configuration(models.Model):
         messages = reduce(
             lambda messages, message_filter: message_filter(messages, self),
             self.message_filters,
-            messages
+            messages,
         )
         messages = self._translate_message_users_from_users_into_consumer(
             messages,
@@ -85,7 +85,7 @@ class Configuration(models.Model):
     @staticmethod
     def _translate_message_users_from_producer_into_users(
         messages: List[ExternalMessage],
-        producer: Type[MessageProducer],
+        producer: MessageProducer,
     ) -> List[InternalMessage]:
         producer_username_key = producer.username_key
 
@@ -113,7 +113,7 @@ class Configuration(models.Model):
     @staticmethod
     def _translate_message_users_from_users_into_consumer(
         messages: List[InternalMessage],
-        consumer: Type[MessageConsumer],
+        consumer: MessageConsumer,
     ) -> List[ExternalMessage]:
         consumer_username_key = consumer.username_key
 
