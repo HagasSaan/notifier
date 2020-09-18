@@ -106,6 +106,6 @@ jobs:
           push: true  # TODO: push only if main branch only
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:sha-${{ github.sha::8 }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:sha-${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
