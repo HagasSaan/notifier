@@ -105,9 +105,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true  # TODO: push only if main branch only
-          tags: |
+          tags: |  # TODO: cut github.sha below to 8 chars only
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:latest
-            # TODO: cut github.sha below to 8 chars only
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:sha-${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
