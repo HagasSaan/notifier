@@ -76,7 +76,7 @@ jobs:
 # TODO: test_in_container?
 
   build_and_push_stage:
-    needs: testing_stage
+    needs: test_on_bare_metal
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
