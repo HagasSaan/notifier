@@ -36,6 +36,7 @@ class ABCObjectModel(models.Model):
         using: Optional[Any] = None,
         update_fields: Optional[Any] = None,
     ) -> None:
+        # TODO: cover with tests that method, it's fucking important
         class_ = self.DEFAULT_REGISTRY.get(self.object_type)
         if isinstance(class_, Validatable):
             try:
