@@ -39,6 +39,7 @@ class Configuration(models.Model):
     def __str__(self):
         return f'{self.__class__.__name__} {self.name}'
 
+    # TODO: Maybe move it to their own filter?
     @cached_property
     def skip_keywords(self) -> List[str]:
         return [

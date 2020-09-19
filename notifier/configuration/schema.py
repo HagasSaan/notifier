@@ -5,6 +5,7 @@ from .models import (
     Configuration,
     SkipKeyword,
     User,
+    MessageFilterModel,
 )
 
 
@@ -21,6 +22,11 @@ class SkipKeywordType(DjangoObjectType):
 class UserType(DjangoObjectType):
     class Meta:
         model = User
+
+
+class MessageFilterType(DjangoObjectType):
+    class Meta:
+        model = MessageFilterModel
 
 
 class ConfigurationsQuery(graphene.ObjectType):
