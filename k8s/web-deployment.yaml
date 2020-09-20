@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      service: web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: web
+    spec:
+      containers:
+        - name: web
+          image: hagassaan/notifier
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+
