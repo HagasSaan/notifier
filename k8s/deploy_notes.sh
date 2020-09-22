@@ -2,6 +2,7 @@
 
 kubectl apply -f db-statefulset.yaml
 kubectl apply -f rabbitmq-statefulset.yaml
+
 # TODO: really stateful?
 kubectl apply -f db-service.yaml
 kubectl apply -f rabbitmq-service.yaml
