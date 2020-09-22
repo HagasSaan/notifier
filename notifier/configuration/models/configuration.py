@@ -33,6 +33,7 @@ class Configuration(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+    # TODO: required=false for skip_keywords and filters
     _skip_keywords = models.ManyToManyField(SkipKeyword)
     _message_filters = models.ManyToManyField(MessageFilterModel)
 
