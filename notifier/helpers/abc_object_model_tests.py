@@ -22,7 +22,7 @@ class SampleClassInDefaultRegistry(Validatable):
         if params['field_2'] != 42:
             raise ValidationError(
                 'I need Answer to the Ultimate Question of Life, '
-                'the Universe, and Everything as field_2 param'
+                'the Universe, and Everything as field_2 param',
             )
 
 
@@ -36,7 +36,7 @@ def test_validate_params(mocker: MockFixture) -> None:
                 'What is the Ultimate Question of Life, '
                 'the Universe, and Everything'
             ),
-            'field_2': 42
+            'field_2': 42,
         },
     ).save()
     mocked_save.assert_called_once()
@@ -53,8 +53,8 @@ def test_validate_params_raise_error(db: MockFixture) -> None:
             '\\nRequired fields for SampleClassInDefaultRegistry is: '
             "\\n\\tfield_1:<class 'str'>"
             "\\t\\nfield_2:<class 'int'>"
-            '"]'
-        )
+            '"]',
+        ),
     ):
         ABCObjectModel(
             name='just name',
@@ -78,8 +78,8 @@ def test_validate_params_raise_error_if_fields_missing(db: MockFixture) -> None:
             '\\nRequired fields for SampleClassInDefaultRegistry is: '
             "\\n\\tfield_1:<class 'str'>"
             "\\t\\nfield_2:<class 'int'>"
-            '"]'
-        )
+            '"]',
+        ),
     ):
         ABCObjectModel(
             name='just name',

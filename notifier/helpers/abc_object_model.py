@@ -47,7 +47,7 @@ class ABCObjectModel(models.Model):
             update_fields=update_fields,
         )
 
-    def _check_params_before_save(self):
+    def _check_params_before_save(self) -> None:
         class_ = self.DEFAULT_REGISTRY.get(self.object_type)
         if issubclass(class_, Validatable):
             try:
