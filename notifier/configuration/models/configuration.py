@@ -6,7 +6,7 @@ import structlog
 from django.db import models
 from django.utils.functional import cached_property
 
-from configuration.models import SkipKeyword, User, MessageFilterModel
+from configuration.models import User, MessageFilterModel
 from helpers.messages_components import ExternalMessage, InternalMessage
 from helpers.messages_components.message_filters import (
     MESSAGE_FILTER_REGISTRY_NAME,

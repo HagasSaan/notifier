@@ -52,7 +52,7 @@ def test_skip_messages_filter(
     ]
 
     assert messages_should_be_consumed == SkipKeywordsMessageFilter(
-        **{'skip_keywords': [skip_keyword.word]}
+        **{'skip_keywords': [skip_keyword.word]},
     )(
         fake_messages,
         configuration,

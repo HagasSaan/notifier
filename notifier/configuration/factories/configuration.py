@@ -2,7 +2,7 @@ from typing import List
 
 import factory
 
-from configuration.models import User, SkipKeyword, Configuration, MessageFilterModel
+from configuration.models import User, Configuration, MessageFilterModel
 from message_consumers.factories import ConsumerModelFactory
 from message_producers.factories import ProducerModelFactory
 

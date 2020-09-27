@@ -114,6 +114,6 @@ GRAPHENE = {
 }
 
 try:
-    from .local_settings import *
+    from .local_settings import *  # noqa
 except ImportError:
     pass
