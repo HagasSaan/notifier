@@ -23,9 +23,9 @@ spec:
             protocol: TCP
           env:
             - name: POSTGRES_PASSWORD
-              value: postgres
+              value: notifier
             - name: POSTGRES_DB
-              value: postgres
+              value: notifier
             - name: POSTGRES_USER
-              value: postgres
+              value: notifier
 

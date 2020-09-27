@@ -18,10 +18,9 @@ jobs:
       postgres:
         image: postgres
         env:
-          # TODO: change name to notifier when it will be changed in settings
-          POSTGRES_DB: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: notifier
+          POSTGRES_USER: notifier
+          POSTGRES_PASSWORD: notifier
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
