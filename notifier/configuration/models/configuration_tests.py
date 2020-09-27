@@ -157,9 +157,11 @@ def test_run_configuration_should_filter_message_with_skip_keywords(
 
     configuration = ConfigurationFactory(
         users=(user1, user2),
-        skip_keywords=(skip_keyword,),
         message_filters=(
-            MessageFilterModelFactory(object_type=SkipKeywordsMessageFilter.__name__),
+            MessageFilterModelFactory(
+                object_type=SkipKeywordsMessageFilter.__name__,
+                parameters={'skip_keywords': [skip_keyword.word]},
+            ),
         ),
     )
 

@@ -33,20 +33,10 @@ class Configuration(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    # TODO: required=false for skip_keywords and filters
-    _skip_keywords = models.ManyToManyField(SkipKeyword)
     _message_filters = models.ManyToManyField(MessageFilterModel)
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.name}'
-
-    # TODO: Maybe move it to their own filter?
-    @cached_property
-    def skip_keywords(self) -> List[str]:
-        return [
-            row['word']
-            for row in self._skip_keywords.values('word')
-        ]
 
     @cached_property
     def message_filters(self) -> List[Type[BaseMessageFilter]]:
@@ -73,7 +63,7 @@ class Configuration(models.Model):
             producer,
         )
         messages = reduce(
-            lambda messages, message_filter: message_filter(messages, self),
+            lambda msgs, message_filter: message_filter(msgs, self),
             self.message_filters,
             messages,
         )

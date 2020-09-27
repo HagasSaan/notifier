@@ -45,14 +45,15 @@ def test_skip_messages_filter(
 
     configuration = ConfigurationFactory(
         users=(user1, user2),
-        skip_keywords=(skip_keyword,),
     )
 
     fake_messages = messages_should_be_consumed + [
         InternalMessage(user2.username, user1.username, f'message with {skip_keyword.word}'),
     ]
 
-    assert messages_should_be_consumed == SkipKeywordsMessageFilter()(
+    assert messages_should_be_consumed == SkipKeywordsMessageFilter(
+        **{'skip_keywords': [skip_keyword.word]}
+    )(
         fake_messages,
         configuration,
     )

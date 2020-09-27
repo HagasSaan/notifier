@@ -112,3 +112,8 @@ USE_GRAPHIQL_INTERFACE = True
 GRAPHENE = {
     'SCHEMA': 'notifier.schema.schema',
 }
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

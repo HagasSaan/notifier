@@ -8,7 +8,6 @@ from helpers.registry import Registry
 class MessageFilterModel(ABCObjectModel):
     DEFAULT_REGISTRY = Registry(MESSAGE_FILTER_REGISTRY_NAME)
 
-    # TODO: Maybe move skip keywords to here?
     object_type = models.CharField(
         max_length=100,
         choices=[

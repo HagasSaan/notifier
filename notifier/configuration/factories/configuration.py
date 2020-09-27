@@ -22,15 +22,6 @@ class ConfigurationFactory(factory.django.DjangoModelFactory):
                 self.users.add(user)
 
     @factory.post_generation
-    def skip_keywords(self, create: bool, extracted: List[SkipKeyword]) -> None:
-        if not create:
-            return
-
-        if extracted:
-            for skip_keyword in extracted:
-                self._skip_keywords.add(skip_keyword)
-
-    @factory.post_generation
     def message_filters(self, create: bool, extracted: List[MessageFilterModel]) -> None:
         if not create:
             return

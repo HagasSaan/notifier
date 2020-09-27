@@ -1,8 +1,6 @@
 import dataclasses
 from typing import Any
 
-# TODO: Move all here to their own application
-
 
 @dataclasses.dataclass
 class ExternalMessage:

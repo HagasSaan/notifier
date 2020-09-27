@@ -4,6 +4,6 @@ RUN mkdir /application
 WORKDIR /application
 COPY requirements.txt /application/
 RUN pip install -r requirements.txt
-COPY . /application/
+COPY ./notifier /application/notifier
 WORKDIR /application/notifier
-ENTRYPOINT python manage.py runserver 0.0.0.0:8000
+CMD python manage.py runserver 0.0.0.0:8000

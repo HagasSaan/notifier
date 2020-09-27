@@ -38,7 +38,7 @@ class ABCObjectModel(models.Model):
     ) -> None:
         # TODO: cover with tests that method, it's fucking important
         class_ = self.DEFAULT_REGISTRY.get(self.object_type)
-        if isinstance(class_, Validatable):
+        if issubclass(class_, Validatable):
             try:
                 class_.validate_params(self.parameters)
             except Exception as e:

@@ -24,7 +24,6 @@ services:
   web:
     build: .
     image: web:latest
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/application
     ports:
@@ -40,6 +39,9 @@ services:
     volumes:
       - .:/application
     command: celery -A notifier worker -l info
+    depends_on:
+      - db
+      - rabbitmq
     environment:
       CELERY_BROKER: amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier
 
