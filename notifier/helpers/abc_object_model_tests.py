@@ -64,7 +64,7 @@ def test_validate_params_raise_error(db: MockFixture) -> None:
                     'What is the Ultimate Question of Life, '
                     'the Universe, and Everything'
                 ),
-                'field_2': '1337'
+                'field_2': '1337',
             },
         ).save()
 
