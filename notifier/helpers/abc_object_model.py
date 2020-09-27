@@ -1,4 +1,4 @@
-from typing import Union, Any, Optional
+from typing import Union, Any, Optional, Dict
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -32,20 +32,9 @@ class ABCObjectModel(models.Model):
     class Meta:
         abstract = True
 
-    def save(
-        self,
-        force_insert: bool = False,
-        force_update: bool = False,
-        using: Optional[Any] = None,
-        update_fields: Optional[Any] = None,
-    ) -> None:
+    def save(self, **kwargs: Dict) -> None:
         self._check_params_before_save()
-        super().save(
-            force_insert=force_insert,
-            force_update=force_update,
-            using=using,
-            update_fields=update_fields,
-        )
+        super().save(**kwargs)
 
     def _check_params_before_save(self) -> None:
         class_ = self.DEFAULT_REGISTRY.get(self.object_type)

@@ -120,7 +120,7 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# mypy
+# mypyme
 .mypy_cache/
 .dmypy.json
 dmypy.json
@@ -130,3 +130,6 @@ dmypy.json
 
 # PyCharm files
 .idea/
+
+# media for project
+media/

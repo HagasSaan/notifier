@@ -1,3 +1,5 @@
+from typing import Dict
+
 import structlog
 from django.db import models
 
@@ -18,3 +20,11 @@ class ProducerModel(ABCObjectModel):
             for key in DEFAULT_REGISTRY.keys
         ],
     )
+
+
+class CustomProducer(models.Model):
+    name = models.CharField(max_length=100)
+    file = models.FileField(upload_to='custom_producers')
+
+    def save(self, **kwargs: Dict):
+        super().save(**kwargs)

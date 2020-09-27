@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ProducerModel
+from .models import ProducerModel, CustomProducer
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
 
@@ -12,3 +12,8 @@ class ProducerModelAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.JSONField: {'widget': JSONEditorWidget},
     }
+
+
+@admin.register(CustomProducer)
+class CustomProducerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'file')

@@ -13,22 +13,22 @@ TODO:
 - [x] Прикрутить консьюмер(telegram)
 - [ ] Прикрутить celery tasks
     - [x] Сделать запуск конфигурации асинхронной задачей
-    - [ ] Сделать запуск конфигураций с определенным периодом ![Celery periodic tasks](https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html)
+    - [ ] Сделать запуск конфигураций с определенным периодом [Celery periodic tasks](https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html)
 - [ ] Собрать весь CI/CD пайплайн на Github Actions
     - [x] Прикрутить линтер
-    - [ ] Дополнить тесты на bare metal тестами в контейнерах ![link](https://github.community/t/how-to-use-docker-compose-with-github-actions/16850/3)
+    - [ ] Дополнить тесты на bare metal тестами в контейнерах [link](https://github.community/t/how-to-use-docker-compose-with-github-actions/16850/3)
     - [x] Добавить выгрузку контейнера после тестов на Dockerhub
     - [x] Развернуть сервис вручную
     - [x] Получить манифесты для развёртывания каждого из сервисов по отдельности
     - [ ] Попробовать написать что-то деплоящее куда-то с GA
-        - ![Конфигурирование AWS Credentials](https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions)
-        - ![Создание контекста](https://github.com/marketplace/actions/kubernetes-set-context)
-        - ![Запуск развёртывания приложения](https://github.com/marketplace/actions/kubernetes-set-context)
+        - [Конфигурирование AWS Credentials](https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions)
+        - [Создание контекста kubernetes](https://github.com/marketplace/actions/kubernetes-set-context)
+        - [Запуск развёртывания приложения kubernetes](https://github.com/marketplace/actions/kubernetes-set-context)
     - [ ] Сделать скрытие секретов в развертываемом проекте и их подключении через Vault
         - [x] Переделать переменные в settings.py в os.environ.get()
         - [ ] Написать свой ConfigMap / Secrets для k8s
     - [ ] Сделать мониторинг на основе Sentry
-        - [ ] ![Sentry Release](https://github.com/marketplace/actions/sentry-release)
+        - [ ] [Sentry Release](https://github.com/marketplace/actions/sentry-release)
 - [x] Переделать фильтр SkipKeywords (вынести слова из конфигурации в фильтр)
 - [ ] Прикрутить консьюмер(vk)
 - [ ] Кастомизировать формат сообщений (текущий формат сделать как default)
@@ -38,7 +38,7 @@ TODO:
     - [ ] Подумать про интерфейс
     - [ ] Подумать про безопасность таких настроек
     - [ ] Реализовать
-- [ ] Подумать о применении проекта в качестве алерт-системы типа Balerter, которая будет чекать что-то скриптом, и пихать данные куда-то
+    - [ ] Подумать о применении проекта в качестве алерт-системы типа Balerter, которая будет чекать что-то скриптом, и пихать данные куда-то
 - [ ] Прикрутить Graphene
     - [ ] Прикрутить авторизацию (OAuth 2.0)
     - [x] Просмотр возможных конфигураций, консьюмеров, продюсеров, их параметров
