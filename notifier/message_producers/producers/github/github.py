@@ -48,6 +48,7 @@ class GithubPullRequest(Initable):
 @Registry.register(PRODUCER_REGISTRY_NAME)
 @dataclasses.dataclass
 class GithubRepository(MessageProducer):
+    # TODO: make token optional param
     name: str
     token: str
 

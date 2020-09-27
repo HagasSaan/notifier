@@ -9,8 +9,11 @@ from message_consumers.consumers.message_consumer import MessageConsumer
 from message_producers.producers.message_producer import MessageProducer
 
 
+DEFAULT_REGISTRY_NAME = 'default'
+
+
 class ABCObjectModel(models.Model):
-    DEFAULT_REGISTRY = Registry('default')
+    DEFAULT_REGISTRY = Registry(DEFAULT_REGISTRY_NAME)
 
     name = models.CharField(max_length=100, unique=True)
     object_type = models.CharField(
@@ -36,7 +39,15 @@ class ABCObjectModel(models.Model):
         using: Optional[Any] = None,
         update_fields: Optional[Any] = None,
     ) -> None:
-        # TODO: cover with tests that method, it's fucking important
+        self._check_params_before_save()
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+
+    def _check_params_before_save(self):
         class_ = self.DEFAULT_REGISTRY.get(self.object_type)
         if issubclass(class_, Validatable):
             try:
@@ -55,12 +66,6 @@ class ABCObjectModel(models.Model):
                     f'Required fields for {self.object_type} is: \n'
                     f'\t{required_fields}',
                 )
-        super().save(
-            force_insert=force_insert,
-            force_update=force_update,
-            using=using,
-            update_fields=update_fields,
-        )
 
     def get_object_by_registry_name(
         self,
