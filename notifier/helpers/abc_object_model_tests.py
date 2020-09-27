@@ -47,12 +47,13 @@ def test_validate_params_raise_error(db: MockFixture) -> None:
         ValidationError,
         match=re.escape(
             '["Error: ['
-            '\'I need Answer to the Ultimate Question of Life, '
+            "'I need Answer to the Ultimate Question of Life, "
             'the Universe, and Everything as field_2 param'
-            '\']'
-            '\\nRequired fields for SampleClassInDefaultRegistry is: '
-            '\\n\\tfield_1:<class \'str\'>'
-            '\\t\\nfield_2:<class \'int\'>"]'
+            "']"
+            '\nRequired fields for SampleClassInDefaultRegistry is: '
+            "\n\tfield_1:<class 'str'>"
+            "\t\nfield_2:<class 'int'>"
+            '"]'
         )
     ):
         ABCObjectModel(
@@ -73,10 +74,11 @@ def test_validate_params_raise_error_if_fields_missing(db: MockFixture) -> None:
         ValidationError,
         match=re.escape(
             '["Error: '
-            '\'field_2\''
-            '\\nRequired fields for SampleClassInDefaultRegistry is: '
-            '\\n\\tfield_1:<class \'str\'>'
-            '\\t\\nfield_2:<class \'int\'>"]'
+            "'field_2'"
+            '\nRequired fields for SampleClassInDefaultRegistry is: '
+            "\n\tfield_1:<class 'str'>"
+            "\t\nfield_2:<class 'int'>"
+            '"]'
         )
     ):
         ABCObjectModel(
