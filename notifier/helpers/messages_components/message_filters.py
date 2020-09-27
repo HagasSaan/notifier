@@ -40,7 +40,7 @@ class SkipKeywordsMessageFilter(BaseMessageFilter, Validatable):
             for message in messages
             if not any(
                 skip_keyword in message.content
-                for skip_keyword in self._skip_keywords
+                for skip_keyword in self.skip_keywords
             )
         ]
 
