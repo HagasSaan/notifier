@@ -26,6 +26,10 @@ class Registry:
 
     def set(self, value: Any) -> None:  # noqa A003
         key = value.__name__
+        logger.info(
+            f'Object {key} successfully '
+            f'registered in {self.name} scope',
+        )
         if self._instances[self.name].get(key) is not None:
             raise ItemAlreadyExists
 
@@ -54,10 +58,6 @@ class Registry:
         def _register_wrapper(class_: object) -> object:
             registry = Registry(name)
             registry.set(class_)
-            logger.info(
-                f'Class {class_.__name__} successfully '
-                f'registered in {name} scope',
-            )
             return class_
 
         return _register_wrapper

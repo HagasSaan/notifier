@@ -1,3 +1,4 @@
+import inspect
 from typing import Union, Dict
 
 from django.core.exceptions import ValidationError
@@ -27,7 +28,7 @@ class ABCObjectModel(models.Model):
     parameters = models.JSONField(blank=True, default=dict)
 
     def __str__(self):
-        return f'{self.object_type} "{self.name}"({self.__class__.__name__})'
+        return f'{self.object_type} "{self.name}"'
 
     class Meta:
         abstract = True
@@ -38,6 +39,12 @@ class ABCObjectModel(models.Model):
 
     def _check_params_before_save(self) -> None:
         class_ = self.DEFAULT_REGISTRY.get(self.object_type)
+
+        # TODO: make abstract class and remove that shit
+        # That created because CustomProducer is not a class
+        if not inspect.isclass(class_):
+            return
+
         if issubclass(class_, Validatable):
             try:
                 class_.validate_params(self.parameters)

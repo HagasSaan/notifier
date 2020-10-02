@@ -33,7 +33,7 @@ class Configuration(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    _message_filters = models.ManyToManyField(MessageFilterModel)
+    _message_filters = models.ManyToManyField(MessageFilterModel, blank=True)
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.name}'
