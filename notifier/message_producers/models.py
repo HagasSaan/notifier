@@ -26,5 +26,8 @@ class CustomProducer(models.Model):
     name = models.CharField(max_length=100)
     file = models.FileField(upload_to='custom_producers')
 
-    def save(self, **kwargs: Dict):
+    def __str__(self):
+        return f'{self.name}: {self.file}'
+
+    def save(self, **kwargs: Dict) -> None:
         super().save(**kwargs)

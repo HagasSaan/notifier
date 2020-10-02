@@ -5,7 +5,7 @@ import freezegun
 import pytest
 from pytest_mock import MockFixture
 
-from configuration.factories import UserFactory, SkipKeywordFactory, ConfigurationFactory
+from configuration.factories import UserFactory, ConfigurationFactory
 from configuration.models import User
 from . import InternalMessage
 from .message_filters import (
@@ -41,18 +41,16 @@ def test_skip_messages_filter(
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
 
-    skip_keyword = SkipKeywordFactory()
-
     configuration = ConfigurationFactory(
         users=(user1, user2),
     )
 
     fake_messages = messages_should_be_consumed + [
-        InternalMessage(user2.username, user1.username, f'message with {skip_keyword.word}'),
+        InternalMessage(user2.username, user1.username, 'message with skip_keyword1'),
     ]
 
     assert messages_should_be_consumed == SkipKeywordsMessageFilter(
-        **{'skip_keywords': [skip_keyword.word]},
+        **{'skip_keywords': ['skip_keyword1']},
     )(
         fake_messages,
         configuration,

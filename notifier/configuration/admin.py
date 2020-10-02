@@ -6,7 +6,7 @@ from django_json_widget.widgets import JSONEditorWidget
 from django.db import models
 from requests import Request
 
-from .models import User, SkipKeyword, Configuration, MessageFilterModel
+from .models import User, Configuration, MessageFilterModel
 from .tasks import run_configuration
 
 logger = structlog.get_logger(__name__)
@@ -35,11 +35,6 @@ class UserAdmin(admin.ModelAdmin):
         return obj.is_working_time
 
     is_working_time.boolean = True
-
-
-@admin.register(SkipKeyword)
-class SkipKeywordAdmin(admin.ModelAdmin):
-    list_display = ('word', )
 
 
 @admin.register(Configuration)

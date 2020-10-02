@@ -7,7 +7,6 @@ from pytest_mock import MockFixture
 
 from configuration.factories import (
     ConfigurationFactory,
-    SkipKeywordFactory,
     UserFactory,
 )
 from configuration.factories.message_filter import MessageFilterModelFactory
@@ -145,10 +144,8 @@ def test_run_configuration_should_filter_message_with_skip_keywords(
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
 
-    skip_keyword = SkipKeywordFactory()
-
     fake_messages = messages_should_be_consumed + [
-        ExternalMessage(user2.username, user1.username, f'message with {skip_keyword.word}'),
+        ExternalMessage(user2.username, user1.username, 'message with skip_keyword1'),
     ]
 
     mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
@@ -160,7 +157,7 @@ def test_run_configuration_should_filter_message_with_skip_keywords(
         message_filters=(
             MessageFilterModelFactory(
                 object_type=SkipKeywordsMessageFilter.__name__,
-                parameters={'skip_keywords': [skip_keyword.word]},
+                parameters={'skip_keywords': ['skip_keyword1']},
             ),
         ),
     )

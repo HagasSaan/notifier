@@ -36,3 +36,4 @@ ignore =
     ANN204  # return type annotation for special methods
     W503    # line break before binary operator
     W504    # line break after binary operator
+    VNE002  # variable name should be clarified
