@@ -1,5 +1,5 @@
 import inspect
-from typing import Union, Dict
+from typing import Union, Dict, Tuple, Any
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -17,15 +17,20 @@ class ABCObjectModel(models.Model):
     DEFAULT_REGISTRY = Registry(DEFAULT_REGISTRY_NAME)
 
     name = models.CharField(max_length=100, unique=True)
-    object_type = models.CharField(
-        max_length=100,
-        choices=[
-            (key, key)
-            for key in DEFAULT_REGISTRY.keys
-        ],
-    )
-
+    object_type = models.CharField(max_length=100, choices=[])
     parameters = models.JSONField(blank=True, default=dict)
+
+    def __init__(
+        self,
+        *args: Tuple[Any, ...],
+        **kwargs: Dict[str, Any],
+    ):
+        super().__init__(*args, **kwargs)
+        object_type = self._meta.get_field('object_type')
+        object_type.choices = [
+            (key, key)
+            for key in self.DEFAULT_REGISTRY.keys
+        ]
 
     def __str__(self):
         return f'{self.object_type} "{self.name}"'
@@ -41,7 +46,7 @@ class ABCObjectModel(models.Model):
         class_ = self.DEFAULT_REGISTRY.get(self.object_type)
 
         # TODO: make abstract class and remove that shit
-        # That created because CustomProducer is not a class
+        #  That created because CustomProducer is not a class
         if not inspect.isclass(class_):
             return
 

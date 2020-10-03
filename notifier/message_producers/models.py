@@ -24,24 +24,24 @@ class CustomProducer(models.Model):
 
     def save(self, **kwargs: Dict) -> None:
         super().save(**kwargs)
+        get_all_custom_producers()
 
     async def produce_messages(self) -> List[ExternalMessage]:
         # TODO: run saved file, get List[Dict] with messages, and return it
         pass
 
 
-_custom_producers = CustomProducer.objects.all()
-for producer in _custom_producers:
-    Registry(PRODUCER_REGISTRY_NAME).set(producer)
+def get_all_custom_producers() -> None:
+    # TODO: может добавить фильтры того, что уже есть?
+    #  а то не айс чёт
+    #  еще вариант отображать конкретно добавленный кастомпродюсер
+    _custom_producers = CustomProducer.objects.all()
+    for producer in _custom_producers:
+        Registry(PRODUCER_REGISTRY_NAME).set(producer, raise_if_exists=False)
 
 
 class ProducerModel(ABCObjectModel):
     DEFAULT_REGISTRY = Registry(PRODUCER_REGISTRY_NAME)
 
-    object_type = models.CharField(
-        max_length=100,
-        choices=[
-            (key, key)
-            for key in DEFAULT_REGISTRY.keys
-        ],
-    )
+
+get_all_custom_producers()

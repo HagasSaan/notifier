@@ -24,13 +24,13 @@ class Registry:
     def __str__(self):
         return f'Registry {self.name}'
 
-    def set(self, value: Any) -> None:  # noqa A003
+    def set(self, value: Any, raise_if_exists: bool = True) -> None:  # noqa A003
         key = value.__name__
         logger.info(
             f'Object {key} successfully '
             f'registered in {self.name} scope',
         )
-        if self._instances[self.name].get(key) is not None:
+        if self._instances[self.name].get(key) is not None and raise_if_exists:
             raise ItemAlreadyExists
 
         self._instances[self.name][key] = value
