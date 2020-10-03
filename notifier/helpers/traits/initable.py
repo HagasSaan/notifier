@@ -32,7 +32,5 @@ class Initable(abc.ABC):
         elif len(subtypes) == 0:
             for kwarg in kwargs[key]:
                 result.append(kwarg)
-        else:
-            raise InitError('List with more than 1 typing cannot be initialized')
 
         return result
