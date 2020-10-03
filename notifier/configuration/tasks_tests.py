@@ -24,7 +24,7 @@ def test_run_configuration_logs_error(
 ) -> None:
     mocker.patch.object(
         Configuration, 'run',
-        side_effect=Exception('error occurred')
+        side_effect=Exception('error occurred'),
     )
     configuration = ConfigurationFactory()
     run_configuration(configuration.id)
