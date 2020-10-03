@@ -23,8 +23,8 @@ services:
   web:
     build: .
     image: web:latest
-#    volumes:
-#      - .:/application
+    volumes:
+      - .:/application
     ports:
       - 8000:8000
     depends_on:
@@ -35,8 +35,8 @@ services:
 
   workers:
     image: web:latest
-#    volumes:
-#      - .:/application
+    volumes:
+      - .:/application
     command: celery -A notifier worker -l info
     depends_on:
       - db

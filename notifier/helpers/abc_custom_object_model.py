@@ -9,11 +9,9 @@ DEFAULT_REGISTRY_NAME = 'default'
 
 class ABCCustomObjectModel(models.Model):
     REGISTRY_NAME = DEFAULT_REGISTRY_NAME
-    DEFAULT_REGISTRY = Registry(REGISTRY_NAME)
-    UPLOAD_TO = REGISTRY_NAME
 
     name = models.CharField(max_length=100)
-    file = models.FileField(upload_to=UPLOAD_TO)
+    file = models.FileField(upload_to=REGISTRY_NAME)
 
     class Meta:
         abstract = True
@@ -27,13 +25,21 @@ class ABCCustomObjectModel(models.Model):
 
     def save(self, **kwargs: Dict) -> None:
         super().save(**kwargs)
-        self.get_all_custom_objects()
+        self._set_object(self)
+
+    # TODO: delete object from registry when it deleted in DB
+
+    def _set_object(self, object_: 'ABCCustomObjectModel') -> None:
+        registry = Registry(self.REGISTRY_NAME)
+        registry.set(object_)
 
     @classmethod
     def get_all_custom_objects(cls) -> None:
-        # TODO: может добавить фильтры того, что уже есть?
-        #  а то не айс чёт
-        #  еще вариант отображать конкретно добавленный объект
-        custom_objects = cls.objects.all()
-        for object_ in custom_objects:
-            cls.DEFAULT_REGISTRY.set(object_, raise_if_exists=False)
+        registry = Registry(cls.REGISTRY_NAME)
+        for object_ in cls.objects.all():
+            registry.set(
+                object_,
+                raise_if_exists=False,
+                notify_listeners=False,
+            )
+        registry.notify_all()

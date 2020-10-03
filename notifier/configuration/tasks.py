@@ -10,7 +10,6 @@ logger = structlog.get_logger(__name__)
 def run_configuration(
     configuration_id: int,
 ) -> None:
-    # TODO: tests  NOQA
     logger.bind(configuration_id=configuration_id)
     try:
         configuration = Configuration.objects.get(id=configuration_id)

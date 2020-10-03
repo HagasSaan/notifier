@@ -1,5 +1,5 @@
 import inspect
-from typing import Union, Dict, Tuple, Any
+from typing import Union, Dict
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -14,7 +14,7 @@ DEFAULT_REGISTRY_NAME = 'default'
 
 
 class ABCObjectModel(models.Model):
-    DEFAULT_REGISTRY = Registry(DEFAULT_REGISTRY_NAME)
+    REGISTRY_NAME = DEFAULT_REGISTRY_NAME
     CUSTOM_OBJECT_MODEL = None
 
     name = models.CharField(max_length=100, unique=True)
@@ -24,19 +24,12 @@ class ABCObjectModel(models.Model):
     class Meta:
         abstract = True
 
-    def __init__(
-        self,
-        *args: Tuple[Any, ...],
-        **kwargs: Dict[str, Any],
-    ):
-        super().__init__(*args, **kwargs)
-        if self.CUSTOM_OBJECT_MODEL is not None:
-            self.CUSTOM_OBJECT_MODEL.get_all_custom_objects()
-
-        object_type = self._meta.get_field('object_type')
+    @classmethod
+    def notify(cls) -> None:
+        object_type = cls._meta.get_field('object_type')
         object_type.choices = [
             (key, key)
-            for key in self.DEFAULT_REGISTRY.keys
+            for key in Registry(cls.REGISTRY_NAME).keys
         ]
 
     def __str__(self):
@@ -47,7 +40,7 @@ class ABCObjectModel(models.Model):
         super().save(**kwargs)
 
     def _check_params_before_save(self) -> None:
-        class_ = self.DEFAULT_REGISTRY.get(self.object_type)
+        class_ = Registry(self.REGISTRY_NAME).get(self.object_type)
 
         # TODO: make abstract class and remove that shit
         #  That created because CustomProducer is not a class

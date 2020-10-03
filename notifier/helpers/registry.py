@@ -15,16 +15,24 @@ class ItemNotExists(Exception):
 
 class Registry:
     _instances = {}
+    _listeners = {}
 
     def __init__(self, name: str):
         if self._instances.get(name) is None:
             self._instances[name] = {}
+            self._listeners[name] = []
+
         self.name = name
 
     def __str__(self):
         return f'Registry {self.name}'
 
-    def set(self, value: Any, raise_if_exists: bool = True) -> None:  # noqa A003
+    def set(  # noqa A003
+        self,
+        value: Any,
+        raise_if_exists: bool = True,
+        notify_listeners: bool = True,
+    ) -> None:
         key = value.__name__
         logger.info(
             f'Object {key} successfully '
@@ -34,6 +42,17 @@ class Registry:
             raise ItemAlreadyExists
 
         self._instances[self.name][key] = value
+
+        if notify_listeners:
+            self.notify_all()
+
+    def notify_all(self) -> None:
+        for listener in self._listeners[self.name]:
+            listener.notify()
+
+    def subscribe(self, listener: Any) -> None:
+        self._listeners[self.name].append(listener)
+        listener.notify()
 
     def get(self, key: Any) -> Any:
         value = self._instances[self.name].get(key)

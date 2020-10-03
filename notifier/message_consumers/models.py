@@ -8,4 +8,7 @@ logger = structlog.get_logger(__name__)
 
 
 class ConsumerModel(ABCObjectModel):
-    DEFAULT_REGISTRY = Registry(CONSUMER_REGISTRY_NAME)
+    REGISTRY_NAME = CONSUMER_REGISTRY_NAME
+
+
+Registry(CONSUMER_REGISTRY_NAME).subscribe(ConsumerModel)
