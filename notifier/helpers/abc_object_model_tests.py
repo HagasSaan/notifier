@@ -91,3 +91,8 @@ def test_validate_params_raise_error_if_fields_missing(db: MockFixture) -> None:
                 ),
             },
         ).save()
+
+
+def test_create_object_model_gets_all_custom_objects() -> None:
+    # TODO: write that test
+    pass

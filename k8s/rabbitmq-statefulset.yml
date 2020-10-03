@@ -31,6 +31,6 @@ spec:
             - name: RABBITMQ_DEFAULT_VHOST
               value: "notifier"
             - name: RABBITMQ_DEFAULT_USER
-              value: "rabbitmq"
+              value: "notifier"
             - name: RABBITMQ_DEFAULT_PASS
-              value: "rabbitmq"
+              value: "notifier"

@@ -50,6 +50,13 @@ def test_add_class_to_registry_twice_raises_error(
         f_registry.set(RegisterTestClass)
 
 
+def test_add_class_to_registry_twice_not_raises_error_with_special_flag(
+    f_registry: Registry,
+) -> None:
+    f_registry.set(RegisterTestClass)
+    f_registry.set(RegisterTestClass, raise_if_exists=False)
+
+
 def test_get_class_which_not_added_raises_error(
     f_registry: Registry,
 ) -> None:
