@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List
 
 import pytest
 
@@ -108,4 +108,3 @@ def test_init_class_with_typings() -> None:
         'field_2': initable_classes,
         'field_2_1': [1, '2', True, 3.4],
     }
-
