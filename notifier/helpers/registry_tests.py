@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 
 from helpers.registry import (
@@ -55,6 +57,24 @@ def test_add_class_to_registry_twice_not_raises_error_with_special_flag(
 ) -> None:
     f_registry.set(RegisterTestClass)
     f_registry.set(RegisterTestClass, raise_if_exists=False)
+
+
+def test_add_class_notifies_listeners(
+    f_registry: Registry,
+) -> None:
+    listeners = [mock.MagicMock() for _ in range(2)]
+    [f_registry.subscribe(listener) for listener in listeners]
+    f_registry.set(RegisterTestClass)
+    assert all(listener.notify.called for listener in listeners)
+
+
+def test_add_class_not_notifies_listeners_with_special_flag(
+    f_registry: Registry,
+) -> None:
+    listener = mock.MagicMock()
+    f_registry.subscribe(listener)
+    f_registry.set(RegisterTestClass, notify_listeners=False)
+    assert not listener.notify.called
 
 
 def test_get_class_which_not_added_raises_error(
