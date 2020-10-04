@@ -48,6 +48,6 @@ class ABCCustomObjectModel(models.Model):
     def __call__(
         self,
         *args: List[Any],
-        **kwargs: Dict[str, Any]
+        **kwargs: Dict[str, Any],
     ) -> 'ABCCustomObjectModel':
         return self
