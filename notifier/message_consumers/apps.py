@@ -15,4 +15,4 @@ class MessageConsumersConfig(AppConfig):
 
         consumer_model = self.get_model('ConsumerModel')
         Registry(CONSUMER_REGISTRY_NAME).subscribe(consumer_model)
-        consumer_model.CUSTOM_OBJECT_MODEL.get_all_custom_objects()
+        consumer_model.CUSTOM_OBJECT_MODEL.upload_all_custom_objects_from_db_to_registry()

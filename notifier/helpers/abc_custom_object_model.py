@@ -33,9 +33,8 @@ class ABCCustomObjectModel(models.Model):
         registry = Registry(self.REGISTRY_NAME)
         registry.set(object_)
 
-    # TODO: incorrect name for that method
     @classmethod
-    def get_all_custom_objects(cls) -> None:
+    def upload_all_custom_objects_from_db_to_registry(cls) -> None:
         registry = Registry(cls.REGISTRY_NAME)
         for object_ in cls.objects.all():
             registry.set(
@@ -50,4 +49,8 @@ class ABCCustomObjectModel(models.Model):
         *args: List[Any],
         **kwargs: Dict[str, Any],
     ) -> 'ABCCustomObjectModel':
+        """
+        This method required because ObjectModels returns constructors, not objects.
+        So, configuration calls object, but it's already created.
+        """
         return self

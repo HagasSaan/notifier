@@ -15,4 +15,4 @@ class MessageProducersConfig(AppConfig):
 
         producer_model = self.get_model('ProducerModel')
         Registry(PRODUCER_REGISTRY_NAME).subscribe(producer_model)
-        producer_model.CUSTOM_OBJECT_MODEL.get_all_custom_objects()
+        producer_model.CUSTOM_OBJECT_MODEL.upload_all_custom_objects_from_db_to_registry()
