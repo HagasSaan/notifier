@@ -52,7 +52,6 @@ class Registry:
 
     def subscribe(self, listener: Any) -> None:
         self._listeners[self.name].append(listener)
-        listener.notify()
 
     def get(self, key: Any) -> Any:
         value = self._instances[self.name].get(key)

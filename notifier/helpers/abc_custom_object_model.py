@@ -33,6 +33,7 @@ class ABCCustomObjectModel(models.Model):
         registry = Registry(self.REGISTRY_NAME)
         registry.set(object_)
 
+    # TODO: incorrect name for that method
     @classmethod
     def get_all_custom_objects(cls) -> None:
         registry = Registry(cls.REGISTRY_NAME)
