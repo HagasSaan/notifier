@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List, Any
 
 from django.db import models
 
@@ -44,3 +44,10 @@ class ABCCustomObjectModel(models.Model):
                 notify_listeners=False,
             )
         registry.notify_all()
+
+    def __call__(
+        self,
+        *args: List[Any],
+        **kwargs: Dict[str, Any]
+    ) -> 'ABCCustomObjectModel':
+        return self

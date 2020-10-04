@@ -79,7 +79,7 @@ class Configuration(models.Model):
         messages: List[ExternalMessage],
         producer: MessageProducer,
     ) -> List[InternalMessage]:
-        producer_username_key = producer.username_key
+        producer_username_key = producer.USERNAME_KEY
 
         result_messages = []
         for message in messages:
@@ -107,7 +107,7 @@ class Configuration(models.Model):
         messages: List[InternalMessage],
         consumer: MessageConsumer,
     ) -> List[ExternalMessage]:
-        consumer_username_key = consumer.username_key
+        consumer_username_key = consumer.USERNAME_KEY
 
         result_messages = []
         for message in messages:

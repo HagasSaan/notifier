@@ -74,7 +74,7 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
         working_time_start=datetime.time(8, 0, 0),
         working_time_end=datetime.time(17, 0, 0),
     )
-    user_without_consumer_username.additional_info.pop(SampleConsumer.username_key)
+    user_without_consumer_username.additional_info.pop(SampleConsumer.USERNAME_KEY)
     user_without_consumer_username.save()
 
     messages_should_be_consumed = [

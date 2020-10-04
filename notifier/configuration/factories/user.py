@@ -18,8 +18,8 @@ class UserFactory(factory.django.DjangoModelFactory):
     on_leave = False
     additional_info = factory.Dict(
         {
-            SampleProducer.username_key: factory.SelfAttribute('..username'),
-            SampleConsumer.username_key: factory.SelfAttribute('..username'),
+            SampleProducer.USERNAME_KEY: factory.SelfAttribute('..username'),
+            SampleConsumer.USERNAME_KEY: factory.SelfAttribute('..username'),
         },
     )
     working_time_start = datetime.now().time()

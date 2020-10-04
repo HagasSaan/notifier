@@ -10,7 +10,7 @@ class MessageProducersConfig(AppConfig):
     name = 'message_producers'
 
     def ready(self) -> None:
-        if sys.argv[1] != 'runserver':
+        if len(sys.argv) < 2 or sys.argv[1] != 'runserver':
             return
 
         producer_model = self.get_model('ProducerModel')

@@ -52,7 +52,7 @@ class GithubRepository(MessageProducer):
     name: str
     token: str
 
-    username_key = 'github_username'
+    USERNAME_KEY = 'github_username'
 
     URL_API_GITHUB = 'https://api.github.com'
     URL_REPOSITORY = URL_API_GITHUB + '/repos/{repository}'

@@ -16,7 +16,7 @@ class SampleConsumer(MessageConsumer):
     field_1: str
     field_2: int
 
-    username_key = 'test_consumer'
+    USERNAME_KEY = 'test_consumer'
 
     async def consume_messages(self, messages: List[ExternalMessage]) -> None:
         pass

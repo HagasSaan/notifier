@@ -18,7 +18,7 @@ class TelegramGroupChat(MessageConsumer):
     bot_token: str
     chat_id: int
 
-    username_key = 'telegram_username'
+    USERNAME_KEY = 'telegram_username'
 
     CHAT_NOT_FOUND = 'chat not found'
 
@@ -70,7 +70,7 @@ class TelegramGroupChat(MessageConsumer):
 @Registry.register(CONSUMER_REGISTRY_NAME)
 @dataclasses.dataclass
 class TelegramChat(MessageConsumer):
-    username_key = 'telegram_user_chat_id'
+    USERNAME_KEY = 'telegram_user_chat_id'
 
     @classmethod
     def validate_params(cls, params: Union[Dict, JSONField]) -> None:

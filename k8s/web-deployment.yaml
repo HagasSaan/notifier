@@ -22,3 +22,8 @@ spec:
           image: hagassaan/notifier
           command: ["celery"]
           args: ["-A", "notifier", "worker", "-l", "info"]
+        # TODO: test it
+        - name: beat
+          image: hagassaan/notifier
+          command: ["celery"]
+          args: ["-A", "notifier", "beat", "-l", "info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]

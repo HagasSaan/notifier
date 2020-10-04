@@ -72,7 +72,7 @@ def test_get_user_by_producer_username(
 ) -> None:
     user = User.get_user_by_producer_username(
         default_user.username,
-        SampleProducer.username_key,
+        SampleProducer.USERNAME_KEY,
     )
     assert user == default_user
 
@@ -97,7 +97,7 @@ def test_get_consumer_username(
     default_user: User,
 ) -> None:
     assert default_user.get_consumer_username(
-        SampleConsumer.username_key,
+        SampleConsumer.USERNAME_KEY,
     ) == default_user.username
 
 

@@ -47,6 +47,8 @@ class ConfigurationAdmin(admin.ModelAdmin):
             # TODO: tests  NOQA
             run_configuration.delay(configuration.id)
 
+    # TODO: make action for scheduling run configuration
+
     run_configurations.short_description = 'Run selected configurations'
 
 

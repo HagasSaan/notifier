@@ -16,7 +16,7 @@ class SampleProducer(MessageProducer):
     field_1: str
     field_2: int
 
-    username_key = 'test_producer'
+    USERNAME_KEY = 'test_producer'
 
     async def produce_messages(self) -> List[ExternalMessage]:
         pass
