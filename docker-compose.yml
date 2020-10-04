@@ -42,7 +42,19 @@ services:
       - db
       - rabbitmq
     environment:
-      CELERY_BROKER: amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier
+      CELERY_BROKER: amqp://notifier:notifier@rabbitmq:5672/notifier
+
+#  TODO: add k8s config for that
+  beat:
+    image: web:latest
+    volumes:
+      - .:/application
+    command: celery -A notifier beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      CELERY_BROKER: amqp://notifier:notifier@rabbitmq:5672/notifier
 
 volumes:
   notifier_postgres:

@@ -6,7 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '_-r1_+g$f*zu5-v6vo*#(l!zmlgx#dvyf0qd#+-od*a@gdweih'
 
-DEBUG = (os.environ.get('DEBUG', 'false') == 'true')
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '0.0.0.0',
@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'django_json_widget',
     'django_celery_results',
+    'django_celery_beat',
     'configuration',
     'message_producers',
     'message_consumers',
