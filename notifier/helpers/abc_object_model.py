@@ -26,6 +26,9 @@ class ABCObjectModel(models.Model):
 
     @classmethod
     def notify(cls) -> None:
+        """
+        Notification comes when registry updated (new custom object added)
+        """
         object_type = cls._meta.get_field('object_type')
         object_type.choices = [
             (key, key)
