@@ -1,6 +1,5 @@
-from unittest import mock
-
 import pytest
+from pytest_mock import MockFixture
 
 from helpers.registry import (
     Registry,
@@ -61,8 +60,9 @@ def test_add_class_to_registry_twice_not_raises_error_with_special_flag(
 
 def test_add_class_notifies_listeners(
     f_registry: Registry,
+    mocker: MockFixture,
 ) -> None:
-    listeners = [mock.MagicMock() for _ in range(2)]
+    listeners = [mocker.MagicMock() for _ in range(2)]
     [f_registry.subscribe(listener) for listener in listeners]
     f_registry.set(RegisterTestClass)
     assert all(listener.notify.called for listener in listeners)
@@ -70,8 +70,9 @@ def test_add_class_notifies_listeners(
 
 def test_add_class_not_notifies_listeners_with_special_flag(
     f_registry: Registry,
+    mocker: MockFixture,
 ) -> None:
-    listener = mock.MagicMock()
+    listener = mocker.MagicMock()
     f_registry.subscribe(listener)
     f_registry.set(RegisterTestClass, notify_listeners=False)
     assert not listener.notify.called
