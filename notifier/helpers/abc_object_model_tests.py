@@ -101,6 +101,8 @@ def test_notify_model_restores_all_custom_objects_from_registry(
     f_meta.get_field.return_value = f_field
     ABCObjectModel.notify()
     f_field.choices = [
-        (SampleClassInDefaultRegistry.__name__, SampleClassInDefaultRegistry.__name__)
+        (
+            SampleClassInDefaultRegistry.__name__,
+            SampleClassInDefaultRegistry.__name__,
+        ),
     ]
-
