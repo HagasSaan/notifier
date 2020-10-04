@@ -1,6 +1,6 @@
 aiohttp==3.6.2
 aioresponses==0.6.4
-amqp==2.6.1
+amqp==5.0.1
 aniso8601==7.0.0
 asgiref==3.2.10
 astroid==2.4.2
@@ -9,13 +9,15 @@ attrs==19.3.0
 Babel==2.8.0
 bandit==1.6.2
 billiard==3.6.3.0
-celery==4.4.7
+celery==5.0.0
 certifi==2020.6.20
 chardet==3.0.4
+click==7.1.2
+click-didyoumean==0.0.3
+click-repl==0.1.6
 coverage==5.2.1
 Django==3.1
 django-celery-beat==2.0.0
-django-celery-results==1.2.1
 django-json-widget==1.0.1
 django-timezone-field==4.0
 dlint==0.10.3
@@ -52,7 +54,7 @@ idna==2.10
 inflection==0.5.1
 iniconfig==1.0.1
 isort==5.4.2
-kombu==4.6.11
+kombu==5.0.2
 lazy-object-proxy==1.4.3
 mccabe==0.6.1
 more-itertools==8.4.0
@@ -62,6 +64,7 @@ pbr==5.4.5
 pep8-naming==0.11.1
 pluggy==0.13.1
 promise==2.3
+prompt-toolkit==3.0.7
 psycopg2==2.8.5
 py==1.9.0
 pycodestyle==2.6.0
@@ -92,6 +95,7 @@ structlog==20.1.0
 text-unidecode==1.3
 toml==0.10.1
 Unidecode==1.1.1
-vine==1.3.0
+vine==5.0.0
+wcwidth==0.2.5
 wrapt==1.12.1
 yarl==1.5.1
