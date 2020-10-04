@@ -9,7 +9,7 @@ from message_producers.producers.message_producer import PRODUCER_REGISTRY_NAME
 class MessageProducersConfig(AppConfig):
     name = 'message_producers'
 
-    def ready(self):
+    def ready(self) -> None:
         if sys.argv[1] != 'runserver':
             return
 

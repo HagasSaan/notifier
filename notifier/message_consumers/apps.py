@@ -9,7 +9,7 @@ from message_consumers.consumers.message_consumer import CONSUMER_REGISTRY_NAME
 class MessageConsumersConfig(AppConfig):
     name = 'message_consumers'
 
-    def ready(self):
+    def ready(self) -> None:
         if sys.argv[1] != 'runserver':
             return
 
