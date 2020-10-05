@@ -18,15 +18,9 @@ logger = structlog.get_logger(__name__)
 class GithubUser(Initable):
     login: str
 
-    def __repr__(self):
-        return f'{self.__class__.__name__} {self.login}'
-
 
 class GithubLabel(Initable):
     name: str
-
-    def __repr__(self):
-        return f'{self.__class__.__name__} {self.name}'
 
     def __str__(self):
         return self.name
