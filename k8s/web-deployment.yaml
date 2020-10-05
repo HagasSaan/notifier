@@ -18,13 +18,22 @@ spec:
           ports:
           - containerPort: 8000
             protocol: TCP
+          env:
+            - name: SENTRY_DSN
+              value: "some_sentry_dsn_from_secret"
         - name: workers
           image: hagassaan/notifier
           command: ["celery"]
           args: ["-A", "notifier", "worker", "-l", "info"]
+          env:
+            - name: SENTRY_DSN
+              value: "some_sentry_dsn_from_secret"
         # TODO: test it
         # TODO: wait for upgrade of lib, cuz now it conflicts with celery 5.*
         - name: beat
           image: hagassaan/notifier
           command: ["celery"]
           args: ["-A", "notifier", "beat", "-l", "info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]
+          env:
+            - name: SENTRY_DSN
+              value: "some_sentry_dsn_from_secret"

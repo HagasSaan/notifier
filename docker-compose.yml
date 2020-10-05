@@ -33,6 +33,7 @@ services:
     environment:
       CELERY_BROKER: amqp://notifier:notifier@rabbitmq:5672/notifier
 
+# TODO: wait for upgrade of lib, cuz now it conflicts with celery 5.*
   workers:
     image: web:latest
     volumes:

@@ -1,5 +1,6 @@
 ![Python application](https://github.com/HagasSaan/notifier/workflows/Python%20application/badge.svg)
 [![codecov](https://codecov.io/gh/HagasSaan/notifier/branch/master/graph/badge.svg)](https://codecov.io/gh/HagasSaan/notifier)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/HagasSaan/notifier.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HagasSaan/notifier/alerts/)
 
 # My Yet Another Scheduler Operator (MYASO)
 Scheduler, working with messages, can consume messages from wherever you want and push it whatever you want.
@@ -14,9 +15,9 @@ TODO:
 - [ ] Прикрутить celery tasks
     - [x] Сделать запуск конфигурации асинхронной задачей
     - [ ] Сделать запуск конфигураций с определенным периодом [Celery periodic tasks](https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html)
-        - [Заблокировано несовместимостью Celery 5.* и django-celery-beat] (https://github.com/celery/django-celery-beat/pull/365)
+        - [Заблокировано несовместимостью Celery 5.* и django-celery-beat](https://github.com/celery/django-celery-beat/pull/365)
     - [ ] Прикрутить отображение таски 
-        - Заблокировано несовместимостью Celery 5.* и django-celery-results
+        - [Заблокировано несовместимостью Celery 5.* и django-celery-results](https://github.com/celery/django-celery-results/pull/158)
 - [ ] Собрать весь CI/CD пайплайн на Github Actions
     - [x] Прикрутить линтер
     - [ ] Дополнить тесты на bare metal тестами в контейнерах [link](https://github.community/t/how-to-use-docker-compose-with-github-actions/16850/3)
@@ -40,15 +41,21 @@ TODO:
 - [ ] Сделать добавление скриптов через админку
     - [ ] Реализовать
     - [ ] Попробовать прикрутить параметры из модели как параметры для вызываемого скрипта
+- [ ] Прикрутить авторизацию (OAuth 2.0)
 - [ ] Прикрутить Graphene
-    - [ ] Прикрутить авторизацию (OAuth 2.0)
     - [x] Просмотр возможных конфигураций, консьюмеров, продюсеров, их параметров
     - [x] Просмотр существующих конфигураций, консьюмеров, продюсеров, с сокрытием чувствительных данных
     - [ ] Создание объектов конфигураций, консьюмеров, продюсеров с помощью API
     - [ ] Прикрутить запуск конфигураций с помощью API
     - [ ] Включить линтер на файлы schema.py
     - [ ] Покрыть это всё тестами
-    - [ ] Посмотреть в сторону ![оптимизации запросов](https://github.com/tfoxy/graphene-django-optimizer)
+    - [ ] Посмотреть в сторону [оптимизации запросов](https://github.com/tfoxy/graphene-django-optimizer)
+- [ ] Прикрутить DRF
+    - [ ] Просмотр возможных конфигураций, консьюмеров, продюсеров, их параметров
+    - [ ] Просмотр существующих конфигураций, консьюмеров, продюсеров, с сокрытием чувствительных данных
+    - [ ] Создание объектов конфигураций, консьюмеров, продюсеров с помощью API
+    - [ ] Прикрутить запуск конфигураций с помощью API
+    - [ ] Покрыть это всё тестами
 - [ ] Зарезолвить все возникшие TODO
 - [ ] Написать нормально ридми. Хотя бы раз в жизни
 - [ ] Сделать документацию

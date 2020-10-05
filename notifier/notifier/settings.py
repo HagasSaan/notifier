@@ -1,5 +1,6 @@
 import os
-
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,8 +24,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'graphene_django',
     'django_json_widget',
-    # 'django_celery_results',  # NOQA TODO: Turn back when it will be compatible with celery 5.0.0
-    'django_celery_beat',
+    # 'django_celery_results',  # NOQA TODO: Turn back when it will be compatible with Celery 5.*
+    # 'django_celery_beat',  # NOQA TODO: Turn back when beat will be compatible with Celery 5.*
     'configuration',
     'message_producers',
     'message_consumers',
@@ -116,6 +117,15 @@ USE_GRAPHIQL_INTERFACE = True
 GRAPHENE = {
     'SCHEMA': 'notifier.schema.schema',
 }
+
+SENTRY_DSN = os.getenv('SENTRY_DSN', None)
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+    send_default_pii=True,
+)
 
 try:
     from .local_settings import *  # noqa
