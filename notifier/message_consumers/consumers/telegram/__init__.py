@@ -1,6 +1,5 @@
-from .telegram import TelegramGroupChat, TelegramChat
+from .telegram import TelegramGroupChat
 
 __all__ = (
-    'TelegramChat',
     'TelegramGroupChat',
 )

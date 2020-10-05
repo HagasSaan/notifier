@@ -65,24 +65,3 @@ class TelegramGroupChat(MessageConsumer):
             raise ValidationError(cls.CHAT_NOT_FOUND)
 
         raise exception
-
-
-@Registry.register(CONSUMER_REGISTRY_NAME)
-@dataclasses.dataclass
-class TelegramChat(MessageConsumer):
-    USERNAME_KEY = 'telegram_user_chat_id'
-
-    @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
-        pass
-
-    async def consume_messages(self, messages: List[ExternalMessage]) -> None:
-        pass
-
-    async def send_message(
-        self,
-        message: ExternalMessage,
-        *args: List[Any],
-        **kwargs: Dict[Any, Any],
-    ) -> None:
-        raise NotImplementedError
