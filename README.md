@@ -14,6 +14,9 @@ TODO:
 - [ ] Прикрутить celery tasks
     - [x] Сделать запуск конфигурации асинхронной задачей
     - [ ] Сделать запуск конфигураций с определенным периодом [Celery periodic tasks](https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html)
+        - [Заблокировано несовместимостью Celery 5.* и django-celery-beat] (https://github.com/celery/django-celery-beat/pull/365)
+    - [ ] Прикрутить отображение таски 
+        - Заблокировано несовместимостью Celery 5.* и django-celery-results
 - [ ] Собрать весь CI/CD пайплайн на Github Actions
     - [x] Прикрутить линтер
     - [ ] Дополнить тесты на bare metal тестами в контейнерах [link](https://github.community/t/how-to-use-docker-compose-with-github-actions/16850/3)

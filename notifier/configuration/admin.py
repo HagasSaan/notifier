@@ -1,4 +1,5 @@
 import structlog
+from django.conf import settings
 
 from django.contrib import admin
 from django.db.models import QuerySet
@@ -45,7 +46,10 @@ class ConfigurationAdmin(admin.ModelAdmin):
     def run_configurations(self, request: Request, queryset: QuerySet) -> None:
         for configuration in queryset:
             # TODO: tests  NOQA
-            run_configuration.delay(configuration.id)
+            if settings.SYNC_MODE:
+                configuration.run()
+            else:
+                run_configuration.delay(configuration.id)
 
     # TODO: make action for scheduling run configuration
 

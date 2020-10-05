@@ -7,6 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_-r1_+g$f*zu5-v6vo*#(l!zmlgx#dvyf0qd#+-od*a@gdweih'
 
 DEBUG = False
+SYNC_MODE = os.getenv('SYNC_MODE', 'false') == 'true'
 
 ALLOWED_HOSTS = [
     '0.0.0.0',
@@ -102,14 +103,13 @@ AUTH_USER_MODEL = 'configuration.User'
 # Celery configs
 # TODO: Move to their own configfile
 
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER', 'amqp://rabbitmq:rabbitmq@rabbitmq:5672/notifier')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER', 'amqp://notifier:notifier@rabbitmq:5672/notifier')
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'max_retries': 3,
     'interval_start': 0,
     'interval_step': 0.2,
     'interval_max': 0.5,
 }
-CELERY_RESULT_BACKEND = 'django-db'
 
 USE_GRAPHIQL_INTERFACE = True
 

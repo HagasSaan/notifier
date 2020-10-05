@@ -23,6 +23,7 @@ spec:
           command: ["celery"]
           args: ["-A", "notifier", "worker", "-l", "info"]
         # TODO: test it
+        # TODO: wait for upgrade of lib, cuz now it conflicts with celery 5.*
         - name: beat
           image: hagassaan/notifier
           command: ["celery"]

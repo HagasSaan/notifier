@@ -53,4 +53,5 @@ class ABCCustomObjectModel(models.Model):
         This method required because ObjectModels returns constructors, not objects.
         So, configuration calls object, but it's already created.
         """
+        self.call_parameters = kwargs
         return self

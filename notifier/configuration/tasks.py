@@ -16,7 +16,7 @@ def run_configuration(
         configuration.run()
         logger.info('Configuration executed')
     except Exception as e:
-        logger.error(
+        logger.exception(
             'Configuration execution failed',
             reason=str(e),
         )
