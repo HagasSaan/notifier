@@ -1,8 +1,8 @@
 ![Python application](https://github.com/HagasSaan/notifier/workflows/Python%20application/badge.svg)
 [![codecov](https://codecov.io/gh/HagasSaan/notifier/branch/master/graph/badge.svg)](https://codecov.io/gh/HagasSaan/notifier)
 
-# notifier
-Notifier with producers and consumers
+# My Yet Another Scheduler Operator (MYASO)
+Scheduler, working with messages, can consume messages from wherever you want and push it whatever you want.
 
 
 TODO:
@@ -55,3 +55,4 @@ TODO:
 - [ ] Подумать в сторону разделени на микросервисы для горизонтальной масштабируемости
     - [ ] Event-based architecture?
     - [ ] Переписать core (configuration) на Rust?
+- [ ] Переименовать везде notifier в myaso
