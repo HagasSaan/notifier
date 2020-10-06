@@ -31,8 +31,8 @@ TODO:
     - [ ] Сделать скрытие секретов в развертываемом проекте и их подключении через Vault
         - [x] Переделать переменные в settings.py в os.environ.get()
         - [ ] Написать свой ConfigMap / Secrets для k8s
-    - [ ] Сделать мониторинг на основе Sentry
-        - [ ] [Sentry Release](https://github.com/marketplace/actions/sentry-release)
+    - [x] Сделать мониторинг на основе Sentry
+        - [x] [Sentry Release](https://github.com/marketplace/actions/sentry-release)
 - [x] Переделать фильтр SkipKeywords (вынести слова из конфигурации в фильтр)
 - [ ] Прикрутить консьюмер(vk)
 - [ ] Кастомизировать формат сообщений (текущий формат сделать как default)
