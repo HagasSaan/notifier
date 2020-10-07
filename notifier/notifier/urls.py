@@ -22,5 +22,5 @@ router.register(r'producer_models', ProducerModelViewSet)
 urlpatterns = [
     path('', admin.site.urls),
     path('graphql', csrf_exempt(GraphQLView.as_view(graphiql=settings.USE_GRAPHIQL_INTERFACE))),
-    path('restapi/', include(router.urls))
+    path('restapi/', include(router.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

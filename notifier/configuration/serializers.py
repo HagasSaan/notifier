@@ -18,5 +18,5 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'additional_info',
             'working_time_start',
             'working_time_end',
-            'is_working_time'
+            'is_working_time',
         )
