@@ -1,6 +1,7 @@
-from typing import List, Optional
+from typing import List, Optional, Any
 
 import graphene
+from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
 
 from helpers.registry import Registry
@@ -17,13 +18,13 @@ class ProducerModelsQuery(graphene.ObjectType):
     producer_models = graphene.List(ProducerModelType)
     producer_types = graphene.List(
         graphene.String,
-        producer_type=graphene.String()
+        producer_type=graphene.String(),
     )
 
-    def resolve_producer_models(self, info):
+    def resolve_producer_models(self, info: Any) -> QuerySet[ProducerModel]:
         return ProducerModel.objects.all()
 
-    def resolve_producer_types(self, info, producer_type: Optional[str]=None) -> List[str]:
+    def resolve_producer_types(self, info: Any, producer_type: Optional[str] = None) -> List[str]:
         if producer_type is None:
             return Registry(ProducerModel.REGISTRY_NAME).keys
 

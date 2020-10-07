@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Any
 
 import graphene
 from django.db.models import QuerySet
@@ -18,13 +18,13 @@ class ConsumerModelsQuery(graphene.ObjectType):
     consumer_models = DjangoListField(ConsumerModelType)
     consumer_types = graphene.List(
         graphene.String,
-        consumer_type=graphene.String()
+        consumer_type=graphene.String(),
     )
 
-    def resolve_consumer_models(self, info) -> QuerySet[ConsumerModel]:
+    def resolve_consumer_models(self, info: Any) -> QuerySet[ConsumerModel]:
         return ConsumerModel.objects.all()
 
-    def resolve_consumer_types(self, info, consumer_type: Optional[str] = None) -> List[str]:
+    def resolve_consumer_types(self, info: Any, consumer_type: Optional[str] = None) -> List[str]:
         if consumer_type is None:
             return Registry(ConsumerModel.REGISTRY_NAME).keys
 

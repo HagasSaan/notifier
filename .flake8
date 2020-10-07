@@ -5,7 +5,7 @@ exclude =
     __pycache__
     migrations
     manage.py
-    schema.py
+    local_settings.py
     media
 
 dlint = ["+*"]  # https://github.com/duo-labs/dlint/tree/master/docs

@@ -1,3 +1,5 @@
+from typing import Any
+
 import graphene
 from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
@@ -23,6 +25,5 @@ class MessageFilterType(DjangoObjectType):
 class ConfigurationsQuery(graphene.ObjectType):
     configurations = graphene.List(ConfigurationType)
 
-    def resolve_configurations(self, info) -> QuerySet[Configuration]:
+    def resolve_configurations(self, info: Any) -> QuerySet[Configuration]:
         return Configuration.objects.all()
-
