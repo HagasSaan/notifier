@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'graphene_django',
+    'rest_framework',
     'django_json_widget',
     # 'django_celery_results',  # NOQA TODO: Turn back when it will be compatible with Celery 5.*
     # 'django_celery_beat',  # NOQA TODO: Turn back when beat will be compatible with Celery 5.*
