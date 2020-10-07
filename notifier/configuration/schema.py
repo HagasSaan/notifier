@@ -1,11 +1,8 @@
 import graphene
+from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
 
-from .models import (
-    Configuration,
-    User,
-    MessageFilterModel,
-)
+from .models import Configuration, User, MessageFilterModel
 
 
 class ConfigurationType(DjangoObjectType):
@@ -26,6 +23,6 @@ class MessageFilterType(DjangoObjectType):
 class ConfigurationsQuery(graphene.ObjectType):
     configurations = graphene.List(ConfigurationType)
 
-    def resolve_configurations(root, info):
+    def resolve_configurations(self, info) -> QuerySet[Configuration]:
         return Configuration.objects.all()
 
