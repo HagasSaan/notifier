@@ -1,7 +1,7 @@
 import asyncio
 import dataclasses
 import json
-from typing import List, Union, Dict, Any
+from typing import Union, Any
 
 import aiohttp
 import structlog
@@ -32,11 +32,11 @@ class GithubPullRequest(Initable):
     title: str
     user: GithubUser
     updated_at: str
-    labels: List[GithubLabel]
-    assignees: List[GithubUser]
+    labels: list[GithubLabel]
+    assignees: list[GithubUser]
 
-    # approved_by: Set[str] = field(default_factory=set)  # noqa: E800
-    # reviewers: Dict[str, str] = field(default_factory=dict)  # noqa: E800
+    # approved_by: set[str] = field(default_factory=set)  # noqa: E800
+    # reviewers: dict[str, str] = field(default_factory=dict)  # noqa: E800
 
 
 @Registry.register(PRODUCER_REGISTRY_NAME)
@@ -55,7 +55,7 @@ class GithubRepository(MessageProducer):
     BAD_CREDENTIALS_MESSAGE = 'Bad credentials'
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+    def validate_params(cls, params: Union[dict, JSONField]) -> None:
         try:
             asyncio.run(
                 cls(**params)._request(
@@ -67,8 +67,8 @@ class GithubRepository(MessageProducer):
                 raise ValidationError(cls.BAD_CREDENTIALS_MESSAGE)
             raise e
 
-    async def produce_messages(self) -> List[ExternalMessage]:
-        messages: List[ExternalMessage] = []
+    async def produce_messages(self) -> list[ExternalMessage]:
+        messages: list[ExternalMessage] = []
         pull_requests = await self.get_pull_requests()
         for pull_request in pull_requests:
             for pull_request_assignee in pull_request.assignees:
@@ -85,7 +85,7 @@ class GithubRepository(MessageProducer):
 
         return messages
 
-    async def get_pull_requests(self) -> List[GithubPullRequest]:
+    async def get_pull_requests(self) -> list[GithubPullRequest]:
         pull_requests = list(map(
             GithubPullRequest,
             await self._request(
@@ -95,7 +95,7 @@ class GithubRepository(MessageProducer):
         logger.info('Pull requests downloaded')
         return pull_requests
 
-    async def _request(self, url: str) -> Dict[str, Any]:
+    async def _request(self, url: str) -> dict[str, Any]:
         async with aiohttp.request(
             'get', url,
             headers={'Authorization': f'Bearer {self.token}'},

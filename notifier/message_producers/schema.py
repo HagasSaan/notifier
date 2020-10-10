@@ -1,4 +1,4 @@
-from typing import List, Optional, Any
+from typing import Optional, Any
 
 import graphene
 from django.db.models import QuerySet
@@ -24,7 +24,7 @@ class ProducerModelsQuery(graphene.ObjectType):
     def resolve_producer_models(self, info: Any) -> QuerySet[ProducerModel]:
         return ProducerModel.objects.all()
 
-    def resolve_producer_types(self, info: Any, producer_type: Optional[str] = None) -> List[str]:
+    def resolve_producer_types(self, info: Any, producer_type: Optional[str] = None) -> list[str]:
         if producer_type is None:
             return Registry(ProducerModel.REGISTRY_NAME).keys
 

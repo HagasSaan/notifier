@@ -1,4 +1,4 @@
-from typing import Dict, List, Any
+from typing import Any
 
 from django.db import models
 
@@ -32,7 +32,7 @@ class ABCCustomObjectModel(models.Model):
     def __str__(self):
         return f'{self.name}: {self.file}'
 
-    def save(self, **kwargs: Dict) -> None:
+    def save(self, **kwargs: dict) -> None:
         super().save(**kwargs)
         self._set_object(self)
 
@@ -55,8 +55,8 @@ class ABCCustomObjectModel(models.Model):
 
     def __call__(
         self,
-        *args: List[Any],
-        **kwargs: Dict[str, Any],
+        *args: list[Any],
+        **kwargs: dict[str, Any],
     ) -> 'ABCCustomObjectModel':
         """
         This method required because ObjectModels returns constructors, not objects.

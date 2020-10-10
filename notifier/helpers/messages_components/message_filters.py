@@ -1,5 +1,5 @@
 import abc
-from typing import List, Dict, Union, Any
+from typing import Union, Any
 
 from django.db.models import JSONField
 
@@ -11,30 +11,30 @@ MESSAGE_FILTER_REGISTRY_NAME = 'MessageFilter'
 
 
 class BaseMessageFilter(abc.ABC):
-    def __init__(self, **kwargs: Dict):
+    def __init__(self, **kwargs: dict):
         ...
 
     def __call__(
         self,
-        messages: List[InternalMessage],
+        messages: list[InternalMessage],
         configuration: 'Configuration',  # noqa F821
-    ) -> List[InternalMessage]:
+    ) -> list[InternalMessage]:
         ...
 
 
 @Registry.register(MESSAGE_FILTER_REGISTRY_NAME)
 class SkipKeywordsMessageFilter(BaseMessageFilter, Validatable):
-    skip_keywords: List[str]
+    skip_keywords: list[str]
 
-    def __init__(self, **kwargs: Dict[str, Any]):
+    def __init__(self, **kwargs: dict[str, Any]):
         super().__init__(**kwargs)
         self.skip_keywords = kwargs['skip_keywords']
 
     def __call__(
         self,
-        messages: List[InternalMessage],
+        messages: list[InternalMessage],
         configuration: 'Configuration',  # noqa F821
-    ) -> List[InternalMessage]:
+    ) -> list[InternalMessage]:
         return [
             message
             for message in messages
@@ -45,7 +45,7 @@ class SkipKeywordsMessageFilter(BaseMessageFilter, Validatable):
         ]
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+    def validate_params(cls, params: Union[dict, JSONField]) -> None:
         _ = params['skip_keywords']
 
 
@@ -53,9 +53,9 @@ class SkipKeywordsMessageFilter(BaseMessageFilter, Validatable):
 class ReceiverExistsMessageFilter(BaseMessageFilter):
     def __call__(
         self,
-        messages: List[InternalMessage],
+        messages: list[InternalMessage],
         configuration: 'Configuration',  # noqa F821
-    ) -> List[InternalMessage]:
+    ) -> list[InternalMessage]:
         return [
             message
             for message in messages
@@ -67,9 +67,9 @@ class ReceiverExistsMessageFilter(BaseMessageFilter):
 class ReceiverWorkingMessageFilter(BaseMessageFilter):
     def __call__(
         self,
-        messages: List[InternalMessage],
+        messages: list[InternalMessage],
         configuration: 'Configuration',  # noqa F821
-    ) -> List[InternalMessage]:
+    ) -> list[InternalMessage]:
         return [
             message
             for message in messages

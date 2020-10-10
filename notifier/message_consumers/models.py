@@ -1,4 +1,4 @@
-from typing import List, Union, Dict
+from typing import Union
 
 import structlog
 from django.db.models import JSONField
@@ -14,11 +14,11 @@ logger = structlog.get_logger(__name__)
 class CustomConsumer(ABCCustomObjectModel, MessageConsumer):
     REGISTRY_NAME = CONSUMER_REGISTRY_NAME
 
-    async def consume_messages(self, messages: List[ExternalMessage]) -> None:
+    async def consume_messages(self, messages: list[ExternalMessage]) -> None:
         pass
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+    def validate_params(cls, params: Union[dict, JSONField]) -> None:
         pass
 
 

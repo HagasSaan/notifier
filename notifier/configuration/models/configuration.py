@@ -1,6 +1,5 @@
 import asyncio
 from functools import reduce
-from typing import List, Type
 
 import structlog
 from django.db import models
@@ -39,7 +38,7 @@ class Configuration(models.Model):
         return f'{self.__class__.__name__} {self.name}'
 
     @cached_property
-    def message_filters(self) -> List[Type[BaseMessageFilter]]:
+    def message_filters(self) -> list[type[BaseMessageFilter]]:
         return [
             message_filter.get_object_by_registry_name(MESSAGE_FILTER_REGISTRY_NAME)
             for message_filter in self._message_filters.all()
@@ -76,9 +75,9 @@ class Configuration(models.Model):
 
     @staticmethod
     def _translate_message_users_from_producer_into_users(
-        messages: List[ExternalMessage],
+        messages: list[ExternalMessage],
         producer: MessageProducer,
-    ) -> List[InternalMessage]:
+    ) -> list[InternalMessage]:
         producer_username_key = producer.USERNAME_KEY
 
         result_messages = []
@@ -104,9 +103,9 @@ class Configuration(models.Model):
 
     @staticmethod
     def _translate_message_users_from_users_into_consumer(
-        messages: List[InternalMessage],
+        messages: list[InternalMessage],
         consumer: MessageConsumer,
-    ) -> List[ExternalMessage]:
+    ) -> list[ExternalMessage]:
         consumer_username_key = consumer.USERNAME_KEY
 
         result_messages = []

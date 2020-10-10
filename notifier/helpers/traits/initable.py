@@ -1,5 +1,5 @@
 import abc
-from typing import get_origin, get_args, Any, Dict, List, Type
+from typing import get_origin, get_args, Any
 
 
 class InitError(Exception):
@@ -7,7 +7,7 @@ class InitError(Exception):
 
 
 class Initable(abc.ABC):
-    def __init__(self, kwargs: Dict[str, Any]):
+    def __init__(self, kwargs: dict[str, Any]):
         fields = self.__annotations__.items()
         for key, type_ in fields:
             origin_type = get_origin(type_)
@@ -20,9 +20,9 @@ class Initable(abc.ABC):
     def _handle_as_list(
         self,
         key: str,
-        kwargs: Dict[str, Any],
-        type_: Type,
-    ) -> List:
+        kwargs: dict[str, Any],
+        type_: type,
+    ) -> list:
         result = []
         subtypes = get_args(type_)
         if len(subtypes) == 1:

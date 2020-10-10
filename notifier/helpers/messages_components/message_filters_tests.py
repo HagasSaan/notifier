@@ -1,5 +1,4 @@
 import datetime
-from typing import Tuple, List
 
 import freezegun
 import pytest
@@ -16,7 +15,7 @@ from .message_filters import (
 
 
 @pytest.fixture
-def setup(db: MockFixture) -> Tuple[User, User, List[InternalMessage]]:
+def setup(db: MockFixture) -> tuple[User, User, list[InternalMessage]]:
     user1, user2 = [
         UserFactory(
             on_leave=False,
@@ -37,7 +36,7 @@ def setup(db: MockFixture) -> Tuple[User, User, List[InternalMessage]]:
 @freezegun.freeze_time('15:00:00')
 def test_skip_messages_filter(
     db: MockFixture,
-    setup: Tuple[User, User, List[InternalMessage]],
+    setup: tuple[User, User, list[InternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
 
@@ -60,7 +59,7 @@ def test_skip_messages_filter(
 @freezegun.freeze_time('15:00:00')
 def test_receiver_exists_filter(
     db: MockFixture,
-    setup: Tuple[User, User, List[InternalMessage]],
+    setup: tuple[User, User, list[InternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
     user_not_in_config = UserFactory(
@@ -86,7 +85,7 @@ def test_receiver_exists_filter(
 @freezegun.freeze_time('15:00:00')
 def test_receiver_working_filter(
     db: MockFixture,
-    setup: Tuple[User, User, List[InternalMessage]],
+    setup: tuple[User, User, list[InternalMessage]],
 ) -> None:
     user1, user2, messages_should_be_consumed = setup
     user_not_working = UserFactory(

@@ -1,5 +1,3 @@
-from typing import List
-
 import pytest
 
 from helpers.traits import Initable
@@ -78,12 +76,12 @@ def test_init_complex_class_without_required_args() -> None:
 
 
 class InitableClassWithTypingsForTests(Initable):
-    field_1: List[str]
-    field_2: List[InitableClassForTests]
-    field_2_1: List
-    # field_3: Dict[Any, Any]   # Not yet  # noqa: E800
+    field_1: list[str]
+    field_2: list[InitableClassForTests]
+    field_2_1: list
+    # field_3: dict[Any, Any]   # Not yet  # noqa: E800
     # field_4: Optional[Any]    # Not yet  # noqa: E800
-    # field_4: Set[Any]         # Not yet  # noqa: E800
+    # field_4: set[Any]         # Not yet  # noqa: E800
 
 
 def test_init_class_with_typings() -> None:

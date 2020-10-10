@@ -1,5 +1,3 @@
-from typing import List
-
 import factory
 
 from configuration.models import User, Configuration, MessageFilterModel
@@ -13,7 +11,7 @@ class ConfigurationFactory(factory.django.DjangoModelFactory):
     producer = factory.SubFactory(ProducerModelFactory)
 
     @factory.post_generation
-    def users(self, create: bool, extracted: List[User]) -> None:
+    def users(self, create: bool, extracted: list[User]) -> None:
         if not create:
             return
 
@@ -22,7 +20,7 @@ class ConfigurationFactory(factory.django.DjangoModelFactory):
                 self.users.add(user)
 
     @factory.post_generation
-    def message_filters(self, create: bool, extracted: List[MessageFilterModel]) -> None:
+    def message_filters(self, create: bool, extracted: list[MessageFilterModel]) -> None:
         if not create:
             return
 

@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Union, Dict, List
+from typing import Union
 
 import factory
 from django.db.models import JSONField
@@ -18,11 +18,11 @@ class SampleProducer(MessageProducer):
 
     USERNAME_KEY = 'test_producer'
 
-    async def produce_messages(self) -> List[ExternalMessage]:
+    async def produce_messages(self) -> list[ExternalMessage]:
         pass
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+    def validate_params(cls, params: Union[dict, JSONField]) -> None:
         pass
 
 

@@ -1,5 +1,5 @@
 import abc
-from typing import Union, Dict
+from typing import Union
 
 from django.db.models import JSONField
 
@@ -7,5 +7,5 @@ from django.db.models import JSONField
 class Validatable:
     @classmethod
     @abc.abstractmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+    def validate_params(cls, params: Union[dict, JSONField]) -> None:
         raise NotImplementedError

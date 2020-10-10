@@ -1,7 +1,7 @@
 import asyncio
 import dataclasses
 import traceback
-from typing import List, Union, Dict, Tuple, Type, Any
+from typing import Union, Any
 
 import telebot
 from django.core.exceptions import ValidationError
@@ -26,14 +26,14 @@ class TelegramGroupChat(MessageConsumer):
         self._bot = telebot.AsyncTeleBot(self.bot_token)
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+    def validate_params(cls, params: Union[dict, JSONField]) -> None:
         bot = telebot.AsyncTeleBot(token=params['bot_token'])
         chat_task: AsyncTask = bot.get_chat(params['chat_id'])
         result = chat_task.wait()
         if not isinstance(result, telebot.types.Chat):
             cls._handle_error(result)
 
-    async def consume_messages(self, messages: List[ExternalMessage]) -> None:
+    async def consume_messages(self, messages: list[ExternalMessage]) -> None:
         await asyncio.gather(
             *[
                 self.send_message(message)
@@ -46,8 +46,8 @@ class TelegramGroupChat(MessageConsumer):
     async def send_message(
         self,
         message: ExternalMessage,
-        *args: List[Any],
-        **kwargs: Dict[Any, Any],
+        *args: list[Any],
+        **kwargs: dict[Any, Any],
     ) -> None:
         message_text = f'From {message.sender} to {message.receiver}: {message.content}'
         send_message_task: AsyncTask = self._bot.send_message(self.chat_id, message_text)
@@ -58,7 +58,7 @@ class TelegramGroupChat(MessageConsumer):
     @classmethod
     def _handle_error(
         cls,
-        error: Tuple[Type[Exception], Exception, traceback.TracebackException],
+        error: tuple[type[Exception], Exception, traceback.TracebackException],
     ) -> None:
         _, exception, _ = error
         if cls.CHAT_NOT_FOUND in str(exception):

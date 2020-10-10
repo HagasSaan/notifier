@@ -1,5 +1,5 @@
 import re
-from typing import Union, Dict
+from typing import Union
 
 import pytest
 from django.core.exceptions import ValidationError
@@ -18,7 +18,7 @@ class SampleClassInDefaultRegistry(Validatable):
     field_2: int
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+    def validate_params(cls, params: Union[dict, JSONField]) -> None:
         if params['field_2'] != 42:
             raise ValidationError(
                 'I need Answer to the Ultimate Question of Life, '

@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Union, Dict, List
+from typing import Union
 
 import factory
 from django.db.models import JSONField
@@ -18,11 +18,11 @@ class SampleConsumer(MessageConsumer):
 
     USERNAME_KEY = 'test_consumer'
 
-    async def consume_messages(self, messages: List[ExternalMessage]) -> None:
+    async def consume_messages(self, messages: list[ExternalMessage]) -> None:
         pass
 
     @classmethod
-    def validate_params(cls, params: Union[Dict, JSONField]) -> None:
+    def validate_params(cls, params: Union[dict, JSONField]) -> None:
         pass
 
 

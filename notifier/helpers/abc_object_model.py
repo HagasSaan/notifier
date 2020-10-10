@@ -1,5 +1,5 @@
 import inspect
-from typing import Union, Dict
+from typing import Union
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -38,7 +38,7 @@ class ABCObjectModel(models.Model):
     def __str__(self):
         return f'{self.object_type} "{self.name}"'
 
-    def save(self, **kwargs: Dict) -> None:
+    def save(self, **kwargs: dict) -> None:
         self._check_params_before_save()
         super().save(**kwargs)
 

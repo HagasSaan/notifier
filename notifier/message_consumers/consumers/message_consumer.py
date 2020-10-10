@@ -1,5 +1,4 @@
 import abc
-from typing import List
 
 from helpers.messages_components import ExternalMessage
 from helpers.traits import Validatable
@@ -9,7 +8,7 @@ class MessageConsumer(Validatable):
     USERNAME_KEY = 'undefined'
 
     @abc.abstractmethod
-    async def consume_messages(self, messages: List[ExternalMessage]) -> None:
+    async def consume_messages(self, messages: list[ExternalMessage]) -> None:
         raise NotImplementedError
 
 

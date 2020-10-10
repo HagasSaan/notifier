@@ -97,6 +97,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# TODO: media contains files from custom_objects, it must be stateful
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

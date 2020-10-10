@@ -1,6 +1,6 @@
 import structlog
 
-from typing import Any, List, Callable, KeysView
+from typing import Any, Callable, KeysView
 
 logger = structlog.get_logger(__name__)
 
@@ -64,7 +64,7 @@ class Registry:
         return value
 
     @property
-    def keys(self) -> List[str]:
+    def keys(self) -> list[str]:
         return self._instances[self.name].keys()
 
     @staticmethod
