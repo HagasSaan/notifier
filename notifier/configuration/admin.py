@@ -45,15 +45,17 @@ class ConfigurationAdmin(admin.ModelAdmin):
 
     def run_configurations(self, request: Request, queryset: QuerySet) -> None:
         for configuration in queryset:
-            # TODO: tests  NOQA
             if settings.SYNC_MODE:
                 configuration.run()
             else:
                 run_configuration.delay(configuration.id)
 
-    # TODO: make action for scheduling run configuration
+    def schedule_run_configuration(self, request: Request, queryset: QuerySet) -> None:
+        # TODO: make action for scheduling run configuration
+        pass
 
     run_configurations.short_description = 'Run selected configurations'
+    schedule_run_configuration.short_description = 'Schedule configuration run'
 
 
 @admin.register(MessageFilterModel)

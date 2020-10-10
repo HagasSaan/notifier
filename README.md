@@ -1,6 +1,5 @@
 ![Python application](https://github.com/HagasSaan/notifier/workflows/Python%20application/badge.svg)
 [![codecov](https://codecov.io/gh/HagasSaan/notifier/branch/master/graph/badge.svg)](https://codecov.io/gh/HagasSaan/notifier)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/HagasSaan/notifier.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HagasSaan/notifier/alerts/)
 
 # My Yet Another Scheduler Operator (MYASO)
 Scheduler, working with messages, can consume messages from wherever you want and push it whatever you want.

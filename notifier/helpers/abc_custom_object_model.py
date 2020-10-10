@@ -10,8 +10,17 @@ DEFAULT_REGISTRY_NAME = 'default'
 class ABCCustomObjectModel(models.Model):
     REGISTRY_NAME = DEFAULT_REGISTRY_NAME
 
+    class Executor(models.TextChoices):
+        PYTHON = 'python'
+        BASH = 'bash'
+
     name = models.CharField(max_length=100)
     file = models.FileField(upload_to=REGISTRY_NAME)
+    executor = models.CharField(
+        max_length=100,
+        choices=Executor.choices,
+        default=Executor.BASH,
+    )
 
     class Meta:
         abstract = True

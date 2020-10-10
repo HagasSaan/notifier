@@ -17,7 +17,7 @@ class ConfigurationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=True, methods=['post'])
-    def run_configuration(self, request: Request, pk: Optional[str] = None):
+    def run_configuration(self, request: Request, pk: Optional[str] = None) -> Response:
         configuration = Configuration.objects.get(pk=pk)
         if settings.SYNC_MODE:
             configuration.run()

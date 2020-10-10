@@ -10,7 +10,7 @@ class MessageConsumersConfig(AppConfig):
     name = 'message_consumers'
 
     def ready(self) -> None:
-        if len(sys.argv) < 2 or sys.argv[1] == 'migrate':
+        if len(sys.argv) < 2 or sys.argv[1] in ('migrate', 'makemigrations'):
             return
 
         consumer_model = self.get_model('ConsumerModel')
