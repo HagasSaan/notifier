@@ -24,8 +24,12 @@ class CustomProducer(ABCCustomObjectModel, MessageProducer):
             stderr=asyncio.subprocess.PIPE,
         )
         stdout, stderr = await process.communicate()
-        await process.wait()
-        return json.loads(stdout.decode())
+        exit_code = await process.wait()
+        if stderr:
+            raise Exception(f'Error: {stderr}, exit code: {exit_code}')
+
+        raw_messages = json.loads(stdout.decode())
+        return [ExternalMessage(**message) for message in raw_messages]
 
     @classmethod
     def validate_params(cls, params: Union[dict, JSONField]) -> None:

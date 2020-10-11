@@ -5,7 +5,7 @@ from helpers.traits import Validatable
 
 
 class MessageProducer(Validatable):
-    USERNAME_KEY = 'undefined'
+    USERNAME_KEY = 'default'
 
     @abc.abstractmethod
     async def produce_messages(self) -> list[ExternalMessage]:

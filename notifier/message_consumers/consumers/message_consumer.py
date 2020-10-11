@@ -5,7 +5,7 @@ from helpers.traits import Validatable
 
 
 class MessageConsumer(Validatable):
-    USERNAME_KEY = 'undefined'
+    USERNAME_KEY = 'default'
 
     @abc.abstractmethod
     async def consume_messages(self, messages: list[ExternalMessage]) -> None:
