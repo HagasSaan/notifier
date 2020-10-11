@@ -27,7 +27,7 @@ class SampleConsumer(MessageConsumer):
 
 
 class ConsumerModelFactory(factory.django.DjangoModelFactory):
-    name = f'consumer_model_{SampleConsumer.__name__}'
+    name = factory.Sequence(lambda x: f'consumer_model_{SampleConsumer.__name__}_{x}')
     object_type = SampleConsumer.__name__
     parameters = {
         name: type_(1234)

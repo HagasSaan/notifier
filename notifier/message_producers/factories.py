@@ -27,7 +27,7 @@ class SampleProducer(MessageProducer):
 
 
 class ProducerModelFactory(factory.django.DjangoModelFactory):
-    name = f'producer_model_{SampleProducer.__name__}'
+    name = factory.Sequence(lambda x: f'producer_model_{SampleProducer.__name__}_{x}')
     object_type = SampleProducer.__name__
     parameters = {
         name: type_(1234)
