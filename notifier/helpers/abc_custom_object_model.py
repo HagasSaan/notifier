@@ -11,7 +11,7 @@ DEFAULT_REGISTRY_NAME = 'default'
 
 
 class ABCCustomObjectModel(models.Model):
-    REGISTRY_NAME = DEFAULT_REGISTRY_NAME
+    REGISTRY_NAME: str = DEFAULT_REGISTRY_NAME
 
     class Executor(models.TextChoices):
         PYTHON = 'python'

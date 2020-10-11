@@ -1,20 +1,20 @@
-from typing import Union
+from typing import Union, Optional
 
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from helpers.abc_custom_object_model import ABCCustomObjectModel
 from helpers.registry import Registry
 from helpers.traits import Validatable
 from message_consumers.consumers.message_consumer import MessageConsumer
 from message_producers.producers.message_producer import MessageProducer
 
-
 DEFAULT_REGISTRY_NAME = 'default'
 
 
 class ABCObjectModel(models.Model):
-    REGISTRY_NAME = DEFAULT_REGISTRY_NAME
-    CUSTOM_OBJECT_MODEL = None
+    REGISTRY_NAME: str = DEFAULT_REGISTRY_NAME
+    CUSTOM_OBJECT_MODEL: Optional[type[ABCCustomObjectModel]] = None
 
     name = models.CharField(max_length=100, unique=True)
     object_type = models.CharField(max_length=100, choices=[])
