@@ -14,7 +14,7 @@ def test_run_configuration_in_api(db: MockFixture) -> None:
     client.force_authenticate(user=user)
     response = client.post(
         f'/restapi/configurations/'
-        f'{configuration.id}/run_configuration/'
+        f'{configuration.id}/run_configuration/',
     )
     assert response.json() == {'status': 'success'}
 
