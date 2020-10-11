@@ -11,7 +11,6 @@ from message_consumers.models import ConsumerModel
 class ConsumerModelType(DjangoObjectType):
     class Meta:
         model = ConsumerModel
-        exclude = ('parameters', )
 
 
 class ConsumerModelsQuery(graphene.ObjectType):

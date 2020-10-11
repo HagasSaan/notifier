@@ -1,4 +1,3 @@
-import inspect
 from typing import Union
 
 from django.core.exceptions import ValidationError
@@ -44,12 +43,6 @@ class ABCObjectModel(models.Model):
 
     def _check_params_before_save(self) -> None:
         class_ = Registry(self.REGISTRY_NAME).get(self.object_type)
-
-        # TODO: make abstract class and remove that shit
-        #  That created because CustomProducer is not a class
-        if not inspect.isclass(class_):
-            return
-
         if issubclass(class_, Validatable):
             try:
                 class_.validate_params(self.parameters)

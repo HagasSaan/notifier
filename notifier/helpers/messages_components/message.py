@@ -14,7 +14,6 @@ class ExternalMessage:
     content: Any
 
     def __hash__(self):
-        # TODO: do it in cycle, cuz new field can be added
         return (
             hash(self.sender)
             + hash(self.receiver)

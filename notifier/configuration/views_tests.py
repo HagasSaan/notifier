@@ -7,7 +7,7 @@ from configuration.serializers import ConfigurationSerializer
 
 
 @override_settings(SYNC_MODE=True)
-def test_run_configuration_in_api(db: MockFixture) -> None:
+def test_run_configuration_in_api_sync_mode(db: MockFixture) -> None:
     configuration = ConfigurationFactory()
     user = UserFactory()
     client = APIClient()

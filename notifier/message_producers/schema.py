@@ -11,7 +11,6 @@ from message_producers.models import ProducerModel
 class ProducerModelType(DjangoObjectType):
     class Meta:
         model = ProducerModel
-        exclude = ('parameters', )
 
 
 class ProducerModelsQuery(graphene.ObjectType):
