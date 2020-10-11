@@ -1,3 +1,4 @@
+from django.test import override_settings
 from pytest_mock import MockFixture
 from rest_framework.test import APIClient
 
@@ -5,6 +6,7 @@ from configuration.factories import UserFactory, ConfigurationFactory
 from configuration.serializers import ConfigurationSerializer
 
 
+@override_settings(SYNC_MODE=True)
 def test_run_configuration_in_api(db: MockFixture) -> None:
     configuration = ConfigurationFactory()
     user = UserFactory()
