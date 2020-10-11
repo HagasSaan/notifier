@@ -1,4 +1,6 @@
-a = input()
-print(a)
+messages = input()
+
+print(messages)
+
 with open('/file.txt', 'w') as f:
-    f.write(a)
+    f.write(messages)

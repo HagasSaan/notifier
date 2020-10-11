@@ -1,5 +1,8 @@
+import asyncio
+from asyncio.subprocess import Process
 from typing import Any
 
+from django.conf import settings
 from django.db import models
 
 from helpers.registry import Registry
@@ -62,5 +65,13 @@ class ABCCustomObjectModel(models.Model):
         This method required because ObjectModels returns constructors, not objects.
         So, configuration calls object, but it's already created.
         """
-        self.call_parameters = kwargs
         return self
+
+    async def _create_process(self) -> Process:
+        return await asyncio.create_subprocess_exec(
+            self.executor,
+            f'{settings.MEDIA_ROOT}/{self.file.name}',
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )

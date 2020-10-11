@@ -1,10 +1,8 @@
-import asyncio
 import dataclasses
 import json
 from typing import Union
 
 import structlog
-from django.conf import settings
 from django.db.models import JSONField
 
 from helpers.abc_custom_object_model import ABCCustomObjectModel
@@ -21,16 +19,10 @@ class CustomConsumer(ABCCustomObjectModel, MessageConsumer):
     async def consume_messages(self, messages: list[ExternalMessage]) -> None:
         messages = [dataclasses.asdict(message) for message in messages]
         raw_messages = json.dumps(messages).encode()
-        process = await asyncio.create_subprocess_exec(
-            self.executor,
-            f'{settings.MEDIA_ROOT}/{self.file.name}',
-            stdin=asyncio.subprocess.PIPE,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
+        process = await self._create_process()
         stdout, stderr = await process.communicate(raw_messages)
         exit_code = await process.wait()
-        if stderr:
+        if stderr or exit_code != 0:
             raise Exception(f'Error: {stderr}, exit code: {exit_code}')
 
     @classmethod
