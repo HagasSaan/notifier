@@ -1,4 +1,3 @@
-import pytest
 from pytest_mock import MockFixture
 from rest_framework.test import APIClient
 
@@ -11,11 +10,11 @@ def test_run_configuration_in_api(db: MockFixture) -> None:
     user = UserFactory()
     client = APIClient()
     client.force_authenticate(user=user)
-    response = client.get(
+    response = client.post(
         f'/restapi/configurations/'
-        f'{configuration.id}/run_configuration'
+        f'{configuration.id}/run_configuration/'
     )
-    assert response.json() == {}
+    assert response.json() == {'status': 'success'}
 
 
 def test_get_all_configurations_in_api(db: MockFixture) -> None:

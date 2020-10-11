@@ -19,7 +19,7 @@ class SampleProducer(MessageProducer):
     USERNAME_KEY = 'test_producer'
 
     async def produce_messages(self) -> list[ExternalMessage]:
-        pass
+        return []
 
     @classmethod
     def validate_params(cls, params: Union[dict, JSONField]) -> None:
