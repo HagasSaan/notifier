@@ -19,6 +19,23 @@ def test_run_configuration_in_api_sync_mode(db: MockFixture) -> None:
     assert response.json() == {'status': 'success'}
 
 
+@override_settings(SYNC_MODE=False)
+def test_run_configuration_in_api_async_mode(
+    db: MockFixture,
+    mocker: MockFixture,
+) -> None:
+    configuration = ConfigurationFactory()
+    mocker.patch('configuration.views.run_configuration_task')
+    user = UserFactory()
+    client = APIClient()
+    client.force_authenticate(user=user)
+    response = client.post(
+        f'/restapi/configurations/'
+        f'{configuration.id}/run_configuration/',
+    )
+    assert response.json() == {'status': 'success'}
+
+
 def test_get_all_configurations_in_api(db: MockFixture) -> None:
     configurations = [ConfigurationFactory() for _ in range(2)]
     user = UserFactory()

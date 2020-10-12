@@ -1,8 +1,7 @@
 import json
-from typing import Union
 
 import structlog
-from django.db.models import JSONField
+
 from helpers.abc_custom_object_model import ABCCustomObjectModel
 from helpers.abc_object_model import ABCObjectModel
 from helpers.messages_components import ExternalMessage
