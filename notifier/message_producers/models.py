@@ -19,7 +19,7 @@ class CustomProducer(ABCCustomObjectModel, MessageProducer):
         stdout, stderr = await process.communicate()
         exit_code = await process.wait()
         if stderr or exit_code != 0:
-            raise Exception(f'Error: {stderr}, exit code: {exit_code}')
+            raise Exception(f'Error: {stderr.decode()}, exit code: {exit_code}')
 
         raw_messages = json.loads(stdout.decode())
         return [ExternalMessage(**message) for message in raw_messages]

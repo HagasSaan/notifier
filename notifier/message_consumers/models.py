@@ -23,7 +23,7 @@ class CustomConsumer(ABCCustomObjectModel, MessageConsumer):
         stdout, stderr = await process.communicate(raw_messages)
         exit_code = await process.wait()
         if stderr or exit_code != 0:
-            raise Exception(f'Error: {stderr}, exit code: {exit_code}')
+            raise Exception(f'Error: {stderr.decode()}, exit code: {exit_code}')
 
     @classmethod
     def validate_params(cls, params: Union[dict, JSONField]) -> None:

@@ -27,3 +27,23 @@ async def test_produce_messages() -> None:
         ExternalMessage(**{'sender': 'user2', 'receiver': 'user1', 'content': 'content2'}),
     ]
     assert actual_messages == expected_messages
+
+
+@pytest.mark.asyncio
+async def test_produce_messages_raises_error() -> None:
+    filename = 'default/broken_message_producer.py'
+    os.makedirs(f'{settings.MEDIA_ROOT}/default', exist_ok=True)
+    shutil.copy(
+        f'{os.path.dirname(__file__)}/test_fixtures/{filename}',
+        f'{settings.MEDIA_ROOT}/{filename}',
+    )
+    custom_producer = CustomProducer(
+        executor=CustomProducer.Executor.PYTHON,
+        name='custom_producer_name',
+        file=filename,
+    )
+    with pytest.raises(
+        Exception,
+        match='Error: Internal error in script\n, exit code: 255'
+    ):
+        await custom_producer.produce_messages()
