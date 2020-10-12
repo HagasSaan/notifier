@@ -24,10 +24,6 @@ class CustomProducer(ABCCustomObjectModel, MessageProducer):
         raw_messages = json.loads(stdout.decode())
         return [ExternalMessage(**message) for message in raw_messages]
 
-    @classmethod
-    def validate_params(cls, params: Union[dict, JSONField]) -> None:
-        pass
-
 
 class ProducerModel(ABCObjectModel):
     REGISTRY_NAME = PRODUCER_REGISTRY_NAME

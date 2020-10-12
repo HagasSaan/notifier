@@ -25,10 +25,6 @@ class CustomConsumer(ABCCustomObjectModel, MessageConsumer):
         if stderr or exit_code != 0:
             raise Exception(f'Error: {stderr.decode()}, exit code: {exit_code}')
 
-    @classmethod
-    def validate_params(cls, params: Union[dict, JSONField]) -> None:
-        pass
-
 
 class ConsumerModel(ABCObjectModel):
     REGISTRY_NAME = CONSUMER_REGISTRY_NAME
