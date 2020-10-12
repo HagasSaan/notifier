@@ -1,4 +1,3 @@
-import abc
 from typing import Union
 
 from django.db.models import JSONField
