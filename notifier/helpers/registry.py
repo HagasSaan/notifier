@@ -14,6 +14,9 @@ class ItemNotExists(Exception):
 
 
 class Registry:
+    """
+    I am registry
+    """
     _instances = {}
     _listeners = {}
 

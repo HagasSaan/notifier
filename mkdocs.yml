@@ -1,0 +1,36 @@
+site_name: Notifier
+nav:
+  - Home: index.md
+  - Configuration: configuration.md
+  - Helpers: helpers.md
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - pymdownx.emoji
+  - pymdownx.magiclink
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+  - toc:
+      permalink: "¤"
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          setup_commands:
+            - import sys
+            - sys.path.append("notifier")
+            - import os
+            - import django
+            - os.environ.setdefault("DJANGO_SETTINGS_MODULE", "notifier.settings")
+            - django.setup()
