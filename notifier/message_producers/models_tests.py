@@ -44,6 +44,6 @@ async def test_produce_messages_raises_error() -> None:
     )
     with pytest.raises(
         Exception,
-        match='Error: Internal error in script\n, exit code: 255'
+        match='Error: Internal error in script\n, exit code: 255',
     ):
         await custom_producer.produce_messages()
