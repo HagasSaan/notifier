@@ -69,9 +69,8 @@ jobs:
       run: flake8
 
     - name: MkDocs build and deploy
-      uses: mhausenblas/mkdocs-deploy-gh-pages@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        mkdocs gh-deploy --force
 
   build_and_push_stage:
     needs: test_on_bare_metal
