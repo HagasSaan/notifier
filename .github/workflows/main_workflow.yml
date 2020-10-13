@@ -69,8 +69,7 @@ jobs:
       run: flake8
 
     - name: MkDocs build and deploy
-      run: |
-        mkdocs gh-deploy --force
+      run: mkdocs gh-deploy --force
 
   build_and_push_stage:
     needs: test_on_bare_metal
