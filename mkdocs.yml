@@ -1,8 +1,15 @@
 site_name: Notifier
 nav:
   - Home: index.md
-  - Configuration: configuration.md
-  - Helpers: helpers.md
+  - User guide:
+    - Installation: user_guide/installation.md
+    - Configuration: user_guide/configuration.md
+  - Sources:
+    - Configuration: sources/configuration.md
+    - Helpers: sources/helpers.md
+    - Message consumers: sources/message_consumers.md
+    - Message producers: sources/message_producers.md
+
 
 theme:
   name: material
@@ -10,16 +17,13 @@ theme:
     scheme: slate
 
 markdown_extensions:
-  - admonition
-  - codehilite:
-      guess_lang: false
+  - toc:
+      permalink: "#"
   - pymdownx.emoji
   - pymdownx.magiclink
   - pymdownx.superfences
   - pymdownx.tabbed
   - pymdownx.tasklist
-  - toc:
-      permalink: "¤"
 
 plugins:
   - search

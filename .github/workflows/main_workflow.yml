@@ -68,6 +68,9 @@ jobs:
     - name: Lint with flake8
       run: flake8
 
+    - name: MkDocs build and deploy
+      run: mkdocs gh-deploy
+
   build_and_push_stage:
     needs: test_on_bare_metal
     runs-on: ubuntu-latest

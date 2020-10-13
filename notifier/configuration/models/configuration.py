@@ -20,9 +20,6 @@ logger = structlog.get_logger(__name__)
 
 
 class Configuration(models.Model):
-    """
-    I am docstring
-    """
     name = models.CharField(max_length=100)
     consumer: ConsumerModel = models.ForeignKey(
         ConsumerModel,
@@ -48,9 +45,6 @@ class Configuration(models.Model):
         ]
 
     def run(self) -> None:
-        """
-        I am docstring
-        """
         if self.consumer is None or self.producer is None:
             raise ValueError('Error: consumer or producer not specified')
 
