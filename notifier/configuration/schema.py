@@ -33,4 +33,3 @@ class MessageFilterModelType(DjangoObjectType):
 class MessageFilterModelMutation(DjangoModelFormMutation):
     class Meta:
         form_class = MessageFilterModelForm
-
