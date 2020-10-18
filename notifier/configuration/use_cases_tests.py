@@ -25,7 +25,5 @@ def test_schedule_configuration_use_case_creates_periodic_task(
 
     assert PeriodicTask.objects.filter(
         task='configuration.tasks.run_configuration',
-        kwargs=json.dumps(
-            {'configuration_id': configuration.id}
-        ),
+        kwargs=json.dumps({'configuration_id': configuration.id}),
     ).count() == 1

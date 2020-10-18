@@ -66,13 +66,13 @@ class ConfigurationAdmin(admin.ModelAdmin):
         my_urls = [
             re_path(
                 'schedule_configuration/',
-                self.admin_site.admin_view(self.schedule_configuration),
-                name='schedule_configuration'
+                self.admin_site.admin_view(self._schedule_configuration),
+                name='schedule_configuration',
             ),
         ]
         return my_urls + urls
 
-    def schedule_configuration(self, request: WSGIRequest) -> TemplateResponse:
+    def _schedule_configuration(self, request: WSGIRequest) -> TemplateResponse:
         context = dict(self.admin_site.each_context(request))
 
         if request.method != 'POST':
@@ -81,7 +81,7 @@ class ConfigurationAdmin(admin.ModelAdmin):
             return TemplateResponse(
                 request,
                 'admin/schedule_configuration.html',
-                context
+                context,
             )
 
         form = ScheduleConfigurationForm(request.POST, request.FILES)
@@ -89,10 +89,10 @@ class ConfigurationAdmin(admin.ModelAdmin):
             return TemplateResponse(
                 request,
                 'admin/schedule_configuration.html',
-                context
+                context,
             )
-        ScheduleConfigurationUseCase(**form.cleaned_data).execute()
 
+        ScheduleConfigurationUseCase(**form.cleaned_data).execute()
         url_name = 'admin:configuration_configuration_changelist'
         return redirect(reverse(url_name))
 

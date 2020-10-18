@@ -17,7 +17,7 @@ class ScheduleConfigurationUseCase:
     timezone: pytz.timezone
     configuration: Configuration
 
-    def execute(self):
+    def execute(self) -> None:
         kwargs = self.__dict__.copy()
         configuration = kwargs.pop('configuration')
         crontab, _ = CrontabSchedule.objects.get_or_create(**kwargs)
@@ -25,5 +25,5 @@ class ScheduleConfigurationUseCase:
             name=f'{str(configuration)}:{str(crontab)}',
             task='configuration.tasks.run_configuration',
             crontab=crontab,
-            kwargs=json.dumps({'configuration_id': configuration.id})
+            kwargs=json.dumps({'configuration_id': configuration.id}),
         )
