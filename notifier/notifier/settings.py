@@ -1,10 +1,15 @@
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+# КОСТЫЛЬ НАЧАЛСЯ
+import sys
+from kombu.utils import encoding
+sys.modules['celery.utils.encoding'] = encoding
+# КОСТЫЛЬ КОНЧИЛСЯ
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '_-r1_+g$f*zu5-v6vo*#(l!zmlgx#dvyf0qd#+-od*a@gdweih'
 
 DEBUG = False
@@ -25,8 +30,8 @@ INSTALLED_APPS = [
     'graphene_django',
     'rest_framework',
     'django_json_widget',
-    # 'django_celery_results',  # NOQA TODO: Turn back when it will be compatible with Celery 5.*
-    # 'django_celery_beat',  # NOQA TODO: Turn back when beat will be compatible with Celery 5.*
+    # 'django_celery_results',
+    'django_celery_beat',
     'configuration',
     'message_producers',
     'message_consumers',
@@ -106,6 +111,7 @@ AUTH_USER_MODEL = 'configuration.User'
 # Celery configs
 # TODO: Move to their own configfile
 
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER', 'amqp://notifier:notifier@rabbitmq:5672/notifier')
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'max_retries': 3,

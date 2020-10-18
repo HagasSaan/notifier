@@ -33,7 +33,6 @@ services:
     environment:
       CELERY_BROKER: amqp://notifier:notifier@rabbitmq:5672/notifier
 
-# TODO: wait for upgrade of lib, cuz now it conflicts with celery 5.*
   workers:
     image: web:latest
     volumes:
@@ -45,13 +44,11 @@ services:
     environment:
       CELERY_BROKER: amqp://notifier:notifier@rabbitmq:5672/notifier
 
-# TODO: test it
-# TODO: wait for upgrade of lib, cuz now it conflicts with celery 5.*
   beat:
     image: web:latest
     volumes:
       - .:/application
-    command: celery -A notifier beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: celery -A notifier beat -l INFO
     depends_on:
       - db
       - rabbitmq
