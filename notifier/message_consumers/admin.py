@@ -16,4 +16,4 @@ class ConsumerModelAdmin(admin.ModelAdmin):
 
 @admin.register(CustomConsumer)
 class CustomConsumerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'file')
+    list_display = ('name', 'executor', 'file')

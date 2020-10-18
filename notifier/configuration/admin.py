@@ -2,13 +2,19 @@ import structlog
 from django.conf import settings
 
 from django.contrib import admin
-from django.db.models import QuerySet
+from django.core.handlers.wsgi import WSGIRequest
+from django.shortcuts import redirect
+from django.template.response import TemplateResponse
+from django.urls import reverse, re_path
+from django.urls.resolvers import RoutePattern
 from django_json_widget.widgets import JSONEditorWidget
 from django.db import models
 from requests import Request
 
+from .forms import ScheduleConfigurationForm
 from .models import User, Configuration, MessageFilterModel
 from .tasks import run_configuration
+from .use_cases import ScheduleConfigurationUseCase
 
 logger = structlog.get_logger(__name__)
 
@@ -40,22 +46,55 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Configuration)
 class ConfigurationAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name', 'producer', 'consumer')
+    list_display_links = ('name', 'producer', 'consumer')
     actions = ('run_configurations', )
 
-    def run_configurations(self, request: Request, queryset: QuerySet) -> None:
+    change_list_template = 'admin/configuration_change_list.html'
+
+    def run_configurations(self, request: Request, queryset: list[Configuration]) -> None:
         for configuration in queryset:
             if settings.SYNC_MODE:
                 configuration.run()
             else:
                 run_configuration.delay(configuration.id)
 
-    def schedule_run_configuration(self, request: Request, queryset: QuerySet) -> None:
-        # TODO: make action for scheduling run configuration
-        pass
-
     run_configurations.short_description = 'Run selected configurations'
-    schedule_run_configuration.short_description = 'Schedule configuration run'
+
+    def get_urls(self) -> list[RoutePattern]:
+        urls = super().get_urls()
+        my_urls = [
+            re_path(
+                'schedule_configuration/',
+                self.admin_site.admin_view(self._schedule_configuration),
+                name='schedule_configuration',
+            ),
+        ]
+        return my_urls + urls
+
+    def _schedule_configuration(self, request: WSGIRequest) -> TemplateResponse:
+        context = dict(self.admin_site.each_context(request))
+
+        if request.method != 'POST':
+            form = ScheduleConfigurationForm()
+            context['form'] = form
+            return TemplateResponse(
+                request,
+                'admin/schedule_configuration.html',
+                context,
+            )
+
+        form = ScheduleConfigurationForm(request.POST, request.FILES)
+        if not form.is_valid():
+            return TemplateResponse(
+                request,
+                'admin/schedule_configuration.html',
+                context,
+            )
+
+        ScheduleConfigurationUseCase(**form.cleaned_data).execute()
+        url_name = 'admin:configuration_configuration_changelist'
+        return redirect(reverse(url_name))
 
 
 @admin.register(MessageFilterModel)

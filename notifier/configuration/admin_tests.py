@@ -63,3 +63,12 @@ def test_is_user_working_time(
     )
     with freezegun.freeze_time(working_time):
         assert f_user_admin.is_working_time(f_user) == expected_is_working
+
+
+def test_get_urls_contains_schedule_config_url() -> None:
+    f_configuration_admin = ConfigurationAdmin(Configuration, AdminSite())
+    urls = f_configuration_admin.get_urls()
+    assert any(
+        'schedule_configuration' in url.name
+        for url in urls
+    )

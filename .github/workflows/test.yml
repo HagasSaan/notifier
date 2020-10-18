@@ -1,10 +1,6 @@
 name: Test on bare metal
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-    types: [opened, edited]
+on: push
 
 jobs:
   test_on_bare_metal:
