@@ -17,14 +17,14 @@ def test_get_all_configurations(
         for configuration in configurations
     }
     response = graphql_query(
-        '''
+        """
         query {
             configurations {
                 id
                 name
             }
         }
-        ''',
+        """,
         client=client,
     )
     content = json.loads(response.content)
