@@ -13,8 +13,7 @@ TODO:
 - [x] Прикрутить консьюмер(telegram)
 - [ ] Прикрутить celery tasks
     - [x] Сделать запуск конфигурации асинхронной задачей
-    - [ ] Сделать запуск конфигураций с определенным периодом [Celery periodic tasks](https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html)
-        - [Заблокировано несовместимостью Celery 5.* и django-celery-beat](https://github.com/celery/django-celery-beat/pull/365)
+    - [x] Сделать запуск конфигураций с определенным периодом [Celery periodic tasks](https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html)
     - [ ] Прикрутить отображение таски 
         - [Заблокировано несовместимостью Celery 5.* и django-celery-results](https://github.com/celery/django-celery-results/pull/158)
 - [ ] Собрать весь CI/CD пайплайн на Github Actions

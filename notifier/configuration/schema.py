@@ -1,9 +1,7 @@
-from typing import Any
-
-import graphene
-from django.db.models import QuerySet
 from graphene_django import DjangoObjectType
+from graphene_django.forms.mutation import DjangoModelFormMutation
 
+from .forms import ConfigurationForm, UserForm, MessageFilterModelForm
 from .models import Configuration, User, MessageFilterModel
 
 
@@ -12,18 +10,26 @@ class ConfigurationType(DjangoObjectType):
         model = Configuration
 
 
+class ConfigurationMutation(DjangoModelFormMutation):
+    class Meta:
+        form_class = ConfigurationForm
+
+
 class UserType(DjangoObjectType):
     class Meta:
         model = User
 
 
-class MessageFilterType(DjangoObjectType):
+class UserMutation(DjangoModelFormMutation):
+    class Meta:
+        form_class = UserForm
+
+
+class MessageFilterModelType(DjangoObjectType):
     class Meta:
         model = MessageFilterModel
 
 
-class ConfigurationsQuery(graphene.ObjectType):
-    configurations = graphene.List(ConfigurationType)
-
-    def resolve_configurations(self, info: Any) -> QuerySet[Configuration]:
-        return Configuration.objects.all()
+class MessageFilterModelMutation(DjangoModelFormMutation):
+    class Meta:
+        form_class = MessageFilterModelForm

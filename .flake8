@@ -19,7 +19,6 @@ flake8-commas = ["+*"]  # https://github.com/PyCQA/flake8-commas/
 flake8-comprehensions = ["+*"]  # https://pypi.org/project/flake8-comprehensions/
 flake8-debugger = ["+*"]  # https://github.com/jbkahn/flake8-debugger
 flake8-django = ["+*"]  # https://pypi.org/project/flake8-django/
-flake8-eradicate = ["+*"]  # https://github.com/sobolevn/flake8-eradicate
 flake8-pep3101 = ["+*"]  # https://github.com/gforcada/flake8-pep3101
 flake8-print = ["+*"]  # https://github.com/jbkahn/flake8-print
 flake8-quotes = ["+*"]  # https://github.com/zheller/flake8-quotes

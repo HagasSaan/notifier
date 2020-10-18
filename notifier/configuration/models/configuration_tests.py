@@ -20,6 +20,11 @@ from message_consumers.factories import SampleConsumer
 from message_producers.factories import SampleProducer
 
 
+def test_str_configuration(db: MockFixture) -> None:
+    configuration = ConfigurationFactory()
+    assert 'test_configuration' in str(configuration)
+
+
 @pytest.mark.parametrize(
     'kwargs', [
         {'producer': None, 'consumer': None},

@@ -24,9 +24,6 @@ class Registry:
 
         self.name = name
 
-    def __str__(self):
-        return f'Registry {self.name}'
-
     def set(  # noqa A003
         self,
         value: Any,
