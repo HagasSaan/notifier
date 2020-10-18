@@ -16,4 +16,4 @@ class ProducerModelAdmin(admin.ModelAdmin):
 
 @admin.register(CustomProducer)
 class CustomProducerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'file')
+    list_display = ('name', 'executor', 'file')
