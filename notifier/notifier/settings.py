@@ -2,12 +2,6 @@ import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-# КОСТЫЛЬ НАЧАЛСЯ
-import sys
-from kombu.utils import encoding
-sys.modules['celery.utils.encoding'] = encoding
-# КОСТЫЛЬ КОНЧИЛСЯ
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '_-r1_+g$f*zu5-v6vo*#(l!zmlgx#dvyf0qd#+-od*a@gdweih'

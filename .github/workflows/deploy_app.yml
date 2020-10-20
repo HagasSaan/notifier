@@ -2,7 +2,7 @@ name: Deploy app
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
     types: [closed]
 
