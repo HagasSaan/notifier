@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
-from django.urls import reverse, re_path
+from django.urls import reverse, path
 from django.urls.resolvers import RoutePattern
 from django_json_widget.widgets import JSONEditorWidget
 from django.db import models
@@ -64,15 +64,15 @@ class ConfigurationAdmin(admin.ModelAdmin):
     def get_urls(self) -> list[RoutePattern]:
         urls = super().get_urls()
         my_urls = [
-            re_path(
+            path(
                 'schedule_configuration/',
-                self.admin_site.admin_view(self._schedule_configuration),
+                self.admin_site.admin_view(self.schedule_configuration),
                 name='schedule_configuration',
             ),
         ]
         return my_urls + urls
 
-    def _schedule_configuration(self, request: WSGIRequest) -> TemplateResponse:
+    def schedule_configuration(self, request: WSGIRequest) -> TemplateResponse:
         context = dict(self.admin_site.each_context(request))
 
         if request.method != 'POST':

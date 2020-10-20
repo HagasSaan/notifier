@@ -4,7 +4,9 @@ from django.test import Client
 from graphene_django.utils.testing import graphql_query
 from pytest_mock import MockFixture
 
-from .factories import ConfigurationFactory
+from message_consumers.factories import ConsumerModelFactory
+from message_producers.factories import ProducerModelFactory
+from .factories import ConfigurationFactory, UserFactory
 
 
 def test_get_all_configurations(
@@ -37,3 +39,33 @@ def test_get_all_configurations(
     }
 
     assert actual_configurations == expected_configurations
+
+
+def test_create_configuration(
+    db: MockFixture,
+    client: Client,
+) -> None:
+    producer = ProducerModelFactory()
+    consumer = ConsumerModelFactory()
+    user = UserFactory()
+    response = graphql_query(
+        """
+        mutation {
+            configuration(input: {
+                name: "fuck"
+                consumer: """ + str(consumer.id) + """
+                producer: """ + str(producer.id) + """
+                users: """ + str(user.id) + """
+            }
+            ) {
+                configuration{
+                    id   
+                }
+            }
+        }
+        """,
+        client=client,
+    )
+    content = json.loads(response.content)
+
+    assert 'errors' not in content
