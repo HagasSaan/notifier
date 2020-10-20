@@ -59,7 +59,7 @@ def test_create_configuration(
             }
             ) {
                 configuration{
-                    id   
+                    id
                 }
             }
         }

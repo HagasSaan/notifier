@@ -65,10 +65,10 @@ def test_schedule_configuration_returns_form_on_get_request(
     db: MockFixture,
 ) -> None:
     User.objects.create_superuser(
-        'superuser', 'superuser@test.com', 'superuser'
+        'superuser', 'superuser@test.com', 'superuser',
     )
     client = Client()
-    client.login(username='superuser', password='superuser')
+    client.login(username='superuser', password='superuser')  # noqa S106
     response = client.get('/configuration/configuration/schedule_configuration/')
     assert response.status_code == 200
 
@@ -78,10 +78,10 @@ def test_schedule_configuration_returns_form_on_incorrect_post_request(
 ) -> None:
     configuration = ConfigurationFactory()
     User.objects.create_superuser(
-        'superuser', 'superuser@test.com', 'superuser'
+        'superuser', 'superuser@test.com', 'superuser',
     )
     client = Client()
-    client.login(username='superuser', password='superuser')
+    client.login(username='superuser', password='superuser')  # noqa S106
     response = client.post(
         '/configuration/configuration/schedule_configuration/',
         data={
@@ -102,10 +102,10 @@ def test_schedule_configuration_create_periodic_task_on_correct_post_request(
 ) -> None:
     configuration = ConfigurationFactory()
     User.objects.create_superuser(
-        'superuser', 'superuser@test.com', 'superuser'
+        'superuser', 'superuser@test.com', 'superuser',
     )
     client = Client()
-    client.login(username='superuser', password='superuser')
+    client.login(username='superuser', password='superuser')  # noqa S106
     response = client.post(
         '/configuration/configuration/schedule_configuration/',
         data={
@@ -122,5 +122,5 @@ def test_schedule_configuration_create_periodic_task_on_correct_post_request(
     assert response.url == '/configuration/configuration/'
 
     assert PeriodicTask.objects.filter(
-        kwargs='{"configuration_id": ' + str(configuration.id) + '}'
+        kwargs='{"configuration_id": ' + str(configuration.id) + '}',
     ).count() == 1
