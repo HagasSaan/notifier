@@ -1,10 +1,15 @@
 name: Deploy app
 
 on:
+# # If you want to deploy every time when commit comes to main branch
 #  push:
 #    branches: [master]
+
+# # If you want to deploy only when pull request merged
 #  pull_request:
 #    types: [closed]
+
+# # If you want to deploy manually (by action in UI)
   workflow_dispatch:
 
 

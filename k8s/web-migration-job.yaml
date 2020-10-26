@@ -3,7 +3,7 @@ kind: Job
 metadata:
   name: web
 spec:
-  backoffLimit: 1
+  backoffLimit: 0
   template:
     metadata:
       labels:
@@ -14,4 +14,7 @@ spec:
         image: hagassaan/notifier
         command: ["python"]
         args: ["./manage.py", "migrate"]
+        env:
+        - name: DB_PORT
+          value: "5432"
       restartPolicy: "Never"

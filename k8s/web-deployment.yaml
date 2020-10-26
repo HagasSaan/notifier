@@ -18,11 +18,20 @@ spec:
           ports:
           - containerPort: 8000
             protocol: TCP
+          env:
+            - name: DB_PORT
+              value: "5432"
         - name: workers
           image: hagassaan/notifier
           command: ["celery"]
           args: ["-A", "notifier", "worker", "-l", "INFO"]
+          env:
+            - name: DB_PORT
+              value: "5432"
         - name: beat
           image: hagassaan/notifier
           command: ["celery"]
           args: ["-A", "notifier", "beat", "-l", "INFO"]
+          env:
+            - name: DB_PORT
+              value: "5432"

@@ -1,6 +1,7 @@
 name: Test on bare metal
 
-on: push
+on:
+  push
 
 jobs:
   test_on_bare_metal:
