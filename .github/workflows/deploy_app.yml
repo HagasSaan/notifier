@@ -56,14 +56,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: K8s set context
-        uses: azure/k8s-set-context@v1
+      - uses: actions/checkout@master
+      - name: deploy to cluster
+        uses: steebchen/kubectl@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }}
         with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG }}
+          args: get pods
 
-      - name: K8s apply
-        run: kubectl get pods
 
       - uses: actions/checkout@v2
       - name: Create Sentry release
