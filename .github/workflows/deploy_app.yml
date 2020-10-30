@@ -63,18 +63,12 @@ jobs:
           kubeconfig: ${{ secrets.KUBECONFIG }}
         id: setcontext
 
-      - name: K8s deploy
-        uses: Azure/k8s-deploy@v1
+      - name: Trigger deploy
+        uses: Jberlinsky/kubernetes-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }}
         with:
-          namespace: 'artyom'
-          manifests: |
-            k8s/db-statefulset.yaml
-            k8s/db-service.yaml
-            k8s/rabbitmq-statefulset.yaml
-            k8s/rabbitmq-service.yaml
-            k8s/web-deployment.yaml
-            k8s/web-migration-job.yaml
-            k8s/web-service.yaml
+          args: apply -k k8s
 
       - uses: actions/checkout@v2
       - name: Create Sentry release
