@@ -61,10 +61,9 @@ jobs:
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBECONFIG }}
-#
-#      - name: K8s apply
-#        run: |
-#          kubectl get pods
+
+      - name: K8s apply
+        run: kubectl get pods
 
       - uses: actions/checkout@v2
       - name: Create Sentry release
