@@ -21,10 +21,7 @@ TODO:
     - [x] Добавить выгрузку контейнера после тестов на Dockerhub
     - [x] Развернуть сервис вручную
     - [x] Получить манифесты для развёртывания каждого из сервисов по отдельности
-    - [ ] Попробовать написать что-то деплоящее куда-то с GA
-        - [Конфигурирование AWS Credentials](https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions)
-        - [Создание контекста kubernetes](https://github.com/marketplace/actions/kubernetes-set-context)
-        - [Запуск развёртывания приложения kubernetes](https://github.com/marketplace/actions/kubernetes-set-context)
+    - [x] Попробовать написать что-то деплоящее куда-то с GA
     - [ ] Сделать скрытие секретов в развертываемом проекте и их подключении через Vault
         - [x] Переделать переменные в settings.py в os.environ.get()
         - [ ] Написать свой ConfigMap / Secrets для k8s
