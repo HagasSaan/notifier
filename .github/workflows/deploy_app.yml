@@ -56,13 +56,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - uses: actions/checkout@master
-      - name: deploy to cluster
-        uses: steebchen/kubectl@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }}
+      - name: K8s set context
+        uses: azure/k8s-set-context@v1
         with:
-          args: get pods
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: K8s deploy
+        uses: Azure/k8s-deploy@v1
+        with:
+          namespace: 'artyom'
+          manifests: |
+            k8s/db-statefulset.yaml
+            k8s/db-service.yaml
+            k8s/rabbitmq-statefulset.yaml
+            k8s/rabbitmq-service.yaml
+            k8s/web-deployment.yaml
+            k8s/web-migration-job.yaml
+            k8s/web-service.yaml
 
 
       - uses: actions/checkout@v2
