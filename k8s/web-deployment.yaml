@@ -12,6 +12,17 @@ spec:
       labels:
         service: web
     spec:
+      initContainers:
+        - name: wait-for-db
+          image: hagassaan/notifier
+          # TODO: make real check of db readiness
+          command: ['sh', '-c', "sleep 10"]
+        - name: run-migrations
+          image: hagassaan/notifier
+          command: ['sh', '-c', "./manage.py migrate"]
+          env:
+            - name: DB_PORT
+              value: "5432"
       containers:
         - name: web
           image: hagassaan/notifier

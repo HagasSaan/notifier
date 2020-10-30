@@ -4,5 +4,4 @@ resources:
 - rabbitmq-statefulset.yaml
 - rabbitmq-service.yaml
 - web-deployment.yaml
-- web-migration-job.yaml
 - web-service.yaml
