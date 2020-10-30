@@ -52,9 +52,9 @@ jobs:
       - name: K8s set context
         uses: azure/k8s-set-context@v1
         with:
-          method: service-account
-          k8s-url: ${{ secrets.K8S_URL }}
-          k8s-secret: ${{ secrets.K8S_SECRET }}
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+        id: setcontext
 
       - name: K8s deploy
         uses: Azure/k8s-deploy@v1
@@ -68,7 +68,6 @@ jobs:
             k8s/web-deployment.yaml
             k8s/web-migration-job.yaml
             k8s/web-service.yaml
-
 
       - uses: actions/checkout@v2
       - name: Create Sentry release
