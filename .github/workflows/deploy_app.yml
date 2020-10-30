@@ -57,7 +57,7 @@ jobs:
           aws-region: us-east-1
 
       - name: K8s set context
-      - uses: azure/k8s-set-context@v1
+        uses: azure/k8s-set-context@v1
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBECONFIG }}
