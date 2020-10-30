@@ -55,12 +55,12 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-#
-#      - name: K8s set context
-#      - uses: azure/k8s-set-context@v1
-#        with:
-#          method: kubeconfig
-#          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: K8s set context
+      - uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
 #
 #      - name: K8s apply
 #        run: |
