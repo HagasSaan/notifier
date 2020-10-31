@@ -5,3 +5,7 @@ resources:
 - rabbitmq-service.yaml
 - web-deployment.yaml
 - web-service.yaml
+secretGenerator:
+- name: sentry-token
+  files:
+  - .sentry.txt
