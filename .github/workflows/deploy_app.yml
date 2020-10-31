@@ -69,7 +69,7 @@ jobs:
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }}
         with:
-          args: apply -k k8s
+          args: apply -f k8s/web-deployment.yaml
 
       - uses: actions/checkout@v2
       - name: Create Sentry release
