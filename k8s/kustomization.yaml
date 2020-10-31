@@ -7,5 +7,6 @@ resources:
 - web-service.yaml
 secretGenerator:
 - name: sentry-token
-  files:
-  - .sentry.txt
+  literals:
+  - SENTRY_DSN=some_sentry_dsn
+

@@ -23,6 +23,11 @@ spec:
           env:
             - name: DB_PORT
               value: "5432"
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-token
+                  key: SENTRY_DSN
       containers:
         - name: web
           image: hagassaan/notifier
@@ -32,6 +37,11 @@ spec:
           env:
             - name: DB_PORT
               value: "5432"
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-token
+                  key: SENTRY_DSN
         - name: workers
           image: hagassaan/notifier
           command: ["celery"]
@@ -39,6 +49,11 @@ spec:
           env:
             - name: DB_PORT
               value: "5432"
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-token
+                  key: SENTRY_DSN
         - name: beat
           image: hagassaan/notifier
           command: ["celery"]
@@ -46,3 +61,8 @@ spec:
           env:
             - name: DB_PORT
               value: "5432"
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-token
+                  key: SENTRY_DSN
