@@ -95,6 +95,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'public/'
 
 # TODO: media contains files from custom_objects, it must be stateful
 MEDIA_URL = '/media/'
