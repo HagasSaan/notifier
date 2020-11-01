@@ -10,7 +10,7 @@ Babel==2.8.0
 bandit==1.6.2
 beautifulsoup4==4.9.3
 billiard==3.6.3.0
-celery==5.0.0
+celery==5.0.1
 certifi==2020.6.20
 chardet==3.0.4
 click==7.1.2
@@ -18,8 +18,9 @@ click-didyoumean==0.0.3
 click-repl==0.1.6
 commonmark==0.9.1
 coverage==5.2.1
-Django==3.1
+Django==3.1.2
 django-celery-beat==2.1.0
+git+https://github.com/celery/django-celery-results.git@ed94080cea3d68a38f9ff048657a37b08e74fc35#egg=django-celery-results
 # django-celery-results==1.2.1
 django-json-widget==1.0.1
 django-timezone-field==4.0
@@ -87,11 +88,11 @@ pylint==2.6.0
 pymdown-extensions==8.0.1
 pyparsing==2.4.7
 pyTelegramBotAPI==3.7.2
-pytest==6.1.1
+pytest==6.1.2
 pytest-aiohttp==0.3.0
 pytest-asyncio==0.14.0
 pytest-cov==2.10.1
-pytest-django==4.0.0
+pytest-django==4.1.0
 pytest-factoryboy==2.0.3
 pytest-mock==3.3.1
 pytest-pythonpath==0.7.3
@@ -102,7 +103,7 @@ pytz==2020.1
 PyYAML==5.3.1
 recommonmark==0.6.0
 regex==2020.10.11
-requests==2.20.0
+requests==2.24.0
 Rx==1.6.1
 sentry-sdk==0.18.0
 singledispatch==3.4.0.3

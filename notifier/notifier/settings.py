@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'rest_framework',
     'django_json_widget',
-    # 'django_celery_results',
+    'django_celery_results',
     'django_celery_beat',
     'configuration',
     'message_producers',
@@ -106,6 +106,7 @@ AUTH_USER_MODEL = 'configuration.User'
 # TODO: Move to their own configfile
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER', 'amqp://notifier:notifier@rabbitmq:5672/notifier')
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'max_retries': 3,
