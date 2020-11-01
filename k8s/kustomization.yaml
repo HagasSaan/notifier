@@ -8,5 +8,4 @@ resources:
 secretGenerator:
 - name: sentry-token
   literals:
-  - SENTRY_DSN=some_sentry_dsn
-
+  - SENTRY_DSN=some_dsn_token
