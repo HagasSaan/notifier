@@ -6,7 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '_-r1_+g$f*zu5-v6vo*#(l!zmlgx#dvyf0qd#+-od*a@gdweih'
 
-DEBUG = False
+DEBUG = True
 SYNC_MODE = os.getenv('SYNC_MODE', False)
 
 ALLOWED_HOSTS = [
@@ -95,7 +95,6 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'public/'
 
 # TODO: media contains files from custom_objects, it must be stateful
 MEDIA_URL = '/media/'
