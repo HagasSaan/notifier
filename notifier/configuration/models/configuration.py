@@ -74,8 +74,8 @@ class Configuration(models.Model):
                     self._translate_message_users_from_users_into_consumer(
                         messages,
                         consumer,
-                    )
-                )
+                    ),
+                ),
             )
 
         logger.info('Messages consumed', messages=messages)

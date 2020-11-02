@@ -243,4 +243,4 @@ def test_configuration_with_multiplie_producers_and_consumers(
     configuration.run()
 
     assert consume_messages_spy.call_count == 2
-    assert consume_messages_spy.mock_calls.args[1] == messages_should_be_consumed * 2
+    assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed * 2

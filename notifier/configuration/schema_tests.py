@@ -1,6 +1,5 @@
 import json
 
-import pytest
 from django.test import Client
 from graphene_django.utils.testing import graphql_query
 from pytest_mock import MockFixture
