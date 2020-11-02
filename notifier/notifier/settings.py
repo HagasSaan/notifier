@@ -115,7 +115,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'interval_max': 0.5,
 }
 
-USE_GRAPHIQL_INTERFACE = os.getenv('SYNC_MODE', False)
+USE_GRAPHIQL_INTERFACE = os.getenv('USE_GRAPHIQL_INTERFACE', False)
 
 GRAPHENE = {
     'SCHEMA': 'notifier.schema.schema',
@@ -129,3 +129,8 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
     send_default_pii=True,
 )
+
+try:
+    from local_settings import *  # noqa
+except ImportError:
+    pass

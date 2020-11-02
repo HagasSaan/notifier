@@ -21,17 +21,9 @@ logger = structlog.get_logger(__name__)
 
 class Configuration(models.Model):
     name = models.CharField(max_length=100)
-    consumer: ConsumerModel = models.ForeignKey(
-        ConsumerModel,
-        null=True,
-        on_delete=models.SET_NULL,
-    )
     users = models.ManyToManyField(User)
-    producer: ProducerModel = models.ForeignKey(
-        ProducerModel,
-        null=True,
-        on_delete=models.SET_NULL,
-    )
+    _consumers = models.ManyToManyField(ConsumerModel, blank=True)
+    _producers = models.ManyToManyField(ProducerModel, blank=True)
     _message_filters = models.ManyToManyField(MessageFilterModel, blank=True)
 
     def __str__(self):
@@ -44,33 +36,48 @@ class Configuration(models.Model):
             for message_filter in self._message_filters.all()
         ]
 
-    def run(self) -> None:
-        if self.consumer is None or self.producer is None:
-            raise ValueError('Error: consumer or producer not specified')
+    @property
+    def consumers(self) -> list[MessageConsumer]:
+        return [
+            consumer.get_object_by_registry_name(CONSUMER_REGISTRY_NAME)
+            for consumer in self._consumers.all()
+        ]
 
-        producer: MessageProducer = self.producer.get_object_by_registry_name(
-            PRODUCER_REGISTRY_NAME,
-        )
-        consumer: MessageConsumer = self.consumer.get_object_by_registry_name(
-            CONSUMER_REGISTRY_NAME,
-        )
+    @property
+    def producers(self) -> list[MessageProducer]:
+        return [
+            producer.get_object_by_registry_name(PRODUCER_REGISTRY_NAME)
+            for producer in self._producers.all()
+        ]
+
+    def run(self) -> None:
         # TODO: Maybe run as task?
-        messages = asyncio.run(producer.produce_messages())
+        messages = []
+        for producer in self.producers:
+            raw_messages = asyncio.run(producer.produce_messages())
+            messages += self._translate_message_users_from_producer_into_users(
+                raw_messages,
+                producer,
+            )
+
         logger.info('Got messages', messages=messages)
-        messages = self._translate_message_users_from_producer_into_users(
-            messages,
-            producer,
-        )
         messages = reduce(
             lambda msgs, message_filter: message_filter(msgs, self),
             self.message_filters,
             messages,
         )
-        messages = self._translate_message_users_from_users_into_consumer(
-            messages,
-            consumer,
-        )
-        asyncio.run(consumer.consume_messages(messages))
+
+        # TODO: Maybe run as task?
+        for consumer in self.consumers:
+            asyncio.run(
+                consumer.consume_messages(
+                    self._translate_message_users_from_users_into_consumer(
+                        messages,
+                        consumer,
+                    ),
+                ),
+            )
+
         logger.info('Messages consumed', messages=messages)
 
     @staticmethod

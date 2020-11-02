@@ -1,14 +1,12 @@
 import factory
 
 from configuration.models import User, Configuration, MessageFilterModel
-from message_consumers.factories import ConsumerModelFactory
-from message_producers.factories import ProducerModelFactory
+from message_consumers.models import ConsumerModel
+from message_producers.models import ProducerModel
 
 
 class ConfigurationFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda x: f'test_configuration_{x}')
-    consumer = factory.SubFactory(ConsumerModelFactory)
-    producer = factory.SubFactory(ProducerModelFactory)
 
     @factory.post_generation
     def users(self, create: bool, extracted: list[User]) -> None:
@@ -27,6 +25,24 @@ class ConfigurationFactory(factory.django.DjangoModelFactory):
         if extracted:
             for message_filter in extracted:
                 self._message_filters.add(message_filter)
+
+    @factory.post_generation
+    def producers(self, create: bool, extracted: list[ProducerModel]) -> None:
+        if not create:
+            return
+
+        if extracted:
+            for producer in extracted:
+                self._producers.add(producer)
+
+    @factory.post_generation
+    def consumers(self, create: bool, extracted: list[ConsumerModel]) -> None:
+        if not create:
+            return
+
+        if extracted:
+            for consumer in extracted:
+                self._consumers.add(consumer)
 
     class Meta:
         model = Configuration
