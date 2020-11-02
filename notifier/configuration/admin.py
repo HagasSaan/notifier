@@ -46,8 +46,8 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Configuration)
 class ConfigurationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'producer', 'consumer')
-    list_display_links = ('name', 'producer', 'consumer')
+    list_display = ('name', )
+    list_display_links = ('name', )
     actions = ('run_configurations', )
 
     change_list_template = 'admin/configuration_change_list.html'

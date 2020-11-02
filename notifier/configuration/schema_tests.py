@@ -1,5 +1,6 @@
 import json
 
+import pytest
 from django.test import Client
 from graphene_django.utils.testing import graphql_query
 from pytest_mock import MockFixture
@@ -24,6 +25,22 @@ def test_get_all_configurations(
             configurations {
                 id
                 name
+                Producers {
+                    id
+                    name
+                    parameters
+                }
+                Consumers {
+                    id
+                    name
+                    parameters
+                }
+                users {
+                    id
+                }
+                MessageFilters {
+                    id
+                }
             }
         }
         """,
@@ -45,22 +62,36 @@ def test_create_configuration(
     db: MockFixture,
     client: Client,
 ) -> None:
-    producer = ProducerModelFactory()
-    consumer = ConsumerModelFactory()
-    user = UserFactory()
+    producers = [ProducerModelFactory() for _ in range(2)]
+    consumers = [ConsumerModelFactory() for _ in range(2)]
+    users = [UserFactory() for _ in range(2)]
     response = graphql_query(
         """
         mutation {
-            configuration(input: {
-                name: "fuck"
-                consumer: """ + str(consumer.id) + """
-                producer: """ + str(producer.id) + """
-                users: """ + str(user.id) + """
-            }
+            configuration(
+                input: {
+                    name: "fuck_muasdltiplit"
+                    Consumers: [""" + ','.join(str(consumer.id) for consumer in consumers) + """]
+                    Producers: [""" + ','.join(str(producer.id) for producer in producers) + """]
+                    users: [""" + ','.join(str(user.id) for user in users) + """]
+                }
             ) {
-                configuration{
+            configuration {
+                id
+                name
+                Producers {
                     id
                 }
+                Consumers {
+                    id
+                }
+                users {
+                    id
+                }
+                MessageFilters {
+                    id
+                }
+            }
             }
         }
         """,

@@ -7,7 +7,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_-r1_+g$f*zu5-v6vo*#(l!zmlgx#dvyf0qd#+-od*a@gdweih'
 
 DEBUG = True
-SYNC_MODE = os.getenv('SYNC_MODE', False)
+# SYNC_MODE = os.getenv('SYNC_MODE', False)
+SYNC_MODE = True
 
 ALLOWED_HOSTS = [
     '0.0.0.0',
@@ -115,7 +116,8 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'interval_max': 0.5,
 }
 
-USE_GRAPHIQL_INTERFACE = os.getenv('SYNC_MODE', False)
+# USE_GRAPHIQL_INTERFACE = os.getenv('USE_GRAPHIQL_INTERFACE', False)
+USE_GRAPHIQL_INTERFACE = True
 
 GRAPHENE = {
     'SCHEMA': 'notifier.schema.schema',
@@ -129,3 +131,8 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
     send_default_pii=True,
 )
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

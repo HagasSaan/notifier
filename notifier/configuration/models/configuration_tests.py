@@ -16,33 +16,13 @@ from helpers.messages_components.message_filters import (
     ReceiverExistsMessageFilter,
     ReceiverWorkingMessageFilter,
 )
-from message_consumers.factories import SampleConsumer
-from message_producers.factories import SampleProducer
+from message_consumers.factories import SampleConsumer, ConsumerModelFactory
+from message_producers.factories import SampleProducer, ProducerModelFactory
 
 
 def test_str_configuration(db: MockFixture) -> None:
     configuration = ConfigurationFactory()
     assert 'test_configuration' in str(configuration)
-
-
-@pytest.mark.parametrize(
-    'kwargs', [
-        {'producer': None, 'consumer': None},
-        {'producer': None},
-        {'consumer': None},
-    ],
-)
-def test_run_configuration_raises_error_if_consumer_or_producer_not_specified(
-    db: MockFixture,
-    kwargs: dict[str, None],
-) -> None:
-    configuration = ConfigurationFactory(**kwargs)
-
-    with pytest.raises(
-        ValueError,
-        match='Error: consumer or producer not specified',
-    ):
-        configuration.run()
 
 
 @pytest.fixture
@@ -99,6 +79,8 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
+        consumers=(ConsumerModelFactory(),),
+        producers=(ProducerModelFactory(),),
         users=(user1, user2, user_without_consumer_username),
     )
 
@@ -129,6 +111,8 @@ def test_run_configuration_should_filter_message_where_receiver_is_not_working(
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
+        consumers=(ConsumerModelFactory(),),
+        producers=(ProducerModelFactory(),),
         users=(user1, user2, user_not_working),
         message_filters=(
             MessageFilterModelFactory(object_type=ReceiverWorkingMessageFilter.__name__),
@@ -157,6 +141,8 @@ def test_run_configuration_should_filter_message_with_skip_keywords(
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
+        consumers=(ConsumerModelFactory(),),
+        producers=(ProducerModelFactory(),),
         users=(user1, user2),
         message_filters=(
             MessageFilterModelFactory(
@@ -197,6 +183,8 @@ def test_run_configuration_should_filter_message_if_user_not_in_config(
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
+        consumers=(ConsumerModelFactory(),),
+        producers=(ProducerModelFactory(),),
         users=(user1, user2),
         message_filters=(
             MessageFilterModelFactory(object_type=ReceiverExistsMessageFilter.__name__),
@@ -224,8 +212,35 @@ def test_run_configuration_should_filter_message_if_user_is_unknown(
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
+        consumers=(ConsumerModelFactory(),),
+        producers=(ProducerModelFactory(),),
         users=(user1, user2),
     )
     configuration.run()
 
     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
+
+
+def test_configuration_with_multiplie_producers_and_consumers(
+    db: MockFixture,
+    mocker: MockFixture,
+    setup: tuple[User, User, list[ExternalMessage]],
+) -> None:
+    user1, user2, messages_should_be_consumed = setup
+
+    fake_messages = messages_should_be_consumed + [
+        ExternalMessage('unknown_user', user1.username, 'message from unknown user'),
+    ]
+
+    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
+    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
+
+    configuration = ConfigurationFactory(
+        consumers=(ConsumerModelFactory(), ConsumerModelFactory()),
+        producers=(ProducerModelFactory(), ProducerModelFactory()),
+        users=(user1, user2),
+    )
+    configuration.run()
+
+    assert consume_messages_spy.call_count == 2
+    assert consume_messages_spy.mock_calls.args[1] == messages_should_be_consumed * 2
