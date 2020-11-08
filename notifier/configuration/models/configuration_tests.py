@@ -3,6 +3,7 @@ import datetime
 import freezegun
 import pytest
 from pytest_mock import MockFixture
+from structlog.testing import capture_logs
 
 from configuration.factories import (
     ConfigurationFactory,
@@ -244,3 +245,46 @@ def test_configuration_with_multiplie_producers_and_consumers(
 
     assert consume_messages_spy.call_count == 2
     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed * 2
+
+
+@pytest.mark.skip(reason='Not done yet')
+def test_alert_configuration() -> None:
+    pass
+
+
+@pytest.mark.xfail(reason='pytest do not fetch output')
+def test_configuration_without_producers(
+    db: MockFixture,
+    setup: tuple[User, User, list[ExternalMessage]],
+) -> None:
+    user1, user2, messages_should_be_consumed = setup
+    configuration = ConfigurationFactory(
+        producers=(ProducerModelFactory(), ),
+        users=(user1, user2),
+    )
+    with capture_logs() as cap_logs:
+        configuration.run()
+        assert {
+            'configuration_id': configuration.id,
+            'event': 'No producers or consumers, skipping...',
+            'log_level': 'info',
+        } in cap_logs
+
+
+@pytest.mark.xfail(reason='pytest do not fetch output')
+def test_configuration_without_consumers(
+    db: MockFixture,
+    setup: tuple[User, User, list[ExternalMessage]],
+) -> None:
+    user1, user2, messages_should_be_consumed = setup
+    configuration = ConfigurationFactory(
+        consumers=(ConsumerModelFactory(), ),
+        users=(user1, user2),
+    )
+    with capture_logs() as cap_logs:
+        configuration.run()
+        assert {
+            'configuration_id': configuration.id,
+            'event': 'No producers or consumers, skipping...',
+            'log_level': 'info',
+        } in cap_logs

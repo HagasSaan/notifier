@@ -4,11 +4,15 @@ nav:
   - User guide:
     - Installation: user_guide/installation.md
     - Configuration: user_guide/configuration.md
+    - How to write custom producer: user_guide/custom_producer_creation.md
+    - How to write custom consumer: user_guide/custom_consumer_creation.md
+    - How to write custom filter: user_guide/custom_filter_creation.md
   - Sources:
     - Configuration: sources/configuration.md
     - Helpers: sources/helpers.md
     - Message consumers: sources/message_consumers.md
     - Message producers: sources/message_producers.md
+    - Message filters: sources/message_filters.md
 
 
 theme:

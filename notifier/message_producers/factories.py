@@ -27,12 +27,12 @@ class SampleProducer(MessageProducer):
 
 
 class ProducerModelFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ProducerModel
+
     name = factory.Sequence(lambda x: f'producer_model_{SampleProducer.__name__}_{x}')
     object_type = SampleProducer.__name__
     parameters = {
         name: type_(1234)
         for (name, type_) in SampleProducer.__annotations__.items()
     }
-
-    class Meta:
-        model = models.ProducerModel

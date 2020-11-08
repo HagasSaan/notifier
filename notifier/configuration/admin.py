@@ -31,8 +31,7 @@ class UserAdmin(admin.ModelAdmin):
         'password',
         'email',
     )
-    list_display = ('username', 'status', 'on_leave', 'is_working_time')
-    list_filter = ('status', )
+    list_display = ('username', 'on_leave', 'is_working_time')
 
     formfield_overrides = {
         models.JSONField: {'widget': JSONEditorWidget},

@@ -27,12 +27,12 @@ class SampleConsumer(MessageConsumer):
 
 
 class ConsumerModelFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ConsumerModel
+
     name = factory.Sequence(lambda x: f'consumer_model_{SampleConsumer.__name__}_{x}')
     object_type = SampleConsumer.__name__
     parameters = {
         name: type_(1234)
         for (name, type_) in SampleConsumer.__annotations__.items()
     }
-
-    class Meta:
-        model = models.ConsumerModel

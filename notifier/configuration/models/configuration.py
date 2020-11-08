@@ -51,6 +51,13 @@ class Configuration(models.Model):
         ]
 
     def run(self) -> None:
+        global logger
+        logger = logger.bind(configuration_id=self.id)
+
+        if len(self.producers) == 0 or len(self.consumers) == 0:
+            logger.info('No producers or consumers, skipping...')
+            return
+
         # TODO: Maybe run as task?
         messages = []
         for producer in self.producers:
