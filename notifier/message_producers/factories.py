@@ -18,7 +18,7 @@ class SampleProducer(MessageProducer):
 
     USERNAME_KEY = 'test_producer'
 
-    async def produce_messages(self) -> list[ExternalMessage]:
+    async def produce_external_messages(self) -> list[ExternalMessage]:
         return []
 
     @classmethod

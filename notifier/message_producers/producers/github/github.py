@@ -67,7 +67,7 @@ class GithubRepository(MessageProducer):
                 raise ValidationError(cls.BAD_CREDENTIALS_MESSAGE)
             raise e
 
-    async def produce_messages(self) -> list[ExternalMessage]:
+    async def produce_external_messages(self) -> list[ExternalMessage]:
         messages: list[ExternalMessage] = []
         pull_requests = await self.get_pull_requests()
         for pull_request in pull_requests:

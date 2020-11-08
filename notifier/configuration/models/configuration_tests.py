@@ -75,7 +75,7 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
         ),
     ]
 
-    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
 
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
@@ -107,7 +107,7 @@ def test_run_configuration_should_filter_message_where_receiver_is_not_working(
         ExternalMessage(user2.username, user_not_working.username, 'message to not working user'),
     ]
 
-    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
 
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
@@ -137,7 +137,7 @@ def test_run_configuration_should_filter_message_with_skip_keywords(
         ExternalMessage(user2.username, user1.username, 'message with skip_keyword1'),
     ]
 
-    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
 
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
@@ -179,7 +179,7 @@ def test_run_configuration_should_filter_message_if_user_not_in_config(
         ),
     ]
 
-    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
 
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
@@ -209,7 +209,7 @@ def test_run_configuration_should_filter_message_if_user_is_unknown(
         ExternalMessage('unknown_user', user1.username, 'message from unknown user'),
     ]
 
-    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(
@@ -233,7 +233,7 @@ def test_configuration_with_multiplie_producers_and_consumers(
         ExternalMessage('unknown_user', user1.username, 'message from unknown user'),
     ]
 
-    mocker.patch.object(SampleProducer, 'produce_messages', return_value=fake_messages)
+    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
 
     configuration = ConfigurationFactory(

@@ -66,11 +66,11 @@ async def test_github_get_pull_requests(
 
 
 @pytest.mark.asyncio
-async def test_github_produce_messages(
+async def test_github_produce_external_messages(
     f_github_repository: GithubRepository,
     m_responses: MockFixture,
 ) -> None:
-    messages = await f_github_repository.produce_messages()
+    messages = await f_github_repository.produce_external_messages()
     assert set(messages) == {
         ExternalMessage(
             sender='comeuplater',

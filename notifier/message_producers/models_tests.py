@@ -9,7 +9,7 @@ from .models import CustomProducer
 
 
 @pytest.mark.asyncio
-async def test_produce_messages() -> None:
+async def test_produce_external_messages() -> None:
     filename = 'default/message_producer.py'
     os.makedirs(f'{settings.MEDIA_ROOT}/default', exist_ok=True)
     shutil.copy(
@@ -21,7 +21,7 @@ async def test_produce_messages() -> None:
         name='custom_producer_name',
         file=filename,
     )
-    actual_messages = await custom_producer.produce_messages()
+    actual_messages = await custom_producer.produce_external_messages()
     expected_messages = [
         ExternalMessage(**{'sender': 'user1', 'receiver': 'user2', 'content': 'content1'}),
         ExternalMessage(**{'sender': 'user2', 'receiver': 'user1', 'content': 'content2'}),
@@ -30,7 +30,7 @@ async def test_produce_messages() -> None:
 
 
 @pytest.mark.asyncio
-async def test_produce_messages_raises_error() -> None:
+async def test_produce_external_messages_raises_error() -> None:
     filename = 'default/broken_message_producer.py'
     os.makedirs(f'{settings.MEDIA_ROOT}/default', exist_ok=True)
     shutil.copy(
@@ -46,4 +46,4 @@ async def test_produce_messages_raises_error() -> None:
         Exception,
         match='Error: Internal error in script\n, exit code: 255',
     ):
-        await custom_producer.produce_messages()
+        await custom_producer.produce_external_messages()

@@ -13,7 +13,7 @@ logger = structlog.get_logger(__name__)
 class CustomProducer(ABCCustomObjectModel, MessageProducer):
     REGISTRY_NAME = PRODUCER_REGISTRY_NAME
 
-    async def produce_messages(self) -> list[ExternalMessage]:
+    async def produce_external_messages(self) -> list[ExternalMessage]:
         process = await self._create_process()
         stdout, stderr = await process.communicate()
         exit_code = await process.wait()

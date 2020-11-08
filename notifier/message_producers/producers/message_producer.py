@@ -12,7 +12,7 @@ class MessageProducer(Validatable):
     USERNAME_KEY = 'default'
 
     @abc.abstractmethod
-    async def produce_messages(self) -> list[ExternalMessage]:
+    async def produce_external_messages(self) -> list[ExternalMessage]:
         raise NotImplementedError
 
     def translate_messages_from_external_to_internal(

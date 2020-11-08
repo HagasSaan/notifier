@@ -60,7 +60,7 @@ class Configuration(models.Model):
         # TODO: Maybe run as task?
         messages = []
         for producer in self.producers:
-            raw_messages = asyncio.run(producer.produce_messages())
+            raw_messages = asyncio.run(producer.produce_external_messages())
             messages += producer.translate_messages_from_external_to_internal(raw_messages)
 
         logger.info('Got messages', messages=messages)
@@ -72,10 +72,7 @@ class Configuration(models.Model):
 
         # TODO: Maybe run as task?
         for consumer in self.consumers:
-            asyncio.run(
-                consumer.consume_messages(
-                    consumer.translate_messages_from_internal_to_external(messages),
-                ),
-            )
+            prepared_messages = consumer.translate_messages_from_internal_to_external(messages)
+            asyncio.run(consumer.consume_messages(prepared_messages))
 
         logger.info('Messages consumed', messages=messages)
