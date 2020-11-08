@@ -6,7 +6,6 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from configuration.models import User, MessageFilterModel
-from helpers.messages_components import ExternalMessage, InternalMessage
 from helpers.messages_components.message_filters import (
     MESSAGE_FILTER_REGISTRY_NAME,
     BaseMessageFilter,
@@ -62,10 +61,7 @@ class Configuration(models.Model):
         messages = []
         for producer in self.producers:
             raw_messages = asyncio.run(producer.produce_messages())
-            messages += self._translate_message_users_from_producer_into_users(
-                raw_messages,
-                producer,
-            )
+            messages += producer.translate_messages_from_external_to_internal(raw_messages)
 
         logger.info('Got messages', messages=messages)
         messages = reduce(
@@ -78,65 +74,8 @@ class Configuration(models.Model):
         for consumer in self.consumers:
             asyncio.run(
                 consumer.consume_messages(
-                    self._translate_message_users_from_users_into_consumer(
-                        messages,
-                        consumer,
-                    ),
+                    consumer.translate_messages_from_internal_to_external(messages),
                 ),
             )
 
         logger.info('Messages consumed', messages=messages)
-
-    @staticmethod
-    def _translate_message_users_from_producer_into_users(
-        messages: list[ExternalMessage],
-        producer: MessageProducer,
-    ) -> list[InternalMessage]:
-        producer_username_key = producer.USERNAME_KEY
-
-        result_messages = []
-        for message in messages:
-            try:
-                result_messages.append(
-                    InternalMessage(
-                        sender=User.get_user_by_producer_username(
-                            message.sender,
-                            producer_username_key,
-                        ),
-                        receiver=User.get_user_by_producer_username(
-                            message.receiver,
-                            producer_username_key,
-                        ),
-                        content=message.content,
-                    ),
-                )
-            except User.DoesNotExist as e:
-                logger.warning(f'Error: {e}')
-
-        return result_messages
-
-    @staticmethod
-    def _translate_message_users_from_users_into_consumer(
-        messages: list[InternalMessage],
-        consumer: MessageConsumer,
-    ) -> list[ExternalMessage]:
-        consumer_username_key = consumer.USERNAME_KEY
-
-        result_messages = []
-        for message in messages:
-            try:
-                result_messages.append(
-                    ExternalMessage(
-                        sender=message.sender.get_consumer_username(
-                            consumer_username_key,
-                        ),
-                        receiver=message.receiver.get_consumer_username(
-                            consumer_username_key,
-                        ),
-                        content=message.content,
-                    ),
-                )
-            except KeyError as e:
-                logger.warning(f'Error: {e}')
-
-        return result_messages
