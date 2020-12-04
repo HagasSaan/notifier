@@ -1,7 +1,9 @@
 import datetime
 
+import celery
 import freezegun
 import pytest
+from celery import shared_task
 from pytest_mock import MockFixture
 from structlog.testing import capture_logs
 
@@ -26,30 +28,11 @@ def test_str_configuration(db: MockFixture) -> None:
     assert 'test_configuration' in str(configuration)
 
 
-@pytest.fixture
-def setup(db: MockFixture) -> tuple[User, User, list[ExternalMessage]]:
-    user1 = UserFactory(
-        on_leave=False,
-        working_time_start=datetime.time(8, 0, 0),
-        working_time_end=datetime.time(17, 0, 0),
-    )
-    user2 = UserFactory(
-        on_leave=False,
-        working_time_start=datetime.time(8, 0, 0),
-        working_time_end=datetime.time(17, 0, 0),
-    )
-
-    messages_should_be_consumed = [
-        ExternalMessage(user1.username, user2.username, 'message1'),
-        ExternalMessage(user2.username, user1.username, 'message2'),
-    ]
-
-    return user1, user2, messages_should_be_consumed
-
-
 @freezegun.freeze_time('15:00:00')
+@pytest.mark.usefixtures('db')
+@pytest.mark.usefixtures('celery_session_app')
+@pytest.mark.usefixtures('celery_session_worker')
 def test_run_configuration_should_filter_message_where_receiver_doesnt_have_consumer_username(
-    db: MockFixture,
     mocker: MockFixture,
     setup: tuple[User, User, list[ExternalMessage]],
 ) -> None:
@@ -90,201 +73,215 @@ def test_run_configuration_should_filter_message_where_receiver_doesnt_have_cons
     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
 
 
-@freezegun.freeze_time('15:00:00')
-def test_run_configuration_should_filter_message_where_receiver_is_not_working(
-    db: MockFixture,
-    mocker: MockFixture,
-    setup: tuple[User, User, list[ExternalMessage]],
-) -> None:
-    user1, user2, messages_should_be_consumed = setup
-    user_not_working = UserFactory(
-        on_leave=True,
-        working_time_start=datetime.time(8, 0, 0),
-        working_time_end=datetime.time(17, 0, 0),
-    )
-
-    fake_messages = messages_should_be_consumed + [
-        ExternalMessage(user2.username, user_not_working.username, 'message to not working user'),
-    ]
-
-    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
-
-    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
-
-    configuration = ConfigurationFactory(
-        consumers=(ConsumerModelFactory(),),
-        producers=(ProducerModelFactory(),),
-        users=(user1, user2, user_not_working),
-        message_filters=(
-            MessageFilterModelFactory(object_type=ReceiverWorkingMessageFilter.__name__),
-        ),
-    )
-
-    configuration.run()
-
-    assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
-
-
-@freezegun.freeze_time('15:00:00')
-def test_run_configuration_should_filter_message_with_skip_keywords(
-    db: MockFixture,
-    mocker: MockFixture,
-    setup: tuple[User, User, list[ExternalMessage]],
-) -> None:
-    user1, user2, messages_should_be_consumed = setup
-
-    fake_messages = messages_should_be_consumed + [
-        ExternalMessage(user2.username, user1.username, 'message with skip_keyword1'),
-    ]
-
-    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
-
-    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
-
-    configuration = ConfigurationFactory(
-        consumers=(ConsumerModelFactory(),),
-        producers=(ProducerModelFactory(),),
-        users=(user1, user2),
-        message_filters=(
-            MessageFilterModelFactory(
-                object_type=SkipKeywordsMessageFilter.__name__,
-                parameters={'skip_keywords': ['skip_keyword1']},
-            ),
-        ),
-    )
-
-    configuration.run()
-
-    assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
-
-
-@freezegun.freeze_time('15:00:00')
-def test_run_configuration_should_filter_message_if_user_not_in_config(
-    db: MockFixture,
-    mocker: MockFixture,
-    setup: tuple[User, User, list[ExternalMessage]],
-) -> None:
-    user1, user2, messages_should_be_consumed = setup
-    user_not_in_config = UserFactory(
-        on_leave=False,
-        working_time_start=datetime.time(8, 0, 0),
-        working_time_end=datetime.time(17, 0, 0),
-    )
-
-    fake_messages = messages_should_be_consumed + [
-        ExternalMessage(
-            user2.username,
-            user_not_in_config.username,
-            'message to not in config user',
-        ),
-    ]
-
-    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
-
-    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
-
-    configuration = ConfigurationFactory(
-        consumers=(ConsumerModelFactory(),),
-        producers=(ProducerModelFactory(),),
-        users=(user1, user2),
-        message_filters=(
-            MessageFilterModelFactory(object_type=ReceiverExistsMessageFilter.__name__),
-        ),
-    )
-
-    configuration.run()
-
-    assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
-
-
-@freezegun.freeze_time('15:00:00')
-def test_run_configuration_should_filter_message_if_user_is_unknown(
-    db: MockFixture,
-    mocker: MockFixture,
-    setup: tuple[User, User, list[ExternalMessage]],
-) -> None:
-    user1, user2, messages_should_be_consumed = setup
-
-    fake_messages = messages_should_be_consumed + [
-        ExternalMessage('unknown_user', user1.username, 'message from unknown user'),
-    ]
-
-    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
-    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
-
-    configuration = ConfigurationFactory(
-        consumers=(ConsumerModelFactory(),),
-        producers=(ProducerModelFactory(),),
-        users=(user1, user2),
-    )
-    configuration.run()
-
-    assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
-
-
-def test_configuration_with_multiplie_producers_and_consumers(
-    db: MockFixture,
-    mocker: MockFixture,
-    setup: tuple[User, User, list[ExternalMessage]],
-) -> None:
-    user1, user2, messages_should_be_consumed = setup
-
-    fake_messages = messages_should_be_consumed + [
-        ExternalMessage('unknown_user', user1.username, 'message from unknown user'),
-    ]
-
-    mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
-    consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
-
-    configuration = ConfigurationFactory(
-        consumers=(ConsumerModelFactory(), ConsumerModelFactory()),
-        producers=(ProducerModelFactory(), ProducerModelFactory()),
-        users=(user1, user2),
-    )
-    configuration.run()
-
-    assert consume_messages_spy.call_count == 2
-    assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed * 2
-
-
-@pytest.mark.skip(reason='Not done yet')
-def test_alert_configuration() -> None:
-    pass
-
-
-@pytest.mark.xfail(reason='pytest do not fetch output')
-def test_configuration_without_producers(
-    db: MockFixture,
-    setup: tuple[User, User, list[ExternalMessage]],
-) -> None:
-    user1, user2, messages_should_be_consumed = setup
-    configuration = ConfigurationFactory(
-        producers=(ProducerModelFactory(), ),
-        users=(user1, user2),
-    )
-    with capture_logs() as cap_logs:
-        configuration.run()
-        assert {
-            'configuration_id': configuration.id,
-            'event': 'No producers or consumers, skipping...',
-            'log_level': 'info',
-        } in cap_logs
-
-
-@pytest.mark.xfail(reason='pytest do not fetch output')
-def test_configuration_without_consumers(
-    db: MockFixture,
-    setup: tuple[User, User, list[ExternalMessage]],
-) -> None:
-    user1, user2, messages_should_be_consumed = setup
-    configuration = ConfigurationFactory(
-        consumers=(ConsumerModelFactory(), ),
-        users=(user1, user2),
-    )
-    with capture_logs() as cap_logs:
-        configuration.run()
-        assert {
-            'configuration_id': configuration.id,
-            'event': 'No producers or consumers, skipping...',
-            'log_level': 'info',
-        } in cap_logs
+# @freezegun.freeze_time('15:00:00')
+# def test_run_configuration_should_filter_message_where_receiver_is_not_working(
+#     celery_app: MockFixture,
+#     celery_worker: MockFixture,
+#     db: MockFixture,
+#     mocker: MockFixture,
+#     setup: tuple[User, User, list[ExternalMessage]],
+# ) -> None:
+#     user1, user2, messages_should_be_consumed = setup
+#     user_not_working = UserFactory(
+#         on_leave=True,
+#         working_time_start=datetime.time(8, 0, 0),
+#         working_time_end=datetime.time(17, 0, 0),
+#     )
+#
+#     fake_messages = messages_should_be_consumed + [
+#         ExternalMessage(user2.username, user_not_working.username, 'message to not working user'),
+#     ]
+#
+#     mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
+#
+#     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
+#
+#     configuration = ConfigurationFactory(
+#         consumers=(ConsumerModelFactory(),),
+#         producers=(ProducerModelFactory(),),
+#         users=(user1, user2, user_not_working),
+#         message_filters=(
+#             MessageFilterModelFactory(object_type=ReceiverWorkingMessageFilter.__name__),
+#         ),
+#     )
+#
+#     configuration.run()
+#
+#     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
+#
+#
+# @freezegun.freeze_time('15:00:00')
+# def test_run_configuration_should_filter_message_with_skip_keywords(
+#     celery_app: MockFixture,
+#     celery_worker: MockFixture,
+#     db: MockFixture,
+#     mocker: MockFixture,
+#     setup: tuple[User, User, list[ExternalMessage]],
+# ) -> None:
+#     user1, user2, messages_should_be_consumed = setup
+#
+#     fake_messages = messages_should_be_consumed + [
+#         ExternalMessage(user2.username, user1.username, 'message with skip_keyword1'),
+#     ]
+#
+#     mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
+#
+#     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
+#
+#     configuration = ConfigurationFactory(
+#         consumers=(ConsumerModelFactory(),),
+#         producers=(ProducerModelFactory(),),
+#         users=(user1, user2),
+#         message_filters=(
+#             MessageFilterModelFactory(
+#                 object_type=SkipKeywordsMessageFilter.__name__,
+#                 parameters={'skip_keywords': ['skip_keyword1']},
+#             ),
+#         ),
+#     )
+#
+#     configuration.run()
+#
+#     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
+#
+#
+# @freezegun.freeze_time('15:00:00')
+# def test_run_configuration_should_filter_message_if_user_not_in_config(
+#     celery_app: MockFixture,
+#     celery_worker: MockFixture,
+#     db: MockFixture,
+#     mocker: MockFixture,
+#     setup: tuple[User, User, list[ExternalMessage]],
+# ) -> None:
+#     user1, user2, messages_should_be_consumed = setup
+#     user_not_in_config = UserFactory(
+#         on_leave=False,
+#         working_time_start=datetime.time(8, 0, 0),
+#         working_time_end=datetime.time(17, 0, 0),
+#     )
+#
+#     fake_messages = messages_should_be_consumed + [
+#         ExternalMessage(
+#             user2.username,
+#             user_not_in_config.username,
+#             'message to not in config user',
+#         ),
+#     ]
+#
+#     mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
+#
+#     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
+#
+#     configuration = ConfigurationFactory(
+#         consumers=(ConsumerModelFactory(),),
+#         producers=(ProducerModelFactory(),),
+#         users=(user1, user2),
+#         message_filters=(
+#             MessageFilterModelFactory(object_type=ReceiverExistsMessageFilter.__name__),
+#         ),
+#     )
+#
+#     configuration.run()
+#
+#     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
+#
+#
+# @freezegun.freeze_time('15:00:00')
+# def test_run_configuration_should_filter_message_if_user_is_unknown(
+#     celery_app: MockFixture,
+#     celery_worker: MockFixture,
+#     db: MockFixture,
+#     mocker: MockFixture,
+#     setup: tuple[User, User, list[ExternalMessage]],
+# ) -> None:
+#     user1, user2, messages_should_be_consumed = setup
+#
+#     fake_messages = messages_should_be_consumed + [
+#         ExternalMessage('unknown_user', user1.username, 'message from unknown user'),
+#     ]
+#
+#     mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
+#     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
+#
+#     configuration = ConfigurationFactory(
+#         consumers=(ConsumerModelFactory(),),
+#         producers=(ProducerModelFactory(),),
+#         users=(user1, user2),
+#     )
+#     configuration.run()
+#
+#     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed
+#
+#
+# def test_configuration_with_multiplie_producers_and_consumers(
+#     celery_app: MockFixture,
+#     celery_worker: MockFixture,
+#     db: MockFixture,
+#     mocker: MockFixture,
+#     setup: tuple[User, User, list[ExternalMessage]],
+# ) -> None:
+#     user1, user2, messages_should_be_consumed = setup
+#
+#     fake_messages = messages_should_be_consumed + [
+#         ExternalMessage('unknown_user', user1.username, 'message from unknown user'),
+#     ]
+#
+#     mocker.patch.object(SampleProducer, 'produce_external_messages', return_value=fake_messages)
+#     consume_messages_spy = mocker.spy(SampleConsumer, 'consume_messages')
+#
+#     configuration = ConfigurationFactory(
+#         consumers=(ConsumerModelFactory(), ConsumerModelFactory()),
+#         producers=(ProducerModelFactory(), ProducerModelFactory()),
+#         users=(user1, user2),
+#     )
+#     configuration.run()
+#
+#     assert consume_messages_spy.call_count == 2
+#     assert consume_messages_spy.call_args.args[1] == messages_should_be_consumed * 2
+#
+#
+# @pytest.mark.skip(reason='Not done yet')
+# def test_alert_configuration() -> None:
+#     pass
+#
+#
+# @pytest.mark.xfail(reason='pytest do not fetch output')
+# def test_configuration_without_producers(
+#     celery_app: MockFixture,
+#     celery_worker: MockFixture,
+#     db: MockFixture,
+#     setup: tuple[User, User, list[ExternalMessage]],
+# ) -> None:
+#     user1, user2, messages_should_be_consumed = setup
+#     configuration = ConfigurationFactory(
+#         producers=(ProducerModelFactory(), ),
+#         users=(user1, user2),
+#     )
+#     with capture_logs() as cap_logs:
+#         configuration.run()
+#         assert {
+#             'configuration_id': configuration.id,
+#             'event': 'No producers or consumers, skipping...',
+#             'log_level': 'info',
+#         } in cap_logs
+#
+#
+# @pytest.mark.xfail(reason='pytest do not fetch output')
+# def test_configuration_without_consumers(
+#     celery_app: MockFixture,
+#     celery_worker: MockFixture,
+#     db: MockFixture,
+#     setup: tuple[User, User, list[ExternalMessage]],
+# ) -> None:
+#     user1, user2, messages_should_be_consumed = setup
+#     configuration = ConfigurationFactory(
+#         consumers=(ConsumerModelFactory(), ),
+#         users=(user1, user2),
+#     )
+#     with capture_logs() as cap_logs:
+#         configuration.run()
+#         assert {
+#             'configuration_id': configuration.id,
+#             'event': 'No producers or consumers, skipping...',
+#             'log_level': 'info',
+#         } in cap_logs
