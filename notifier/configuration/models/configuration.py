@@ -1,11 +1,12 @@
-import asyncio
 from functools import reduce
 
 import structlog
 from django.db import models
 from django.utils.functional import cached_property
 
+from configuration import tasks
 from configuration.models import User, MessageFilterModel
+from helpers.messages_components import InternalMessage
 from helpers.messages_components.message_filters import (
     MESSAGE_FILTER_REGISTRY_NAME,
     BaseMessageFilter,
@@ -57,11 +58,7 @@ class Configuration(models.Model):
             logger.info('No producers or consumers, skipping...')
             return
 
-        # TODO: Maybe run as task?
-        messages = []
-        for producer in self.producers:
-            raw_messages = asyncio.run(producer.produce_external_messages())
-            messages += producer.translate_messages_from_external_to_internal(raw_messages)
+        messages = self._produce_all_messages()
 
         logger.info('Got messages', messages=messages)
         messages = reduce(
@@ -70,9 +67,26 @@ class Configuration(models.Model):
             messages,
         )
 
-        # TODO: Maybe run as task?
-        for consumer in self.consumers:
-            prepared_messages = consumer.translate_messages_from_internal_to_external(messages)
-            asyncio.run(consumer.consume_messages(prepared_messages))
+        self._consume_all_messages(messages)
 
         logger.info('Messages consumed', messages=messages)
+
+    def _consume_all_messages(self, messages) -> None:
+        task_handlers = []
+        for consumer in self.consumers:
+            task_handlers.append(tasks.put_messages_to_consumer.delay(consumer, messages))
+
+        [th.get() for th in task_handlers]
+
+    def _produce_all_messages(self) -> list[InternalMessage]:
+        task_handlers = []
+        for producer in self.producers:
+            task_handlers.append(
+                tasks.get_messages_from_producer.delay(producer)
+            )
+
+        messages = []
+        for th in task_handlers:
+            messages.append(th.get())
+
+        return messages
