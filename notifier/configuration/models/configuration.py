@@ -3,7 +3,6 @@ from functools import reduce
 
 import structlog
 from django.db import models
-from django.utils.functional import cached_property
 
 from configuration.models import User, MessageFilterModel
 from helpers.messages_components.message_filters import (
@@ -14,8 +13,6 @@ from message_consumers.consumers.message_consumer import MessageConsumer, CONSUM
 from message_consumers.models import ConsumerModel
 from message_producers.models import ProducerModel
 from message_producers.producers.message_producer import MessageProducer, PRODUCER_REGISTRY_NAME
-
-logger = structlog.get_logger(__name__)
 
 
 class Configuration(models.Model):
@@ -28,7 +25,11 @@ class Configuration(models.Model):
     def __str__(self):
         return f'{self.__class__.__name__} {self.name}'
 
-    @cached_property
+    @property
+    def _logger(self) -> structlog.BoundLogger:
+        return structlog.get_logger(__name__)
+
+    @property
     def message_filters(self) -> list[type[BaseMessageFilter]]:
         return [
             message_filter.get_object_by_registry_name(MESSAGE_FILTER_REGISTRY_NAME)
@@ -50,11 +51,10 @@ class Configuration(models.Model):
         ]
 
     def run(self) -> None:
-        global logger
-        logger = logger.bind(configuration_id=self.id)
+        self._logger.bind(configuration_id=self.id)
 
         if len(self.producers) == 0 or len(self.consumers) == 0:
-            logger.info('No producers or consumers, skipping...')
+            self._logger.info('No producers or consumers, skipping...')
             return
 
         # TODO: Maybe run as task?
@@ -63,7 +63,7 @@ class Configuration(models.Model):
             raw_messages = asyncio.run(producer.produce_external_messages())
             messages += producer.translate_messages_from_external_to_internal(raw_messages)
 
-        logger.info('Got messages', messages=messages)
+        self._logger.info('Got messages', messages=messages)
         messages = reduce(
             lambda msgs, message_filter: message_filter(msgs, self),
             self.message_filters,
@@ -75,4 +75,4 @@ class Configuration(models.Model):
             prepared_messages = consumer.translate_messages_from_internal_to_external(messages)
             asyncio.run(consumer.consume_messages(prepared_messages))
 
-        logger.info('Messages consumed', messages=messages)
+        self._logger.info('Messages consumed', messages=messages)
