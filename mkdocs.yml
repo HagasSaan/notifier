@@ -7,6 +7,10 @@ nav:
     - How to write custom producer: user_guide/custom_producer_creation.md
     - How to write custom consumer: user_guide/custom_consumer_creation.md
     - How to write custom filter: user_guide/custom_filter_creation.md
+  - Avaliable producers:
+    - Github: producers/github.md
+  - Avaliable consumers:
+    - Telegram: consumers/telegram.md
   - Sources:
     - Configuration: sources/configuration.md
     - Helpers: sources/helpers.md
