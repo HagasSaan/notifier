@@ -57,7 +57,7 @@ imagesize==1.2.0
 inflection==0.5.1
 iniconfig==1.0.1
 isort==5.4.2
-joblib==0.17.0
+joblib==1.2.0
 kombu==5.0.2
 lazy-object-proxy==1.4.3
 livereload==2.6.3
