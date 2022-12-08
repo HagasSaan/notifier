@@ -1,4 +1,4 @@
-![Python application](https://github.com/HagasSaan/notifier/workflows/Python%20application/badge.svg)
+[![Tests](https://github.com/HagasSaan/notifier/actions/workflows/test_on_bare_metal.yml/badge.svg)](https://github.com/HagasSaan/notifier/actions/workflows/test_on_bare_metal.yml)
 [![codecov](https://codecov.io/gh/HagasSaan/notifier/branch/master/graph/badge.svg)](https://codecov.io/gh/HagasSaan/notifier)
 
 # Notifier
