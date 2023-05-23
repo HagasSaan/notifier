@@ -102,7 +102,7 @@ pytz==2020.1
 PyYAML==5.4
 recommonmark==0.6.0
 regex==2020.10.11
-requests==2.25.0
+requests==2.31.0
 Rx==1.6.1
 sentry-sdk==0.19.4
 singledispatch==3.4.0.3
