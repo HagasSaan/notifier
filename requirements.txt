@@ -83,7 +83,7 @@ psycopg2==2.8.6
 py==1.10.0
 pycodestyle==2.6.0
 pyflakes==2.2.0
-pylint==2.6.0
+pylint==4.0.9
 pymdown-extensions==8.0.1
 pyparsing==2.4.7
 pyTelegramBotAPI==3.7.3
